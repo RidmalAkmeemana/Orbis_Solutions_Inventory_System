@@ -446,7 +446,7 @@
                                                                 <div class="input-group-prepend">
                                                                     <span class="input-group-text">LKR:</span>
                                                                 </div>
-                                                                <input type="text" name="Unit_Price" class="form-control unit-price-input text-right" required>
+                                                                <input type="text" name="Unit_Price" class="form-control unit-price-input text-right">
                                                             </div>
                                                             <label class="font-weight-bold">Wholesale Price</label><label class="text-danger">*</label>
                                                             <input style="display:;" type="text" name="Wholesale_Price" class="form-control text-right" readonly required>
@@ -456,7 +456,7 @@
                                                         </div>
                                                         <div class="col-md-1">
                                                             <label class="font-weight-bold">Qty</label><label class="text-danger">*</label>
-                                                            <input type="number" name="Qty" class="form-control qty-input w-100" min="1" required>
+                                                            <input type="number" name="Qty" class="form-control qty-input w-100" min="1">
                                                             <small class="text-muted remaining-qty">Available Qty: 0</small>
                                                         </div>
                                                         <div class="col-md-2">
@@ -510,21 +510,21 @@
                                                     <div style="margin-top:17px;" class="row">
                                                         <div class="col-md-3 text-left mt-4">
                                                             <h6 class="text-xs font-weight-bold mb-1">No. of Items: <span id="itemCount" class="font-weight-bold">0</span></h6>
-                                                            <input style="width: auto; display:none;" type="text" id="Item_Count" name="Item_Count" class="form-control text-right" value="1" readonly required>
+                                                            <input style="width: auto; display:;" type="text" id="Item_Count" name="Item_Count" class="form-control text-right" value="0" readonly required>
                                                         </div>
                                                         <div class="col-md-3 text-left mt-4">
                                                             <h6 class="text-xs font-weight-bold mb-1">Sub Total (LKR): <span id="subtotal" class="font-weight-bold">0.00</span></h6>
-                                                            <input style="width: auto; display:none;" type="text" id="Sub_Total" name="Sub_Total" class="form-control text-right" readonly required>
+                                                            <input style="width: auto; display:;" type="text" id="Sub_Total" name="Sub_Total" class="form-control text-right" readonly required>
                                                         </div>
                                                         <div class="col-md-3 text-right mt-4">
                                                             <h6 class="text-xs font-weight-bold mb-1">Discount (LKR): <span id="discountTotal" class="font-weight-bold">0.00</span></h6>
-                                                            <input style="width: auto; display:none;" type="text" id="Discount_Total" name="Discount_Total" class="form-control text-right" readonly required>
+                                                            <input style="width: auto; display:;" type="text" id="Discount_Total" name="Discount_Total" class="form-control text-right" readonly required>
                                                         </div>
                                                         <div class="col-md-3 text-right mt-4">
                                                             <h6 style="display:none;" class="text-xs font-weight-bold mb-1">Total Profit (LKR): <span id="profitTotal" class="font-weight-bold">0.00</span></h6>
-                                                            <input style="width: auto; display:none;" type="text" id="Profit_Total" name="Profit_Total" class="form-control text-right" readonly required>
+                                                            <input style="width: auto; display:;" type="text" id="Profit_Total" name="Profit_Total" class="form-control text-right" readonly required>
                                                             <h6 class="text-xs font-weight-bold mb-1">GRAND TOTAL (LKR): <span id="grandTotal" class="font-weight-bold">0.00</span></h6>
-                                                            <input style="width: auto; display:none;" type="text" id="Grand_Total" name="Grand_Total" class="form-control text-right" readonly required>
+                                                            <input style="width: auto; display:;" type="text" id="Grand_Total" name="Grand_Total" class="form-control text-right" readonly required>
                                                         </div>
                                                     </div>
 
@@ -757,12 +757,13 @@
                     var landingCost = parseFloat($('input[name="Landing_Cost"]').val().replace(/,/g, ''));
                     var enteredValue = parseFloat($(this).val().replace(/,/g, ''));
 
+                    $(this).val(enteredValue.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,'));
+
                     var unitDiscount = wholesalePrice - enteredValue;
 
                     if (isNaN(enteredValue)) {
                         $(this).val('');
                     } else if (enteredValue < landingCost) {
-                        // alert(`Unit Price Cannot Be Less Than Cost`);
                         $('#UnitPriceErrorModel').modal('show');
                         $(this).val(wholesalePrice.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }));
                         $('.discount-value').text('Unit Discount (LKR): 0.00').show();
@@ -845,7 +846,6 @@
                         $('.total-price').val('').show(); // Show total price with commas
                         $('.total-cost').val('').show(); // Show total cost with commas
                         $('.total-profit').val('').show(); // Show total profit with commas
-                        //updateTotals(); // Update row count when quantity changes
                     } else {
                         $('.remaining-qty').text(`Available Qty: ${(maxQty - enteredQty).toLocaleString()}`).show(); // Show available qty with commas
                         $('.total-discount-value').text(`Total Discount (LKR): ${(totalDiscount).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`).show(); // Show discount with commas
@@ -853,17 +853,22 @@
                         $('.total-price').val(`${(unitPrice * enteredQty).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`).show(); // Show total price with commas
                         $('.total-cost').val(`${(cost * enteredQty).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`).show(); // Show total cost with commas
                         $('.total-profit').val(`${(unitProfit).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`).show(); // Show total profit with commas
-                        //updateTotals(); // Update row count when quantity changes
                     }
                 });
 
                 $(".add-row").click(function () {
                     var productId = $("#productSelect").val();
+                    var Id = $("#Id").val();
                     var productName = $(".product-name").val();
                     var landingCost = $("input[name='Landing_Cost']").val();
                     var unitPrice = $("input[name='Unit_Price']").val();
+                    var wholesalePrice = $("input[name='Wholesale_Price']").val();
+                    var unitDiscount = $("input[name='unit-discount-input']").val();
                     var qty = $("input[name='Qty']").val();
                     var totalPrice = $("input[name='Total_Price']").val();
+                    var totalCost = $("input[name='Total_Cost']").val();
+                    var totalProfit = $("input[name='Total_Profit']").val();
+                    var totalDiscount = $("input[name='total-discount-input']").val();
 
                     if (!productId || !productName) {
                         $('#ProductErrorModel').modal('show');
@@ -881,13 +886,13 @@
                     }
 
                     // Check if the product already exists in the table
-                    var exists = false;
+                    let exists = false;
                     $("#productTable tbody tr").each(function () {
-                        var rowProductId = $(this).find("td:first").text();
+                        let rowProductId = $(this).find("input[name='Product_Id[]']").val();
                         if (rowProductId === productId) {
                             exists = true;
                             $('#ProductDuplicateModel').modal('show');
-                            return false;
+                            return false; // Exit the loop
                         }
                     });
 
@@ -899,12 +904,37 @@
                     // Append row to table
                     var newRow = `
                         <tr>
-                            <td>${productId}</td>
-                            <td>${productName}</td>
-                            <td class="text-right">${landingCost}</td>
-                            <td class="text-right">${unitPrice}<input style="display:none;" class="form-control text-right unit-price-edit" value="${unitPrice}" min="0"></td>
-                            <td class="text-center">${qty}<input style="display:none;" type="number" class="form-control text-right qty-edit" value="${qty}" min="1"></td>
-                            <td class="text-right">${totalPrice}</td>
+                            <td>
+                                <input style="width: auto; display:;" type="text" name="Invoice_No[]" class="form-control" value="<?php echo $combinedInvoiceNumber; ?>" readonly>
+                                <input style="width: auto; display:;" type="text" name="Product_Id[]" class="form-control" value="${productId}" readonly>
+                                ${productId}
+                            </td>
+                            <td>
+                                <input style="width: auto; display:;" type="number" name="Id[]" class="form-control" min="1" value="${Id}" readonly>
+						        <input style="width: auto;" display:;" type="text" name="Product_Name[]" class="form-control" value="${productName}" readonly>
+                                ${productName}
+                            </td>
+                            <td class="text-right">
+                                <input style="width: auto;" display:;" type="text" name="Landing_Cost[]" class="form-control" value="${landingCost}" readonly>
+                                ${landingCost}
+                            </td>
+                            <td class="text-right">
+                                <input style="width: auto;" display:;" type="text" name="Unit_Price[]" class="form-control" value="${unitPrice}" readonly>
+                                <input style="width: auto;" display:;" type="text" name="Wholesale_Price[]" class="form-control" value="${wholesalePrice}" readonly>
+                                <input style="width: auto; display:;" type="text" name="unit-discount-input[]" class="form-control" value="${unitDiscount}" readonly>
+                                ${unitPrice}
+                            </td>
+                            <td class="text-center">
+                                <input style="width: auto;" display:;" type="number" name="Qty[]" class="form-control" value="${qty}" readonly>
+                                ${qty}
+                            </td>
+                            <td class="text-right">
+                                <input style="width: auto;" display:;" type="text" name="Total_Price[]" class="form-control" value="${totalPrice}" readonly>
+								<input style="width: auto; display:;" type="text" name="Total_Cost[]" class="form-control" value="${totalCost}" readonly>
+								<input style="width: auto; display:;" type="text" name="Total_Profit[]" class="form-control" value="${totalProfit}" readonly>
+                                <input style="width: auto; display:;" type="text" name="total-discount-input[]" class="form-control" value="${totalDiscount}" readonly>
+                                ${totalPrice}
+                            </td>
                             <td class="text-center">
                                 <button type="button" class="btn btn bg-primary-light btn-sm edit-row"><i class="fe fe-pencil"></i></button>
                                 <button type="button" class="btn btn bg-danger-light btn-sm remove-row"><i class="fe fe-trash"></i></button>
@@ -913,9 +943,15 @@
                     `;
                     $("#productTable tbody").append(newRow);
 
+                    let rowCount = $("#productTable tbody tr").length;
+
+                    updateRowCount(rowCount);
+                    updateTotals();
+
                     // Reset form fields
                     $("#productSelect").val('Select Product Code').trigger('change'); // Reset Select2 dropdown
                     $("input[name='Id'], input[name='Product_Name'], input[name='Landing_Cost'], input[name='Unit_Price'], input[name='Wholesale_Price'], input[name='unit-discount-input'], input[name='Qty'], input[name='Total_Price']").val('');
+                    $('.discount-value').text(`Unit Discount (LKR): 0.00`).show();
                     $('.remaining-qty').text(`Available Qty: 0`).show();
 
                 });
@@ -923,10 +959,69 @@
                 // Remove Row
                 $("#productTable").on("click", ".remove-row", function () {
                     $(this).closest("tr").remove();
-                    if ($("#productTable tbody tr").length === 0) {
-                        $("#productTable tbody").append('<tr><td colspan="7" class="text-center py-5 my-xl-3 text-muted"><strong>No Product Added</strong></td></tr>');
+
+                    let rowCount = $("#productTable tbody tr").length;
+
+                    if (rowCount === 0 || $("#productTable tbody tr:visible").length === 0) {
+                        $("#productTable tbody").html('<tr><td colspan="7" class="text-center py-5 my-xl-3 text-muted"><strong>No Product Added</strong></td></tr>');
+                        rowCount = 0; // Ensure Item Count is set to 0
+
+                        // Reset totals when no products are left
+                        resetTotals();
                     }
+
+                    updateRowCount(rowCount);
+                    updateTotals();
                 });
+
+                // Calculate and update row count
+                function updateRowCount(count) {
+                    $('#itemCount').text(count);
+                    $('#Item_Count').val(count);
+                }
+
+                // Function to reset the totals to default values
+                function resetTotals() {
+                    $('#subtotal').text("0.00");
+                    $('#Sub_Total').val('');
+                    $('#discountTotal').text("0.00");
+                    $('#Discount_Total').val('');
+                    $('#profitTotal').text("0.00");
+                    $('#Profit_Total').val('');
+                    $('#grandTotal').text("0.00");
+                    $('#Grand_Total').val('');
+                }
+
+                // Calculate and update totals
+                function updateTotals() {
+                    var subTotal = 0;
+                    var discountTotal = 0;
+                    var profitTotal = 0;
+                    var grandTotal = 0;
+
+                    $('#productTable tbody tr').each(function () {
+                        var qty = parseInt($(this).find('input[name="Qty[]"]').val()) || 0;
+                        var unitPrice = parseFloat($(this).find('input[name="Wholesale_Price[]"]').val().replace(/,/g, '')) || 0;
+                        var totalPrice = parseFloat($(this).find('input[name="Total_Price[]"]').val().replace(/,/g, '')) || 0;
+                        var totalProfit = parseFloat($(this).find('input[name="Total_Profit[]"]').val().replace(/,/g, '')) || 0;
+                        var totalDiscountText = parseFloat($(this).find('input[name="total-discount-input[]"]').val().replace(/,/g, '')) || 0;
+                        
+                        subTotal += unitPrice * qty;
+                        discountTotal += totalDiscountText;
+                        profitTotal += totalProfit;
+                        grandTotal += totalPrice;
+                        
+                    });
+
+                    $('#subtotal').text(subTotal.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }));
+                    $('#Sub_Total').val(subTotal.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }));
+                    $('#discountTotal').text(discountTotal.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }));
+                    $('#Discount_Total').val(discountTotal.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }));
+                    $('#profitTotal').text(profitTotal.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }));
+                    $('#Profit_Total').val(profitTotal.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }));
+                    $('#grandTotal').text(grandTotal.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }));
+                    $('#Grand_Total').val(grandTotal.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }));
+                }
 
                 // Character Count for Description Textarea
                 let myText = document.getElementById("my-text");
