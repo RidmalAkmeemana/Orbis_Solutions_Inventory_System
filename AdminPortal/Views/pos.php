@@ -464,8 +464,8 @@
                                                             <div class="input-group">
                                                                 <div class="input-group-prepend">
                                                                     <span class="input-group-text">LKR:</span>
-                                                                    <input type="text" name="Total_Price" class="form-control text-right total-price" readonly required>
                                                                 </div>
+                                                                <input type="text" name="Total_Price" class="form-control text-right total-price" readonly required>
                                                             </div>
                                                             <label class="font-weight-bold">Total Cost</label><label class="text-danger">*</label>
                                                             <input style="display:;" type="text" name="Total_Cost" class="form-control text-right total-cost" readonly required>
@@ -947,13 +947,65 @@
 
                     updateRowCount(rowCount);
                     updateTotals();
+                    resetForm();
 
-                    // Reset form fields
-                    $("#productSelect").val('Select Product Code').trigger('change'); // Reset Select2 dropdown
-                    $("input[name='Id'], input[name='Product_Name'], input[name='Landing_Cost'], input[name='Unit_Price'], input[name='Wholesale_Price'], input[name='unit-discount-input'], input[name='Qty'], input[name='Total_Price']").val('');
-                    $('.discount-value').text(`Unit Discount (LKR): 0.00`).show();
-                    $('.remaining-qty').text(`Available Qty: 0`).show();
+                });
 
+                // Edit Row
+                $("#productTable").on("click", ".edit-row", function () {
+                    let row = $(this).closest("tr");
+
+                    // Highlight the selected row
+                    $("#productTable tbody tr").removeClass("table-danger"); // Remove highlight from other rows
+                    row.addClass("table-danger"); // Add highlight to the clicked row
+
+                    // Fetch values from the row
+                    let productId = row.find('input[name="Product_Id[]"]').val();
+                    let Id = row.find('input[name="Id[]"]').val();
+                    let productName = row.find('input[name="Product_Name[]"]').val();
+                    let landingCost = row.find('input[name="Landing_Cost[]"]').val();
+                    let unitPrice = row.find('input[name="Unit_Price[]"]').val();
+                    let wholesalePrice = row.find('input[name="Wholesale_Price[]"]').val();
+                    let unitDiscount = row.find('input[name="unit-discount-input[]"]').val();
+                    let qty = row.find('input[name="Qty[]"]').val();
+                    let totalPrice = row.find('input[name="Total_Price[]"]').val();
+                    let totalCost = row.find('input[name="Total_Cost[]"]').val();
+                    let totalProfit = row.find('input[name="Total_Profit[]"]').val();
+                    let totalDiscount = row.find('input[name="total-discount-input[]"]').val();
+
+                    // Populate values in the respective fields
+                    $("#productSelect").val(productId).trigger("change.select2");
+                    $("input[name='Id']").val(Id);
+                    $("input[name='Product_Name']").val(productName);
+                    $("input[name='Landing_Cost']").val(landingCost);
+                    $("input[name='Unit_Price']").val(unitPrice);
+                    $("input[name='Wholesale_Price']").val(wholesalePrice);
+                    $("input[name='unit-discount-input']").val(unitDiscount);
+                    $("input[name='Qty").val(qty);
+                    $("input[name='Total_Price").val(totalPrice);
+                    $("input[name='Total_Cost").val(totalCost);
+                    $("input[name='Total_Profit").val(totalProfit);
+                    $("input[name='total-discount-input").val(totalDiscount);
+
+                    // let unitDiscount = parseFloat(row.find('input[name="unit-discount-input[]"]').val().replace(/,/g, '')) || 0;
+                    // let totalDiscount = parseFloat(row.find('input[name="total-discount-input[]"]').val().replace(/,/g, '')) || 0;
+                    // let qty = row.find('.qty-input').val() || '';
+                    // let maxQty = parseInt(row.find('.qty-input').attr('data-max')) || 0;
+                    // let totalPrice = row.find('.total-price').val() || '';
+                    // let totalCost = row.find('.total-cost').val() || '';
+                    // let totalProfit = row.find('.total-profit').val() || '';
+
+                    
+                    // $('.discount-value').text(`Unit Discount (LKR): ${unitDiscount.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')}`).show();
+                    // $('input[name="unit-discount-input"]').val(unitDiscount.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,'));
+                    // $('.total-discount-value').text(`Total Discount (LKR): ${totalDiscount.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')}`).show();
+                    // $('input[name="total-discount-input"]').val(totalDiscount.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,'));
+                    
+                    // $('.qty-input').val(qty).show();
+                    // $('.remaining-qty').text(`Available Qty: ${maxQty.toLocaleString()}`).show();
+                    // $('.total-price').val(totalPrice).show();
+                    // $('.total-cost').val(totalCost).show();
+                    // $('.total-profit').val(totalProfit).show();
                 });
 
                 // Remove Row
@@ -973,6 +1025,14 @@
                     updateRowCount(rowCount);
                     updateTotals();
                 });
+
+                // Reset form fields
+                function resetForm() {
+                    $("#productSelect").val('Select Product Code').trigger('change'); // Reset Select2 dropdown
+                    $("input[name='Id'], input[name='Product_Name'], input[name='Landing_Cost'], input[name='Unit_Price'], input[name='Wholesale_Price'], input[name='unit-discount-input'], input[name='Qty'], input[name='Total_Price']").val('');
+                    $('.discount-value').text(`Unit Discount (LKR): 0.00`).show();
+                    $('.remaining-qty').text(`Available Qty: 0`).show();
+                }
 
                 // Calculate and update row count
                 function updateRowCount(count) {
