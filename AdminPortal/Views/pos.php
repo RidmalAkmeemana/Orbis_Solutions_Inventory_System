@@ -513,23 +513,41 @@ if ($result) {
                                                         </div>
                                                     </div>
                                                     <div style="margin-top:17px;" class="row">
-                                                        <div class="col-md-3 text-left mt-4">
+                                                        <div class="col-md-4 text-left mt-4">
                                                             <h6 class="text-xs font-weight-bold mb-1">No. of Items: <span id="itemCount" class="font-weight-bold">0</span></h6>
                                                             <input style="width: auto; display:none;" type="text" id="Item_Count" name="Item_Count" class="form-control text-right" value="0" readonly required>
                                                         </div>
-                                                        <div class="col-md-3 text-left mt-4">
+                                                        <div class="col-md-4 text-left mt-4">
                                                             <h6 class="text-xs font-weight-bold mb-1">Sub Total (LKR): <span id="subtotal" class="font-weight-bold">0.00</span></h6>
                                                             <input style="width: auto; display:none;" type="text" id="Sub_Total" name="Sub_Total" class="form-control text-right" readonly required>
                                                         </div>
-                                                        <div class="col-md-3 text-right mt-4">
+                                                        <div class="col-md-4 text-right mt-4">
                                                             <h6 class="text-xs font-weight-bold mb-1">Discount (LKR): <span id="discountTotal" class="font-weight-bold">0.00</span></h6>
                                                             <input style="width: auto; display:none;" type="text" id="Discount_Total" name="Discount_Total" class="form-control text-right" readonly required>
                                                         </div>
-                                                        <div class="col-md-3 text-right mt-4">
+                                                    </div>
+
+                                                    <div style="margin-top:17px;" class="row">
+                                                        <div class="col-md-4 text-left mt-4">
+                                                            <h6 class="text-xs font-weight-bold mb-1">Service Charge <span id="serviceCharge" class="font-weight-bold">0.00</span></h6>
+                                                            <input style="width: auto; display:;" type="text" id="Service_Charge" name="Service_Charge[]" class="form-control text-right" readonly required>
+                                                        </div>
+                                                        <div class="col-md-4 text-left mt-4">
+                                                            <h6 class="text-xs font-weight-bold mb-1" id="taxChargeLabel">Tax: <span id="taxCharge" class="font-weight-bold">0.00</span></h6>
+                                                            <input style="width: auto; display:;" type="text" id="Tax_Charge" name="Tax_Charge[]" class="form-control text-right" readonly required>
+                                                        </div>
+                                                        <div class="col-md-4 text-right mt-4">
+                                                            <h6 class="text-xs font-weight-bold mb-1" id="vatChargeLabel">Vat: <span id="vatCharge" class="font-weight-bold">0.00</span></h6>
+                                                            <input style="width: auto; display:;" type="text" id="Vat_Charge" name="Vat_Charge[]" class="form-control text-right" readonly required>
+                                                        </div>
+                                                    </div>
+
+                                                    <div style="margin-top:17px;" class="row">
+                                                        <div class="col-md-12 text-right mt-4">
                                                             <h6 style="display:none;" class="text-xs font-weight-bold mb-1">Total Profit (LKR): <span id="profitTotal" class="font-weight-bold">0.00</span></h6>
                                                             <input style="width: auto; display:none;" type="text" id="Profit_Total" name="Profit_Total" class="form-control text-right" readonly required>
                                                             <h6 class="text-xs font-weight-bold mb-1">GRAND TOTAL (LKR): <span id="grandTotal" class="font-weight-bold">0.00</span></h6>
-                                                            <input style="width: auto; display:none;" type="text" id="Grand_Total" name="Grand_Total" class="form-control text-right" readonly required>
+                                                            <input style="width: auto; display:;" type="text" id="Grand_Total" name="Grand_Total" class="form-control text-right" readonly required>
                                                         </div>
                                                     </div>
 
@@ -544,7 +562,7 @@ if ($result) {
                                                         <!-- Paid Amount -->
                                                         <div class="col-md-4 mt-4">
                                                             <div class="form-group">
-                                                                <label class="font-weight-bold">Paid Amount (LKR:)</label><label class="text-danger">*</label>
+                                                                <label class="font-weight-bold">Paid Amount (LKR): </label><label class="text-danger">*</label>
                                                                 <div class="input-group">
                                                                     <div class="input-group-prepend">
                                                                         <span class="input-group-text">LKR:</span>
@@ -736,6 +754,124 @@ if ($result) {
                         }
                     });
                 }
+
+                // Function to fetch and display system details
+                function fetchSystemDetails() {
+                    $.ajax({
+                        type: 'GET',
+                        url: '../../API/Admin/getSystemConfiguration.php',
+                        dataType: 'json',
+                        success: function (response) {
+
+                            //Service Charge
+                            if (response.ServiceCharge_IsPercentage === "1") {
+                                
+                                var serviceCharge = parseFloat(response.ServiceCharge);  // Ensure serviceCharge is treated as a float
+                                
+                                // Set the formatted service charge text in the #serviceCharge element
+                                $('#serviceCharge').text('(%): '+serviceCharge.toLocaleString(undefined, {
+                                    minimumFractionDigits: 2,
+                                    maximumFractionDigits: 2
+                                })).show();
+
+                                // Format the service charge with two decimal places and comma separation
+                                $('input[name="Service_Charge[]"]').val(serviceCharge.toLocaleString(undefined, {
+                                    minimumFractionDigits: 2,
+                                    maximumFractionDigits: 2
+                                }));
+
+                            } else {
+
+                                var serviceCharge = parseFloat(response.ServiceCharge);  // Ensure serviceCharge is treated as a float
+                                
+                                // Set the formatted service charge text in the #serviceCharge element
+                                $('#serviceCharge').text('(LKR): '+serviceCharge.toLocaleString(undefined, {
+                                    minimumFractionDigits: 2,
+                                    maximumFractionDigits: 2
+                                })).show();
+
+                                // Format the service charge with two decimal places and comma separation
+                                $('input[name="Service_Charge[]"]').val(serviceCharge.toLocaleString(undefined, {
+                                    minimumFractionDigits: 2,
+                                    maximumFractionDigits: 2
+                                }));
+                            }
+
+                            // Tax Charge
+                            if (response.Tax_IsPercentage === "1") {
+                                
+                                var taxCharge = parseFloat(response.Tax);  // Ensure taxCharge is treated as a float
+                                
+                                // Set the formatted service charge text in the #taxCharge element
+                                $('#taxCharge').text('(%): '+taxCharge.toLocaleString(undefined, {
+                                    minimumFractionDigits: 2,
+                                    maximumFractionDigits: 2
+                                })).show();
+
+                                // Format the tax charge with two decimal places and comma separation
+                                $('input[name="Tax_Charge[]"]').val(taxCharge.toLocaleString(undefined, {
+                                    minimumFractionDigits: 2,
+                                    maximumFractionDigits: 2
+                                }));
+
+
+                            } else {
+                                var taxCharge = parseFloat(response.Tax);  // Ensure taxCharge is treated as a float
+                                
+                                // Set the formatted service charge text in the #taxCharge element
+                                $('#taxCharge').text('(LKR): '+taxCharge.toLocaleString(undefined, {
+                                    minimumFractionDigits: 2,
+                                    maximumFractionDigits: 2
+                                })).show();
+
+                                // Format the tax charge with two decimal places and comma separation
+                                $('input[name="Tax_Charge[]"]').val(taxCharge.toLocaleString(undefined, {
+                                    minimumFractionDigits: 2,
+                                    maximumFractionDigits: 2
+                                }));
+                            }
+
+                            // VAT Charge
+                            if (response.Vat_IsPercentage === "1") {
+                                
+                                var vatCharge = parseFloat(response.Vat);  // Ensure vatCharge is treated as a float
+                                
+                                // Set the formatted vat charge text in the #vatCharge element
+                                $('#vatCharge').text('(LKR): '+vatCharge.toLocaleString(undefined, {
+                                    minimumFractionDigits: 2,
+                                    maximumFractionDigits: 2
+                                })).show();
+
+                                // Format the vat charge with two decimal places and comma separation
+                                $('input[name="Vat_Charge[]"]').val(vatCharge.toLocaleString(undefined, {
+                                    minimumFractionDigits: 2,
+                                    maximumFractionDigits: 2
+                                }));
+
+                            } else {
+                                var vatCharge = parseFloat(response.Vat);  // Ensure vatCharge is treated as a float
+                                
+                                // Set the formatted vat charge text in the #vatCharge element
+                                $('#vatCharge').text('(LKR): '+vatCharge.toLocaleString(undefined, {
+                                    minimumFractionDigits: 2,
+                                    maximumFractionDigits: 2
+                                })).show();
+
+                                // Format the vat charge with two decimal places and comma separation
+                                $('input[name="Vat_Charge[]"]').val(vatCharge.toLocaleString(undefined, {
+                                    minimumFractionDigits: 2,
+                                    maximumFractionDigits: 2
+                                }));
+                            }
+                        },
+                        error: function (xhr, status, error) {
+                            console.error('Error:', status, error);
+                        }
+                    });
+                }
+
+                // Call fetchSystemDetails function to load profile details when the page is ready
+                fetchSystemDetails();
 
                 // Handle unit price input validation
                 $(document).on('input', '.unit-price-input', function() {
@@ -1109,6 +1245,14 @@ if ($result) {
                         grandTotal += totalPrice;
 
                     });
+
+                    // Get Additional Charges
+                    var serviceCharge = parseFloat($('#Service_Charge').val().replace(/,/g, '')) || 0;
+                    var taxCharge = parseFloat($('#Tax_Charge').val().replace(/,/g, '')) || 0;
+                    var vatCharge = parseFloat($('#Vat_Charge').val().replace(/,/g, '')) || 0;
+
+                    // Add Additional Charges to Grand Total
+                    grandTotal += serviceCharge + taxCharge + vatCharge;
 
                     $('#subtotal').text(subTotal.toLocaleString(undefined, {
                         minimumFractionDigits: 2,
