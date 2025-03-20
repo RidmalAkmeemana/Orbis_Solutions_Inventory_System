@@ -529,16 +529,19 @@ if ($result) {
 
                                                     <div style="margin-top:17px;" class="row">
                                                         <div class="col-md-4 text-left mt-4">
+                                                            <input style="width: auto; display:none;" type="text" id="ServiceChargeIsPercentage" class="form-control text-right" readonly required>
                                                             <h6 class="text-xs font-weight-bold mb-1">Service Charge <span id="serviceCharge" class="font-weight-bold">0.00</span></h6>
-                                                            <input style="width: auto; display:;" type="text" id="Service_Charge" name="Service_Charge[]" class="form-control text-right" readonly required>
+                                                            <input style="width: auto; display:none;" type="text" id="Service_Charge" name="Service_Charge[]" class="form-control text-right" readonly required>
                                                         </div>
                                                         <div class="col-md-4 text-left mt-4">
+                                                            <input style="width: auto; display:none;" type="text" id="TaxIsPercentage" class="form-control text-right" readonly required>
                                                             <h6 class="text-xs font-weight-bold mb-1" id="taxChargeLabel">Tax: <span id="taxCharge" class="font-weight-bold">0.00</span></h6>
-                                                            <input style="width: auto; display:;" type="text" id="Tax_Charge" name="Tax_Charge[]" class="form-control text-right" readonly required>
+                                                            <input style="width: auto; display:none;" type="text" id="Tax_Charge" name="Tax_Charge[]" class="form-control text-right" readonly required>
                                                         </div>
                                                         <div class="col-md-4 text-right mt-4">
+                                                            <input style="width: auto; display:none;" type="text" id="VatIsPercentage" class="form-control text-right" readonly required>
                                                             <h6 class="text-xs font-weight-bold mb-1" id="vatChargeLabel">Vat: <span id="vatCharge" class="font-weight-bold">0.00</span></h6>
-                                                            <input style="width: auto; display:;" type="text" id="Vat_Charge" name="Vat_Charge[]" class="form-control text-right" readonly required>
+                                                            <input style="width: auto; display:none;" type="text" id="Vat_Charge" name="Vat_Charge[]" class="form-control text-right" readonly required>
                                                         </div>
                                                     </div>
 
@@ -547,7 +550,7 @@ if ($result) {
                                                             <h6 style="display:none;" class="text-xs font-weight-bold mb-1">Total Profit (LKR): <span id="profitTotal" class="font-weight-bold">0.00</span></h6>
                                                             <input style="width: auto; display:none;" type="text" id="Profit_Total" name="Profit_Total" class="form-control text-right" readonly required>
                                                             <h6 class="text-xs font-weight-bold mb-1">GRAND TOTAL (LKR): <span id="grandTotal" class="font-weight-bold">0.00</span></h6>
-                                                            <input style="width: auto; display:;" type="text" id="Grand_Total" name="Grand_Total" class="form-control text-right" readonly required>
+                                                            <input style="width: auto; display:none;" type="text" id="Grand_Total" name="Grand_Total" class="form-control text-right" readonly required>
                                                         </div>
                                                     </div>
 
@@ -767,6 +770,9 @@ if ($result) {
                             if (response.ServiceCharge_IsPercentage === "1") {
                                 
                                 var serviceCharge = parseFloat(response.ServiceCharge);  // Ensure serviceCharge is treated as a float
+                                var serviceChargeIsPercentage = parseFloat(response.ServiceCharge_IsPercentage);
+
+                                $('#ServiceChargeIsPercentage').val(serviceChargeIsPercentage);
                                 
                                 // Set the formatted service charge text in the #serviceCharge element
                                 $('#serviceCharge').text('(%): '+serviceCharge.toLocaleString(undefined, {
@@ -783,6 +789,9 @@ if ($result) {
                             } else {
 
                                 var serviceCharge = parseFloat(response.ServiceCharge);  // Ensure serviceCharge is treated as a float
+                                var serviceChargeIsPercentage = parseFloat(response.ServiceCharge_IsPercentage);
+
+                                $('#ServiceChargeIsPercentage').val(serviceChargeIsPercentage);
                                 
                                 // Set the formatted service charge text in the #serviceCharge element
                                 $('#serviceCharge').text('(LKR): '+serviceCharge.toLocaleString(undefined, {
@@ -801,8 +810,11 @@ if ($result) {
                             if (response.Tax_IsPercentage === "1") {
                                 
                                 var taxCharge = parseFloat(response.Tax);  // Ensure taxCharge is treated as a float
+                                var taxChargeIsPercentage = parseFloat(response.Tax_IsPercentage);
+
+                                $('#TaxIsPercentage').val(taxChargeIsPercentage);
                                 
-                                // Set the formatted service charge text in the #taxCharge element
+                                // Set the formatted tax charge text in the #taxCharge element
                                 $('#taxCharge').text('(%): '+taxCharge.toLocaleString(undefined, {
                                     minimumFractionDigits: 2,
                                     maximumFractionDigits: 2
@@ -817,6 +829,9 @@ if ($result) {
 
                             } else {
                                 var taxCharge = parseFloat(response.Tax);  // Ensure taxCharge is treated as a float
+                                var taxChargeIsPercentage = parseFloat(response.Tax_IsPercentage);
+
+                                $('#TaxIsPercentage').val(taxChargeIsPercentage);
                                 
                                 // Set the formatted service charge text in the #taxCharge element
                                 $('#taxCharge').text('(LKR): '+taxCharge.toLocaleString(undefined, {
@@ -835,9 +850,12 @@ if ($result) {
                             if (response.Vat_IsPercentage === "1") {
                                 
                                 var vatCharge = parseFloat(response.Vat);  // Ensure vatCharge is treated as a float
+                                var vatChargeIsPercentage = parseFloat(response.Vat_IsPercentage);
+
+                                $('#VatIsPercentage').val(vatChargeIsPercentage);
                                 
                                 // Set the formatted vat charge text in the #vatCharge element
-                                $('#vatCharge').text('(LKR): '+vatCharge.toLocaleString(undefined, {
+                                $('#vatCharge').text('(%): '+vatCharge.toLocaleString(undefined, {
                                     minimumFractionDigits: 2,
                                     maximumFractionDigits: 2
                                 })).show();
@@ -850,6 +868,9 @@ if ($result) {
 
                             } else {
                                 var vatCharge = parseFloat(response.Vat);  // Ensure vatCharge is treated as a float
+                                var vatChargeIsPercentage = parseFloat(response.Vat_IsPercentage);
+
+                                $('#VatIsPercentage').val(vatChargeIsPercentage);
                                 
                                 // Set the formatted vat charge text in the #vatCharge element
                                 $('#vatCharge').text('(LKR): '+vatCharge.toLocaleString(undefined, {
@@ -870,7 +891,6 @@ if ($result) {
                     });
                 }
 
-                // Call fetchSystemDetails function to load profile details when the page is ready
                 fetchSystemDetails();
 
                 // Handle unit price input validation
@@ -1246,10 +1266,18 @@ if ($result) {
 
                     });
 
+                    var serviceChargeIsPercentage = $('#ServiceChargeIsPercentage').val();
+                    var taxIsPercentage = $('#TaxIsPercentage').val();
+                    var vatIsPercentage = $('#VatIsPercentage').val();
+
                     // Get Additional Charges
-                    var serviceCharge = parseFloat($('#Service_Charge').val().replace(/,/g, '')) || 0;
-                    var taxCharge = parseFloat($('#Tax_Charge').val().replace(/,/g, '')) || 0;
-                    var vatCharge = parseFloat($('#Vat_Charge').val().replace(/,/g, '')) || 0;
+                    var tempServiceCharge = parseFloat($('#Service_Charge').val().replace(/,/g, '')) || 0;
+                    var tempTaxCharge = parseFloat($('#Tax_Charge').val().replace(/,/g, '')) || 0;
+                    var tempVatCharge = parseFloat($('#Vat_Charge').val().replace(/,/g, '')) || 0;
+
+                    var serviceCharge = (serviceChargeIsPercentage === "1") ? (tempServiceCharge / 100) * grandTotal : tempServiceCharge;
+                    var taxCharge = (taxIsPercentage === "1") ? (tempTaxCharge / 100) * grandTotal : tempTaxCharge;
+                    var vatCharge = (vatIsPercentage === "1") ? (tempVatCharge / 100) * grandTotal : tempVatCharge;
 
                     // Add Additional Charges to Grand Total
                     grandTotal += serviceCharge + taxCharge + vatCharge;

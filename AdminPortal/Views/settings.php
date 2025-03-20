@@ -329,7 +329,7 @@
 																		<input type="radio" id="flat" name="Service_Charge_Type" class="form-check-input service-charge" value="0">
 																		<label class="form-check-label" for="flat">Flat (LKR)</label>
 																	</div>
-																	<input type="number" class="form-control mt-2" min="1" step="any" required name="serviceCharge" id="serviceCharge">
+																	<input type="number" class="form-control mt-2" min="0" step="any" required name="serviceCharge" id="serviceCharge">
 																</div>
 															</div>
 
@@ -344,7 +344,7 @@
 																		<input type="radio" id="flat" name="Tax_Charge_Type" class="form-check-input tax-charge" value="0">
 																		<label class="form-check-label" for="flat">Flat (LKR)</label>
 																	</div>
-																	<input type="number" class="form-control mt-2" min="1" step="any" required name="taxCharge" id="taxCharge">
+																	<input type="number" class="form-control mt-2" min="0" step="any" required name="taxCharge" id="taxCharge">
 																</div>
 															</div>
 
@@ -359,7 +359,7 @@
 																		<input type="radio" id="flat" name="Vat_Charge_Type" class="form-check-input vat-charge" value="0">
 																		<label class="form-check-label" for="flat">Flat (LKR)</label>
 																	</div>
-																	<input type="number" class="form-control mt-2" min="1" step="any" required name="vatCharge" id="vatCharge">
+																	<input type="number" class="form-control mt-2" min="0" step="any" required name="vatCharge" id="vatCharge">
 																</div>
 															</div>
 														</div>

@@ -11,7 +11,7 @@ $Vat_Charge_Type = $_POST['Vat_Charge_Type'];
 $vatCharge = $_POST['vatCharge'];
 
 // Validate required fields
-if (empty($Configuration_Id) || empty($serviceCharge) || empty($taxCharge) || empty($vatCharge)) {
+if (empty($Configuration_Id) || !isset($serviceCharge) || !isset($taxCharge) || !isset($vatCharge)) {
     $myObj = new \stdClass();
     $myObj->success = 'false';
     $myObj->error = 'empty';
