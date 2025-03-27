@@ -18,7 +18,9 @@ if ($result->num_rows > 0) {
         "Tax_IsPercentage" => $row["Tax_IsPercentage"],
         "Tax" => $row["Tax"],
         "Vat_IsPercentage" => $row["Vat_IsPercentage"],
-        "Vat" => $row["Vat"]
+        "Vat" => $row["Vat"],
+        "Delivery_IsPercentage" => $row["Delivery_IsPercentage"],
+        "Delivery" => $row["Delivery"]
     );
 
     echo json_encode($response); // Return JSON without array

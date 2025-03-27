@@ -9,9 +9,11 @@ $Tax_Charge_Type = $_POST['Tax_Charge_Type'];
 $taxCharge = $_POST['taxCharge'];
 $Vat_Charge_Type = $_POST['Vat_Charge_Type'];
 $vatCharge = $_POST['vatCharge'];
+$Delivery_Charge_Type = $_POST['Delivery_Charge_Type'];
+$deliveryCharge = $_POST['deliveryCharge'];
 
 // Validate required fields
-if (empty($Configuration_Id) || !isset($serviceCharge) || !isset($taxCharge) || !isset($vatCharge)) {
+if (empty($Configuration_Id) || !isset($serviceCharge) || !isset($deliveryCharge) || !isset($taxCharge) || !isset($vatCharge)) {
     $myObj = new \stdClass();
     $myObj->success = 'false';
     $myObj->error = 'empty';
@@ -31,7 +33,9 @@ if (mysqli_num_rows($updateResult) > 0) {
                     `Tax_IsPercentage` = '$Tax_Charge_Type', 
                     `Tax` = '$taxCharge',
                     `Vat_IsPercentage` = $Vat_Charge_Type,
-                    `Vat` = $vatCharge 
+                    `Vat` = $vatCharge,
+                    `Delivery_IsPercentage` = $Delivery_Charge_Type,
+                    `Delivery` =  $deliveryCharge
                     WHERE `Id` = '$Configuration_Id';";
 
     if (mysqli_query($conn, $updateQuery)) {

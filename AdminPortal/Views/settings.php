@@ -317,7 +317,7 @@
 												<div class="col-md-10 col-lg-12">
 													<form method="POST" action="../../API/Admin/updateConfiguration.php" id="updateConfigurationForm" enctype="multipart/form-data">
 														<div class="form-group row">
-															<div class="col-md-4">
+															<div class="col-md-3">
 																<label class="font-weight-bold">Service Charge</label><label class="text-danger">*</label>
 																<input style="display:none;" type="text" name="Configuration_Id" class="form-control" id="FormConfigurationId" readonly="true" required="">
 																<div class="service-charge">
@@ -333,7 +333,22 @@
 																</div>
 															</div>
 
-															<div class="col-md-4">
+															<div class="col-md-3">
+																<label class="font-weight-bold">Delivery Charge</label><label class="text-danger">*</label>
+																<div class="delivery-charge">
+																	<div class="form-check form-check-inline">
+																		<input type="radio" id="percentage" name="Delivery_Charge_Type" class="form-check-input delivery-charge" value="1" checked>
+																		<label class="form-check-label" for="percentage">Percentage (%)</label>
+																	</div>
+																	<div class="form-check form-check-inline">
+																		<input type="radio" id="flat" name="Delivery_Charge_Type" class="form-check-input delivery-charge" value="0">
+																		<label class="form-check-label" for="flat">Flat (LKR)</label>
+																	</div>
+																	<input type="number" class="form-control mt-2" min="0" step="any" required name="deliveryCharge" id="deliveryCharge">
+																</div>
+															</div>
+
+															<div class="col-md-3">
 																<label class="font-weight-bold">Tax Charge</label><label class="text-danger">*</label>
 																<div class="tax-charge">
 																	<div class="form-check form-check-inline">
@@ -348,7 +363,7 @@
 																</div>
 															</div>
 
-															<div class="col-md-4">
+															<div class="col-md-3">
 																<label class="font-weight-bold">VAT Charge</label><label class="text-danger">*</label>
 																<div class="vat-charge">
 																	<div class="form-check form-check-inline">
@@ -408,6 +423,11 @@
 		// Clear input field when changing Service Charge type
 		$('input[name="Service_Charge_Type"]').change(function () {
 			$('#serviceCharge').val('');
+		});
+
+		// Clear input field when changing Delivery Charge type
+		$('input[name="Delivery_Charge_Type"]').change(function () {
+			$('#deliveryCharge').val('');
 		});
 
 		// Clear input field when changing Tax Charge type
@@ -524,6 +544,13 @@
 						$('input[name="Service_Charge_Type"][value="0"]').prop('checked', true);
 					}
 
+					//Delivery Charge
+					if (response.DeliveryCharge_IsPercentage === "1") {
+						$('input[name="Delivery_Charge_Type"][value="1"]').prop('checked', true);
+					} else {
+						$('input[name="Delivery_Charge_Type"][value="0"]').prop('checked', true);
+					}
+
 					// Tax Charge
 					if (response.Tax_IsPercentage === "1") {
 						$('input[name="Tax_Charge_Type"][value="1"]').prop('checked', true);
@@ -539,6 +566,7 @@
 					}
 
 					$('#serviceCharge').val(response.ServiceCharge);
+					$('#deliveryCharge').val(response.Delivery);
                     $('#taxCharge').val(response.Tax);
 					$('#vatCharge').val( response.Vat);
                 },
