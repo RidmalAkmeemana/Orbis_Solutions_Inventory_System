@@ -272,20 +272,39 @@
 											</div>
 										</div>
 										<div style="margin-top:17px;" class="row">
-											<div class="col-md-3 text-left mt-4">
+											<div class="col-md-4 text-left mt-4">
 												<h6 class="text-xs font-weight-bold mb-1">No. of Items: <span id="itemCount" class="font-weight-bold"></span></h6>
 											</div>
-											<div class="col-md-3 text-left mt-4">
+											<div class="col-md-4 text-left mt-4">
 												<h6 class="text-xs font-weight-bold mb-1">Sub Total (LKR): <span id="subTotal" class="font-weight-bold"></span></h6>
 											</div>
-											<div class="col-md-3 text-right mt-4">
+											<div class="col-md-4 text-right mt-4">
 												<h6 class="text-xs font-weight-bold mb-1">Discount (LKR): <span id="discountTotal" class="font-weight-bold"></span></h6>
 											</div>
+										</div>
+
+										<div style="margin-top:17px;" class="row">
+											<div class="col-md-3 text-left mt-4">
+												<h6 class="text-xs font-weight-bold mb-1">Service Charge <span id="serviceCharge" class="font-weight-bold">0.00</span></h6>
+											</div>
+											<div class="col-md-3 text-left mt-4">
+												<h6 class="text-xs font-weight-bold mb-1" id="taxChargeLabel">Tax <span id="taxCharge" class="font-weight-bold">0.00</span></h6>
+											</div>
 											<div class="col-md-3 text-right mt-4">
+												<h6 class="text-xs font-weight-bold mb-1" id="vatChargeLabel">Vat <span id="vatCharge" class="font-weight-bold">0.00</span></h6>
+											</div>
+											<div class="col-md-3 text-right mt-4">
+												<h6 class="text-xs font-weight-bold mb-1" id="deliveryChargeLabel">Delivery Charge <span id="deliveryCharge" class="font-weight-bold">0.00</span></h6>
+											</div>
+										</div>
+
+										<div style="margin-top:17px;" class="row">
+											<div class="col-md-12 text-right mt-4">
 												<h6 style="display:none;" class="text-xs font-weight-bold mb-1">Total Profit (LKR): <span id="profitTotal" class="font-weight-bold"></span></h6>
 												<h6 class="text-xs font-weight-bold mb-1">GRAND TOTAL (LKR): <span id="grandTotal" class="font-weight-bold"></span></h6>
 											</div>
 										</div>
+
 										<div class="row">
 											<div class="col-md-12 text-left mt-4">
 												<h5 class="page-title">
@@ -605,6 +624,99 @@
                     $('#itemCount').text(response.InvoiceData.Item_Count);
                     $('#subTotal').text(response.InvoiceData.Sub_Total);
                     $('#discountTotal').text(response.InvoiceData.Discount_Total);
+
+					//Service Charge
+					if (response.InvoiceData.ServiceCharge_IsPercentage === "1") {
+                                
+                                var serviceCharge = parseFloat(response.InvoiceData.ServiceCharge);  // Ensure serviceCharge is treated as a float
+                                
+                                // Set the formatted service charge text in the #serviceCharge element
+                                document.getElementById('serviceCharge').innerText = response.InvoiceData.ServiceCharge;
+                                $('#serviceCharge').text('(%): '+serviceCharge.toLocaleString(undefined, {
+                                    minimumFractionDigits: 2,
+                                    maximumFractionDigits: 2
+                                })).show();
+
+                            } else {
+
+                                var serviceCharge = parseFloat(response.ServiceCharge);  // Ensure serviceCharge is treated as a float
+                        
+                                // Set the formatted service charge text in the #serviceCharge element
+                                $('#serviceCharge').text('(LKR): '+serviceCharge.toLocaleString(undefined, {
+                                    minimumFractionDigits: 2,
+                                    maximumFractionDigits: 2
+                                })).show();
+                            }
+
+                            //Tax Charge
+                            if (response.InvoiceData.Tax_IsPercentage === "1") {
+                                
+                                var tax = parseFloat(response.InvoiceData.Tax);  // Ensure taxCharge is treated as a float
+                                
+                                // Set the formatted tax charge text in the #taxCharge element
+                                document.getElementById('taxCharge').innerText = response.InvoiceData.Tax;
+                                $('#taxCharge').text('(%): '+tax.toLocaleString(undefined, {
+                                    minimumFractionDigits: 2,
+                                    maximumFractionDigits: 2
+                                })).show();
+
+                            } else {
+
+                                var tax = parseFloat(response.InvoiceData.Tax);  // Ensure tax is treated as a float
+                        
+                                // Set the formatted tax charge text in the #tax element
+                                $('#taxCharge').text('(LKR): '+tax.toLocaleString(undefined, {
+                                    minimumFractionDigits: 2,
+                                    maximumFractionDigits: 2
+                                })).show();
+                            }
+
+                            //Vat Charge
+                            if (response.InvoiceData.Vat_IsPercentage === "1") {
+                                
+                                var vat = parseFloat(response.InvoiceData.Vat);  // Ensure vat is treated as a float
+                                
+                                // Set the formatted vat charge text in the #vatCharge element
+                                document.getElementById('vatCharge').innerText = response.InvoiceData.Tax;
+                                $('#vatCharge').text('(%): '+vat.toLocaleString(undefined, {
+                                    minimumFractionDigits: 2,
+                                    maximumFractionDigits: 2
+                                })).show();
+
+                            } else {
+
+                                var vat = parseFloat(response.InvoiceData.Vat);  // Ensure vatCharge is treated as a float
+                        
+                                // Set the formatted vat charge text in the #vatCharge element
+                                $('#vatCharge').text('(LKR): '+vat.toLocaleString(undefined, {
+                                    minimumFractionDigits: 2,
+                                    maximumFractionDigits: 2
+                                })).show();
+                            }
+
+                            //Delivery Charge
+                            if (response.InvoiceData.Delivery_IsPercentage === "1") {
+                                
+                                var delivery = parseFloat(response.InvoiceData.Delivery);  // Ensure delivery is treated as a float
+                                
+                                // Set the formatted delivery charge text in the #deliveryCharge element
+                                document.getElementById('deliveryCharge').innerText = response.InvoiceData.Delivery;
+                                $('#deliveryCharge').text('(%): '+delivery.toLocaleString(undefined, {
+                                    minimumFractionDigits: 2,
+                                    maximumFractionDigits: 2
+                                })).show();
+
+                            } else {
+
+                                var delivery = parseFloat(response.InvoiceData.Delivery);  // Ensure delivery is treated as a float
+                        
+                                // Set the formatted delivery charge text in the #deliveryCharge element
+                                $('#deliveryCharge').text('(LKR): '+delivery.toLocaleString(undefined, {
+                                    minimumFractionDigits: 2,
+                                    maximumFractionDigits: 2
+                                })).show();
+                            }
+
                     $('#grandTotal').text(response.InvoiceData.Grand_Total);
                     $('#paidAmount').text(response.InvoiceData.Paid_Amount);
                     $('#balanceAmount').text(response.InvoiceData.Balance_Total);

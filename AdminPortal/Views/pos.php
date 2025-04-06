@@ -529,24 +529,24 @@ if ($result) {
 
                                                     <div style="margin-top:17px;" class="row">
                                                         <div class="col-md-3 text-left mt-4">
-                                                            <input style="width: auto; display:;" type="text" id="ServiceChargeIsPercentage" class="form-control text-right" readonly required>
+                                                            <input style="width: auto; display:none;" type="text" id="ServiceChargeIsPercentage" name="Service_Charge_Type" class="form-control text-right" readonly required>
                                                             <h6 class="text-xs font-weight-bold mb-1">Service Charge <span id="serviceCharge" class="font-weight-bold">0.00</span></h6>
-                                                            <input style="width: auto; display:;" type="text" id="Service_Charge" name="Service_Charge[]" class="form-control text-right" readonly required>
+                                                            <input style="width: auto; display:none;" type="text" id="Service_Charge" name="Service_Charge" class="form-control text-right" readonly required>
                                                         </div>
                                                         <div class="col-md-3 text-left mt-4">
-                                                            <input style="width: auto; display:;" type="text" id="TaxIsPercentage" class="form-control text-right" readonly required>
+                                                            <input style="width: auto; display:none;" type="text" id="TaxIsPercentage" name="Tax_Charge_Type" class="form-control text-right" readonly required>
                                                             <h6 class="text-xs font-weight-bold mb-1" id="taxChargeLabel">Tax <span id="taxCharge" class="font-weight-bold">0.00</span></h6>
-                                                            <input style="width: auto; display:;" type="text" id="Tax_Charge" name="Tax_Charge[]" class="form-control text-right" readonly required>
+                                                            <input style="width: auto; display:none;" type="text" id="Tax_Charge" name="Tax_Charge" class="form-control text-right" readonly required>
                                                         </div>
                                                         <div class="col-md-3 text-right mt-4">
-                                                            <input style="width: auto; display:;" type="text" id="VatIsPercentage" class="form-control text-right" readonly required>
+                                                            <input style="width: auto; display:none;" type="text" id="VatIsPercentage" name="Vat_Charge_Type" class="form-control text-right" readonly required>
                                                             <h6 class="text-xs font-weight-bold mb-1" id="vatChargeLabel">Vat <span id="vatCharge" class="font-weight-bold">0.00</span></h6>
-                                                            <input style="width: auto; display:;" type="text" id="Vat_Charge" name="Vat_Charge[]" class="form-control text-right" readonly required>
+                                                            <input style="width: auto; display:none;" type="text" id="Vat_Charge" name="Vat_Charge" class="form-control text-right" readonly required>
                                                         </div>
                                                         <div class="col-md-3 text-right mt-4">
-                                                            <input style="width: auto; display:;" type="text" id="DeliveryIsPercentage" class="form-control text-right" readonly required>
+                                                            <input style="width: auto; display:none;" type="text" id="DeliveryIsPercentage" name="Delivery_Charge_Type" class="form-control text-right" readonly required>
                                                             <h6 class="text-xs font-weight-bold mb-1" id="deliveryChargeLabel">Delivery Charge <span id="deliveryCharge" class="font-weight-bold">0.00</span></h6>
-                                                            <input style="width: auto; display:;" type="text" id="Delivery_Charge" name="Delivery_Charge[]" class="form-control text-right" readonly required>
+                                                            <input style="width: auto; display:none;" type="text" id="Delivery_Charge" name="Delivery_Charge" class="form-control text-right" readonly required>
                                                         </div>
                                                     </div>
 
@@ -786,7 +786,7 @@ if ($result) {
                                 })).show();
 
                                 // Format the service charge with two decimal places and comma separation
-                                $('input[name="Service_Charge[]"]').val(serviceCharge.toLocaleString(undefined, {
+                                $('input[name="Service_Charge"]').val(serviceCharge.toLocaleString(undefined, {
                                     minimumFractionDigits: 2,
                                     maximumFractionDigits: 2
                                 }));
@@ -805,7 +805,7 @@ if ($result) {
                                 })).show();
 
                                 // Format the service charge with two decimal places and comma separation
-                                $('input[name="Service_Charge[]"]').val(serviceCharge.toLocaleString(undefined, {
+                                $('input[name="Service_Charge"]').val(serviceCharge.toLocaleString(undefined, {
                                     minimumFractionDigits: 2,
                                     maximumFractionDigits: 2
                                 }));
@@ -826,7 +826,7 @@ if ($result) {
                                 })).show();
 
                                 // Format the tax charge with two decimal places and comma separation
-                                $('input[name="Tax_Charge[]"]').val(taxCharge.toLocaleString(undefined, {
+                                $('input[name="Tax_Charge"]').val(taxCharge.toLocaleString(undefined, {
                                     minimumFractionDigits: 2,
                                     maximumFractionDigits: 2
                                 }));
@@ -845,7 +845,7 @@ if ($result) {
                                 })).show();
 
                                 // Format the tax charge with two decimal places and comma separation
-                                $('input[name="Tax_Charge[]"]').val(taxCharge.toLocaleString(undefined, {
+                                $('input[name="Tax_Charge"]').val(taxCharge.toLocaleString(undefined, {
                                     minimumFractionDigits: 2,
                                     maximumFractionDigits: 2
                                 }));
@@ -866,7 +866,7 @@ if ($result) {
                                 })).show();
 
                                 // Format the vat charge with two decimal places and comma separation
-                                $('input[name="Vat_Charge[]"]').val(vatCharge.toLocaleString(undefined, {
+                                $('input[name="Vat_Charge"]').val(vatCharge.toLocaleString(undefined, {
                                     minimumFractionDigits: 2,
                                     maximumFractionDigits: 2
                                 }));
@@ -884,7 +884,7 @@ if ($result) {
                                 })).show();
 
                                 // Format the vat charge with two decimal places and comma separation
-                                $('input[name="Vat_Charge[]"]').val(vatCharge.toLocaleString(undefined, {
+                                $('input[name="Vat_Charge"]').val(vatCharge.toLocaleString(undefined, {
                                     minimumFractionDigits: 2,
                                     maximumFractionDigits: 2
                                 }));
@@ -905,7 +905,7 @@ if ($result) {
                                 })).show();
 
                                 // Format the delivery charge with two decimal places and comma separation
-                                $('input[name="Delivery_Charge[]"]').val(deliveryCharge.toLocaleString(undefined, {
+                                $('input[name="Delivery_Charge"]').val(deliveryCharge.toLocaleString(undefined, {
                                     minimumFractionDigits: 2,
                                     maximumFractionDigits: 2
                                 }));
@@ -923,7 +923,7 @@ if ($result) {
                                 })).show();
 
                                 // Format the delivery charge with two decimal places and comma separation
-                                $('input[name="Delivery_Charge[]"]').val(deliveryCharge.toLocaleString(undefined, {
+                                $('input[name="Delivery_Charge"]').val(deliveryCharge.toLocaleString(undefined, {
                                     minimumFractionDigits: 2,
                                     maximumFractionDigits: 2
                                 }));

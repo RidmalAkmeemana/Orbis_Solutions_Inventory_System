@@ -23,6 +23,14 @@ $userId = $_POST['User_Id'];
 $itemCount = $_POST['Item_Count'];
 $subTotal = str_replace(',', '', $_POST['Sub_Total']);
 $discountTotal = str_replace(',', '', $_POST['Discount_Total']);
+$serviceChargeType = $_POST['Service_Charge_Type'];
+$serviceCharge = str_replace(',', '', $_POST['Service_Charge']);
+$taxChargeType = $_POST['Tax_Charge_Type'];
+$taxCharge = str_replace(',', '', $_POST['Tax_Charge']);
+$vatChargeType = $_POST['Vat_Charge_Type'];
+$vatCharge = str_replace(',', '', $_POST['Vat_Charge']);
+$deliveryChargeType = $_POST['Delivery_Charge_Type'];
+$deliveryCharge = str_replace(',', '', $_POST['Delivery_Charge']);
 $profitTotal = str_replace(',', '', $_POST['Profit_Total']);
 $grandTotal = str_replace(',', '', $_POST['Grand_Total']);
 $paidAmount = str_replace(',', '', $_POST['Paid_Amount']);
@@ -106,9 +114,9 @@ for ($i = 0; $i < count($productIds); $i++) {
 
 // Insert invoice data into tbl_invoice
 $insertInvoiceSQL = "INSERT INTO tbl_invoice 
-    (Invoice_Id, Customer_Id, User_Id, Sale_Type, Item_Count, Status, Sub_Total, Discount_Total, Profit_Total, Grand_Total, Paid_Amount, Balance_Total, Due_Total, Payment_Type, Description, Invoice_Date, Payment_Date)
+    (Invoice_Id, Customer_Id, User_Id, Sale_Type, Item_Count, Status, Sub_Total, Discount_Total, ServiceCharge_IsPercentage, ServiceCharge, Tax_IsPercentage, Tax, Vat_IsPercentage, Vat, Delivery_IsPercentage, Delivery, Profit_Total, Grand_Total, Paid_Amount, Balance_Total, Due_Total, Payment_Type, Description, Invoice_Date, Payment_Date)
     VALUES 
-    ('$invoiceId', '$customerId', '$userId', '$saleType', '$itemCount', '$status', '$subTotal', '$discountTotal', '$profitTotal', '$grandTotal', '$paidAmount', '$balanceTotal', '$dueTotal', '$paymentMethod', $description, '$currentDateTime', $paymentDate)";
+    ('$invoiceId', '$customerId', '$userId', '$saleType', '$itemCount', '$status', '$subTotal', '$discountTotal', '$serviceChargeType', '$serviceCharge', '$taxChargeType', '$taxCharge', '$vatChargeType', '$vatCharge', '$deliveryChargeType', '$deliveryCharge', '$profitTotal', '$grandTotal', '$paidAmount', '$balanceTotal', '$dueTotal', '$paymentMethod', $description, '$currentDateTime', $paymentDate)";
 
 if (!mysqli_query($conn, $insertInvoiceSQL)) {
     $response = new \stdClass();

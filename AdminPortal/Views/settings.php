@@ -545,7 +545,7 @@
 					}
 
 					//Delivery Charge
-					if (response.DeliveryCharge_IsPercentage === "1") {
+					if (response.Delivery_IsPercentage === "1") {
 						$('input[name="Delivery_Charge_Type"][value="1"]').prop('checked', true);
 					} else {
 						$('input[name="Delivery_Charge_Type"][value="0"]').prop('checked', true);

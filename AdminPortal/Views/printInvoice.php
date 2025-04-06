@@ -173,42 +173,53 @@
                 </div>
 
                 <div class="row invoice-payment">
-                    <div class="col-sm-7"></div>
-                    <div class="col-sm-5">
+                    <div class="col-sm-12">
                         <div class="m-b-20">
                             <div class="table-responsive no-border">
                                 <table class="table">
-                                    <tbody>
+                                    <thead>
+                                    <tr>
                                         <th style="font-family: Arial; font-size: 17px;">
-                                            Sub Total (LKR): <span style="float: right;" id="sub_Total"></span>
+                                            Discount (LKR): <span id="discount_Total"></span>
                                         </th>
-                                            <tr>
-                                                <th style="font-family: Arial; font-size: 17px;">
-                                                    Discount (LKR): <span style="float: right;" id="discount_Total"></span>
-                                                </th>
-                                            </tr>
-                                            <tr>
-                                                <th style="font-family: Arial; font-size: 17px;">
-                                                    GRAND TOTAL (LKR): <span style="float: right;" id="grand_Total"></span>
-                                                </th>
-                                            </tr>
-                                            <tr>
-                                                <th style="font-family: Arial; font-size: 17px;">
-                                                    Paid Amount (LKR): <span style="float: right;" id="paid_Amount"></span>
-                                                </th>
-                                            </tr>
-                                            <tr>
-                                                <th style="font-family: Arial; font-size: 17px;">
-                                                    Due (LKR): <span style="float: right;" id="due_Amount"></span>
-                                                </th>
-                                            </tr>
-                                            <tr>
-                                                <th style="font-family: Arial; font-size: 17px;">
-                                                    Balance (LKR): <span style="float: right;" id="balance_Amount"></span>
-                                                </th>
-                                            </tr>
-                                            <tr></tr>
-                                    </tbody>
+                                        <th style="font-family: Arial; font-size: 17px; float:right;">
+                                            Sub Total (LKR): <span id="sub_Total"></span>
+                                        </th>
+                                    </tr>
+                                    <tr>
+                                        <th style="font-family: Arial; font-size: 17px;">
+                                            Service Charge <span id="service_Charge"></span>
+                                        </th>
+                                        <th style="font-family: Arial; font-size: 17px; float:right;">
+                                            GRAND TOTAL (LKR): <span id="grand_Total"></span>
+                                        </th>
+                                    </tr>
+                                    <tr>
+                                        <th style="font-family: Arial; font-size: 17px;">
+                                            Tax <span id="tax"></span>
+                                        </th>
+                                        <th style="font-family: Arial; font-size: 17px; float:right;">
+                                            Paid Amount (LKR): <span id="paid_Amount"></span>
+                                        </th>
+                                    </tr>
+                                    <tr>
+                                        <th style="font-family: Arial; font-size: 17px;">
+                                            Vat <span id="vat"></span>
+                                        </th>
+                                        <th style="font-family: Arial; font-size: 17px; float:right;">
+                                            Due (LKR): <span id="due_Amount"></span>
+                                        </th>
+                                    </tr>
+                                    <tr>
+                                        <th style="font-family: Arial; font-size: 17px;">
+                                            Delivery Charge <span id="delivery_Charge"></span>
+                                        </th>
+                                        <th style="font-family: Arial; font-size: 17px; float:right;">
+                                            Balance (LKR): <span id="balance_Amount"></span>
+                                        </th>
+                                    </tr>
+                                    <tr></tr>
+                                    </thead>
                                 </table>
                             </div>
                         </div>
@@ -325,6 +336,99 @@
             document.getElementById('status').innerText = invoice.Status;
             document.getElementById('sub_Total').innerText = invoice.Sub_Total;
             document.getElementById('discount_Total').innerText = invoice.Discount_Total;
+
+                            //Service Charge
+                            if (invoice.ServiceCharge_IsPercentage === "1") {
+                                
+                                var serviceCharge = parseFloat(invoice.ServiceCharge);  // Ensure serviceCharge is treated as a float
+                                
+                                // Set the formatted service charge text in the #serviceCharge element
+                                document.getElementById('service_Charge').innerText = invoice.ServiceCharge;
+                                $('#service_Charge').text('(%): '+serviceCharge.toLocaleString(undefined, {
+                                    minimumFractionDigits: 2,
+                                    maximumFractionDigits: 2
+                                })).show();
+
+                            } else {
+
+                                var serviceCharge = parseFloat(response.ServiceCharge);  // Ensure serviceCharge is treated as a float
+                        
+                                // Set the formatted service charge text in the #serviceCharge element
+                                $('#service_Charge').text('(LKR): '+serviceCharge.toLocaleString(undefined, {
+                                    minimumFractionDigits: 2,
+                                    maximumFractionDigits: 2
+                                })).show();
+                            }
+
+                            //Tax Charge
+                            if (invoice.Tax_IsPercentage === "1") {
+                                
+                                var tax = parseFloat(invoice.Tax);  // Ensure tax is treated as a float
+                                
+                                // Set the formatted tax charge text in the #tax element
+                                document.getElementById('tax').innerText = invoice.Tax;
+                                $('#tax').text('(%): '+tax.toLocaleString(undefined, {
+                                    minimumFractionDigits: 2,
+                                    maximumFractionDigits: 2
+                                })).show();
+
+                            } else {
+
+                                var tax = parseFloat(invoice.Tax);  // Ensure tax is treated as a float
+                        
+                                // Set the formatted tax charge text in the #tax element
+                                $('#tax').text('(LKR): '+tax.toLocaleString(undefined, {
+                                    minimumFractionDigits: 2,
+                                    maximumFractionDigits: 2
+                                })).show();
+                            }
+
+                            //Vat Charge
+                            if (invoice.Vat_IsPercentage === "1") {
+                                
+                                var vat = parseFloat(invoice.Vat);  // Ensure vat is treated as a float
+                                
+                                // Set the formatted vat charge text in the #vat element
+                                document.getElementById('vat').innerText = invoice.Tax;
+                                $('#vat').text('(%): '+vat.toLocaleString(undefined, {
+                                    minimumFractionDigits: 2,
+                                    maximumFractionDigits: 2
+                                })).show();
+
+                            } else {
+
+                                var vat = parseFloat(invoice.Vat);  // Ensure vat is treated as a float
+                        
+                                // Set the formatted vat charge text in the #vat element
+                                $('#vat').text('(LKR): '+vat.toLocaleString(undefined, {
+                                    minimumFractionDigits: 2,
+                                    maximumFractionDigits: 2
+                                })).show();
+                            }
+
+                            //Delivery Charge
+                            if (invoice.Delivery_IsPercentage === "1") {
+                                
+                                var delivery = parseFloat(invoice.Delivery);  // Ensure delivery is treated as a float
+                                
+                                // Set the formatted delivery charge text in the #delivery_Charge element
+                                document.getElementById('delivery_Charge').innerText = invoice.Delivery;
+                                $('#delivery_Charge').text('(%): '+delivery.toLocaleString(undefined, {
+                                    minimumFractionDigits: 2,
+                                    maximumFractionDigits: 2
+                                })).show();
+
+                            } else {
+
+                                var delivery = parseFloat(invoice.Delivery);  // Ensure delivery is treated as a float
+                        
+                                // Set the formatted delivery charge text in the #delivery_Charge element
+                                $('#delivery_Charge').text('(LKR): '+delivery.toLocaleString(undefined, {
+                                    minimumFractionDigits: 2,
+                                    maximumFractionDigits: 2
+                                })).show();
+                            }
+
             document.getElementById('grand_Total').innerText = invoice.Grand_Total;
             document.getElementById('paid_Amount').innerText = invoice.Paid_Amount;
             document.getElementById('balance_Amount').innerText = invoice.Balance_Total;
