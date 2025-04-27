@@ -420,72 +420,88 @@
 		<script>
     $(document).ready(function () {
 
-		// Clear input field when changing Service Charge type
-		$('input[name="Service_Charge_Type"]').change(function () {
-			$('#serviceCharge').val('');
-		});
-
-		// Clear input field when changing Delivery Charge type
-		$('input[name="Delivery_Charge_Type"]').change(function () {
-			$('#deliveryCharge').val('');
-		});
-
-		// Clear input field when changing Tax Charge type
-		$('input[name="Tax_Charge_Type"]').change(function () {
-			$('#taxCharge').val('');
-		});
-
-		// Clear input field when changing VAT Charge type
-		$('input[name="Vat_Charge_Type"]').change(function () {
-			$('#vatCharge').val('');
-		});
-
-        // Function to show and hide alerts based on response for updating
-        function showUpdateAlerts(response) {
-            // Hide the Add Update_Company modal before showing any alert modals
-			$('#Update_Company').modal('hide');
-			
-			if (response.success === 'true') {
-				// Show UpdateSuccessModel only if success is true
-				$('#UpdateSuccessModel').modal('show');
-			}else {
-				// Show UpdateFailedModel for any other failure scenario
-				$('#UpdateFailedModel').modal('show');
-			}
+        function setChargeAttributes(inputName, inputId) {
+            if ($('input[name="' + inputName + '"]:checked').val() === "1") {
+                // Percentage selected
+                $('#' + inputId).attr({
+                    'min': 0.00,
+                    'max': 99.99,
+                    'step': 'any'
+                });
+            } else {
+                // Flat selected
+                $('#' + inputId).removeAttr('max');
+                $('#' + inputId).attr({
+                    'min': 0.00,
+                    'step': 'any'
+                });
+            }
         }
 
-        // Function to show the modal when the "Edit Profile" button is clicked
+        function setupChargeHandler(inputName, inputId) {
+            setChargeAttributes(inputName, inputId);
+
+            $('input[name="' + inputName + '"]').change(function () {
+                $('#' + inputId).val('');
+                setChargeAttributes(inputName, inputId);
+            });
+
+            $('#' + inputId).on('input', function () {
+                let type = $('input[name="' + inputName + '"]:checked').val();
+                let value = parseFloat($(this).val());
+
+                if (type === "1" && value > 99.99) {
+                    $(this).val('99.99');
+                }
+            });
+        }
+
+        // Setup all charges
+        setupChargeHandler('Service_Charge_Type', 'serviceCharge');
+        setupChargeHandler('Delivery_Charge_Type', 'deliveryCharge');
+        setupChargeHandler('Tax_Charge_Type', 'taxCharge');
+        setupChargeHandler('Vat_Charge_Type', 'vatCharge');
+
+        // Existing your code below here unchanged
+        // -----------------------------------------
+
+        function showUpdateAlerts(response) {
+            $('#Update_Company').modal('hide');
+            if (response.success === 'true') {
+                $('#UpdateSuccessModel').modal('show');
+            } else {
+                $('#UpdateFailedModel').modal('show');
+            }
+        }
+
         $('#editProfileBtn').click(function () {
             $('#Update_Company').modal('show');
         });
 
-        // Function to fetch and display profile details
         function fetchCompanyDetails() {
             $.ajax({
                 type: 'GET',
                 url: '../../API/Admin/getCompanyDetails.php',
                 dataType: 'json',
                 success: function (response) {
+                    const CompanyTel2 = response.Company_Tel2 && response.Company_Tel2.trim() !== '' ? response.Company_Tel2 : 'N/A';
+                    const CompanyTel3 = response.Company_Tel3 && response.Company_Tel3.trim() !== '' ? response.Company_Tel3 : 'N/A';
 
-					// Ensure the correct field names are used
-					const CompanyTel2 = response.Company_Tel2 && response.Company_Tel2.trim() !== '' ? response.Company_Tel2 : 'N/A';
-            		const CompanyTel3 = response.Company_Tel3 && response.Company_Tel3.trim() !== '' ? response.Company_Tel3 : 'N/A';
-
-					$('#CompanyName').text(response.Company_Name);
+                    $('#CompanyName').text(response.Company_Name);
                     $('#CompanyName1').text(response.Company_Name);
-					$('#CompanyAddress').text( response.Company_Address);
+                    $('#CompanyAddress').text(response.Company_Address);
                     $('#CompanyEmail').text(response.Company_Email);
-					$('#CompanyTel1').text(response.Company_Tel1);
-					$('#CompanyTel2').text(CompanyTel2);
-					$('#CompanyTel3').text(CompanyTel3);
+                    $('#CompanyTel1').text(response.Company_Tel1);
+                    $('#CompanyTel2').text(CompanyTel2);
+                    $('#CompanyTel3').text(CompanyTel3);
 
-					$('#FormCompanyId').val(response.Company_Id);
+                    $('#FormCompanyId').val(response.Company_Id);
                     $('#FormCompanyName').val(response.Company_Name);
                     $('#my-text').val(response.Company_Address);
-					$('#FormCompanyEmail').val(response.Company_Email);
+                    $('#FormCompanyEmail').val(response.Company_Email);
                     $('#FormCompanyTel1').val(response.Company_Tel1);
-					$('#FormCompanyTel2').val(response.Company_Tel2);
-					$('#FormCompanyTel3').val(response.Company_Tel3);
+                    $('#FormCompanyTel2').val(response.Company_Tel2);
+                    $('#FormCompanyTel3').val(response.Company_Tel3);
                 },
                 error: function (xhr, status, error) {
                     console.error('Error:', status, error);
@@ -493,10 +509,8 @@
             });
         }
 
-        // Call fetchCompanyDetails function to load profile details when the page is ready
         fetchCompanyDetails();
 
-        // Function to update profile
         $('#updateCompanyForm').submit(function (event) {
             event.preventDefault();
             $.ajax({
@@ -507,68 +521,64 @@
                 contentType: false,
                 dataType: 'json',
                 success: function (response) {
-					// Parse the response as a JSON object (if not already parsed)
-					if (typeof response === 'string') {
-						response = JSON.parse(response);
-					}
+                    if (typeof response === 'string') {
+                        response = JSON.parse(response);
+                    }
 
                     showUpdateAlerts(response);
-
-					console.log(response);
-
-					fetchCompanyDetails();
-                    
+                    console.log(response);
+                    fetchCompanyDetails();
                 },
                 error: function (xhr, status, error) {
                     console.error('Error:', status, error);
-					$('#Update_Company').modal('hide');
-					$('#UpdateFailedModel').modal('show');
+                    $('#Update_Company').modal('hide');
+                    $('#UpdateFailedModel').modal('show');
                 }
             });
         });
 
-		// Function to fetch and display system details
         function fetchSystemDetails() {
             $.ajax({
                 type: 'GET',
                 url: '../../API/Admin/getSystemConfiguration.php',
                 dataType: 'json',
                 success: function (response) {
+                    $('#FormConfigurationId').val(response.Id);
 
-					$('#FormConfigurationId').val(response.Id);
+                    if (response.ServiceCharge_IsPercentage === "1") {
+                        $('input[name="Service_Charge_Type"][value="1"]').prop('checked', true);
+                    } else {
+                        $('input[name="Service_Charge_Type"][value="0"]').prop('checked', true);
+                    }
 
-					//Service Charge
-					if (response.ServiceCharge_IsPercentage === "1") {
-						$('input[name="Service_Charge_Type"][value="1"]').prop('checked', true);
-					} else {
-						$('input[name="Service_Charge_Type"][value="0"]').prop('checked', true);
-					}
+                    if (response.Delivery_IsPercentage === "1") {
+                        $('input[name="Delivery_Charge_Type"][value="1"]').prop('checked', true);
+                    } else {
+                        $('input[name="Delivery_Charge_Type"][value="0"]').prop('checked', true);
+                    }
 
-					//Delivery Charge
-					if (response.Delivery_IsPercentage === "1") {
-						$('input[name="Delivery_Charge_Type"][value="1"]').prop('checked', true);
-					} else {
-						$('input[name="Delivery_Charge_Type"][value="0"]').prop('checked', true);
-					}
+                    if (response.Tax_IsPercentage === "1") {
+                        $('input[name="Tax_Charge_Type"][value="1"]').prop('checked', true);
+                    } else {
+                        $('input[name="Tax_Charge_Type"][value="0"]').prop('checked', true);
+                    }
 
-					// Tax Charge
-					if (response.Tax_IsPercentage === "1") {
-						$('input[name="Tax_Charge_Type"][value="1"]').prop('checked', true);
-					} else {
-						$('input[name="Tax_Charge_Type"][value="0"]').prop('checked', true);
-					}
+                    if (response.Vat_IsPercentage === "1") {
+                        $('input[name="Vat_Charge_Type"][value="1"]').prop('checked', true);
+                    } else {
+                        $('input[name="Vat_Charge_Type"][value="0"]').prop('checked', true);
+                    }
 
-					// VAT Charge
-					if (response.Vat_IsPercentage === "1") {
-						$('input[name="Vat_Charge_Type"][value="1"]').prop('checked', true);
-					} else {
-						$('input[name="Vat_Charge_Type"][value="0"]').prop('checked', true);
-					}
-
-					$('#serviceCharge').val(response.ServiceCharge);
-					$('#deliveryCharge').val(response.Delivery);
+                    $('#serviceCharge').val(response.ServiceCharge);
+                    $('#deliveryCharge').val(response.Delivery);
                     $('#taxCharge').val(response.Tax);
-					$('#vatCharge').val( response.Vat);
+                    $('#vatCharge').val(response.Vat);
+
+                    // Set attributes correctly based on fetched values
+                    setupChargeHandler('Service_Charge_Type', 'serviceCharge');
+                    setupChargeHandler('Delivery_Charge_Type', 'deliveryCharge');
+                    setupChargeHandler('Tax_Charge_Type', 'taxCharge');
+                    setupChargeHandler('Vat_Charge_Type', 'vatCharge');
                 },
                 error: function (xhr, status, error) {
                     console.error('Error:', status, error);
@@ -576,10 +586,8 @@
             });
         }
 
-        // Call fetchSystemDetails function to load profile details when the page is ready
         fetchSystemDetails();
 
-		// Function to update profile password
         $('#updateConfigurationForm').submit(function (event) {
             event.preventDefault();
             $.ajax({
@@ -590,26 +598,22 @@
                 contentType: false,
                 dataType: 'json',
                 success: function (response) {
-                    // Parse the response as a JSON object (if not already parsed)
-					if (typeof response === 'string') {
-						response = JSON.parse(response);
-					}
+                    if (typeof response === 'string') {
+                        response = JSON.parse(response);
+                    }
 
                     showUpdateAlerts(response);
-
-					console.log(response);
-
-					fetchCompanyDetails();
+                    console.log(response);
+                    fetchCompanyDetails();
                 },
                 error: function (xhr, status, error) {
                     console.error('Error:', status, error);
-					$('#Update_Company').modal('hide');
-					$('#UpdateFailedModel').modal('show');
+                    $('#Update_Company').modal('hide');
+                    $('#UpdateFailedModel').modal('show');
                 }
             });
         });
 
-        // Count characters in textarea (assuming you have a textarea with ID 'my-text')
         let myText = document.getElementById("my-text");
         let result = document.getElementById("count-result");
         myText.addEventListener("input", () => {
@@ -627,6 +631,8 @@
         });
     });
 </script>
+
+
 		
     </body>
 

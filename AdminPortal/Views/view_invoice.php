@@ -586,6 +586,21 @@
             }
         }
 
+		function formatCharge(selector, isPercentage, value) {
+			// Remove commas before parsing
+			var cleanedValue = value.toString().replace(/,/g, '');
+			var formattedValue = parseFloat(cleanedValue).toLocaleString(undefined, {
+				minimumFractionDigits: 2,
+				maximumFractionDigits: 2
+			});
+
+			if (isPercentage === "1") {
+				$(selector).text('(%):' + formattedValue).show();
+			} else {
+				$(selector).text('(LKR):' + formattedValue).show();
+			}
+		}
+
         // Function to fetch and display invoice data
         function fetchInvoiceData(Invoice_Id) {
             $.ajax({
@@ -625,97 +640,12 @@
                     $('#subTotal').text(response.InvoiceData.Sub_Total);
                     $('#discountTotal').text(response.InvoiceData.Discount_Total);
 
-					//Service Charge
-					if (response.InvoiceData.ServiceCharge_IsPercentage === "1") {
-                                
-                                var serviceCharge = parseFloat(response.InvoiceData.ServiceCharge);  // Ensure serviceCharge is treated as a float
-                                
-                                // Set the formatted service charge text in the #serviceCharge element
-                                document.getElementById('serviceCharge').innerText = response.InvoiceData.ServiceCharge;
-                                $('#serviceCharge').text('(%): '+serviceCharge.toLocaleString(undefined, {
-                                    minimumFractionDigits: 2,
-                                    maximumFractionDigits: 2
-                                })).show();
+					//Charges
+					formatCharge('#serviceCharge', response.InvoiceData.ServiceCharge_IsPercentage, response.InvoiceData.ServiceCharge);
+					formatCharge('#taxCharge', response.InvoiceData.Tax_IsPercentage, response.InvoiceData.Tax);
+					formatCharge('#vatCharge', response.InvoiceData.Vat_IsPercentage, response.InvoiceData.Vat);
+					formatCharge('#deliveryCharge', response.InvoiceData.Delivery_IsPercentage, response.InvoiceData.Delivery);
 
-                            } else {
-
-                                var serviceCharge = parseFloat(response.ServiceCharge);  // Ensure serviceCharge is treated as a float
-                        
-                                // Set the formatted service charge text in the #serviceCharge element
-                                $('#serviceCharge').text('(LKR): '+serviceCharge.toLocaleString(undefined, {
-                                    minimumFractionDigits: 2,
-                                    maximumFractionDigits: 2
-                                })).show();
-                            }
-
-                            //Tax Charge
-                            if (response.InvoiceData.Tax_IsPercentage === "1") {
-                                
-                                var tax = parseFloat(response.InvoiceData.Tax);  // Ensure taxCharge is treated as a float
-                                
-                                // Set the formatted tax charge text in the #taxCharge element
-                                document.getElementById('taxCharge').innerText = response.InvoiceData.Tax;
-                                $('#taxCharge').text('(%): '+tax.toLocaleString(undefined, {
-                                    minimumFractionDigits: 2,
-                                    maximumFractionDigits: 2
-                                })).show();
-
-                            } else {
-
-                                var tax = parseFloat(response.InvoiceData.Tax);  // Ensure tax is treated as a float
-                        
-                                // Set the formatted tax charge text in the #tax element
-                                $('#taxCharge').text('(LKR): '+tax.toLocaleString(undefined, {
-                                    minimumFractionDigits: 2,
-                                    maximumFractionDigits: 2
-                                })).show();
-                            }
-
-                            //Vat Charge
-                            if (response.InvoiceData.Vat_IsPercentage === "1") {
-                                
-                                var vat = parseFloat(response.InvoiceData.Vat);  // Ensure vat is treated as a float
-                                
-                                // Set the formatted vat charge text in the #vatCharge element
-                                document.getElementById('vatCharge').innerText = response.InvoiceData.Tax;
-                                $('#vatCharge').text('(%): '+vat.toLocaleString(undefined, {
-                                    minimumFractionDigits: 2,
-                                    maximumFractionDigits: 2
-                                })).show();
-
-                            } else {
-
-                                var vat = parseFloat(response.InvoiceData.Vat);  // Ensure vatCharge is treated as a float
-                        
-                                // Set the formatted vat charge text in the #vatCharge element
-                                $('#vatCharge').text('(LKR): '+vat.toLocaleString(undefined, {
-                                    minimumFractionDigits: 2,
-                                    maximumFractionDigits: 2
-                                })).show();
-                            }
-
-                            //Delivery Charge
-                            if (response.InvoiceData.Delivery_IsPercentage === "1") {
-                                
-                                var delivery = parseFloat(response.InvoiceData.Delivery);  // Ensure delivery is treated as a float
-                                
-                                // Set the formatted delivery charge text in the #deliveryCharge element
-                                document.getElementById('deliveryCharge').innerText = response.InvoiceData.Delivery;
-                                $('#deliveryCharge').text('(%): '+delivery.toLocaleString(undefined, {
-                                    minimumFractionDigits: 2,
-                                    maximumFractionDigits: 2
-                                })).show();
-
-                            } else {
-
-                                var delivery = parseFloat(response.InvoiceData.Delivery);  // Ensure delivery is treated as a float
-                        
-                                // Set the formatted delivery charge text in the #deliveryCharge element
-                                $('#deliveryCharge').text('(LKR): '+delivery.toLocaleString(undefined, {
-                                    minimumFractionDigits: 2,
-                                    maximumFractionDigits: 2
-                                })).show();
-                            }
 
                     $('#grandTotal').text(response.InvoiceData.Grand_Total);
                     $('#paidAmount').text(response.InvoiceData.Paid_Amount);

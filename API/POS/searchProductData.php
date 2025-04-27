@@ -16,7 +16,7 @@ $stmt_sum_qty->bind_param("s", $Product_Id);
 $stmt_sum_qty->execute();
 $result_sum_qty = $stmt_sum_qty->get_result();
 $sum_qty_row = $result_sum_qty->fetch_assoc();
-$sum_qty = $sum_qty_row['SUMQty'];
+$sum_qty = $sum_qty_row['SUMQty'] ?? 0; // fallback to 0 if null
 
 // Fetch the product details where Qty > 0
 $sql = "
@@ -56,9 +56,10 @@ $stmt->execute();
 $result = $stmt->get_result();
 
 $dataset = array();
+
 if ($result->num_rows > 0) {
-    while($row = $result->fetch_assoc()) {
-        array_push($dataset, array(
+    while ($row = $result->fetch_assoc()) {
+        $dataset[] = array(
             "Id" => $row["Id"],
             "Product_Id" => $row["Product_Id"],
             "Product_Name" => $row["Product_Name"],
@@ -72,15 +73,16 @@ if ($result->num_rows > 0) {
             "Supplier_Id" => $row["Supplier_Id"],
             "Supplier_Name" => $row["Supplier_Name"],
             "Received_Date" => $row["Received_Date"]
-        ));
+        );
     }
 } else {
-    // In case no records with Qty > 0, fetch the latest record
+    // No records with Qty > 0, fallback to latest record (even if Qty = 0)
     $sql_fallback = "
         SELECT 
             p.Product_Id,
             p.Product_Name,
             c.Category_Name,
+            s.Supplier_Id,
             s.Supplier_Name,
             pd.Id,
             pd.Cost, 
@@ -110,8 +112,8 @@ if ($result->num_rows > 0) {
     $result_fallback = $stmt_fallback->get_result();
 
     if ($result_fallback->num_rows > 0) {
-        while($row = $result_fallback->fetch_assoc()) {
-            array_push($dataset, array(
+        while ($row = $result_fallback->fetch_assoc()) {
+            $dataset[] = array(
                 "Id" => $row["Id"],
                 "Product_Id" => $row["Product_Id"],
                 "Product_Name" => $row["Product_Name"],
@@ -125,12 +127,15 @@ if ($result->num_rows > 0) {
                 "Supplier_Id" => $row["Supplier_Id"],
                 "Supplier_Name" => $row["Supplier_Name"],
                 "Received_Date" => $row["Received_Date"]
-            ));
+            );
         }
     }
 }
 
+// Return JSON response
 echo json_encode($dataset);
+
+// Close connection
 mysqli_close($conn);
 
 ?>
