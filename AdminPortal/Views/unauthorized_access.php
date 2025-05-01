@@ -1,5 +1,7 @@
 <?php
 
+require_once '../../API/Connection/config.php';
+
 // Fetch Company Name from the database
 	$companyName = ""; // Default name if query fails
 
@@ -56,12 +58,6 @@
 		
         </div>
 		<!-- /Main Wrapper -->
-
-		<!-- Footer -->
-		<?php 
-    		require 'footer.php';
-		?>
-        <!-- /Footer -->
 		
 		<!-- jQuery -->
         <script src="assets/js/jquery-3.2.1.min.js"></script>
