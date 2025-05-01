@@ -235,11 +235,6 @@
 					</div>
 					<!-- /Model Alerts -->
 
-					<!-- /Alerts -->
-					<div style="display:none" id="SaveSuccessAlert" class="alert alert-success" role="alert"><i class="fa fa-check-circle" aria-hidden="true"></i> <b>Success!</b> Data Saved Successfully</div>
-					<div style="display:none" id="SaveFailedAlert" class="alert alert-danger" role="alert"><i class="fa fa-exclamation-circle" aria-hidden="true"></i><b>Failed!</b> Data Saved Unsuccessfull</div>
-					<!-- /Alerts -->
-
 					<!-- /Page Header -->
 					<div class="row">
 						<div class="col-sm-12">
@@ -387,24 +382,6 @@
 				$('#SaveFailedModel').modal('show');
 			}
 		}
-
-		// function hideAlerts() {
-        //     $('#SaveSuccessAlert, #SaveFailedAlert').fadeOut(3000);
-        // }
-
-        // // Function to show and hide alerts based on response
-        // function showHideAlerts(success, error) {
-        //     if (success === 'true') {
-        //         $('#SaveSuccessAlert').fadeIn();
-        //         hideAlerts();
-        //     } else if (success === 'false' && error === 'duplicate') {
-        //         $('#SaveDuplicateAlert').fadeIn();
-        //         hideAlerts();
-        //     } else {
-        //         $('#SaveFailedAlert').fadeIn();
-        //         hideAlerts();
-        //     }
-        // }
 
         // Function to add a new supplier
         $('#addBrandForm').submit(function (event) {
