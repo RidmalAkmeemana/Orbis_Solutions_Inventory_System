@@ -1,7 +1,5 @@
 <?php 
-    require_once '../../API/Connection/validator.php';
     require_once '../../API/Connection/config.php';
-	require_once '../../API/Connection/ScreenPermission.php';
 
     // Fetch Company Name from the database
 	$companyName = ""; // Default name if query fails
@@ -65,7 +63,7 @@
         .mt-4 {
             margin-top: 1.5rem;
         }
-
+        
         /* Print styles */
         @media print {
             .no-print {
@@ -158,15 +156,15 @@
                     <table class="table">
                         <thead>
                             <tr>
-                                <th style="font-family: Arial; font-size: 17px;">Product Id</th>
-                                <th style="font-family: Arial; font-size: 17px;">Product Name</th>
-                                <th style="font-family: Arial; font-size: 17px;" class="text-center">Qty</th>
-                                <th style="font-family: Arial; font-size: 17px;" class="text-nowrap text-right">Unit Price</th>
-                                <th style="font-family: Arial; font-size: 17px;" class="text-nowrap text-right">Discount Price</th>
-                                <th style="font-family: Arial; font-size: 17px;" class="text-right">Total Price</th>
+                                <th  style="font-family: Arial; font-size: 17px;">Product Id</th>
+                                <th  style="font-family: Arial; font-size: 17px;">Product Name</th>
+                                <th  style="font-family: Arial; font-size: 17px;" class="text-center">Qty</th>
+                                <th  style="font-family: Arial; font-size: 17px;" class="text-nowrap text-right">Unit Price</th>
+                                <th  style="font-family: Arial; font-size: 17px;" class="text-nowrap text-right">Discount Price</th>
+                                <th  style="font-family: Arial; font-size: 17px;" class="text-right">Total Price</th>
                             </tr>
                         </thead>
-                        <tbody id="product_list" style="font-family: Arial; font-size: 17px;">
+                        <tbody id="product_list"  style="font-family: Arial; font-size: 17px;">
                             <tr></tr>
                         </tbody>
                     </table>
@@ -230,16 +228,16 @@
                     <!-- Left Column -->
                     <div class="col-sm-6 col-lg-6 m-b-20">
                         <h6 class="text-left">
-                            <span style="font-family: Arial; font-size: 17px;" class="font-weight-bold mb-1">Item Count: </span>
-                            <span style="font-family: Arial; font-size: 17px;" id="item_Count"></span>
+                            <span  style="font-family: Arial; font-size: 17px;" class="font-weight-bold mb-1">Item Count: </span>
+                            <span  style="font-family: Arial; font-size: 17px;" id="item_Count"></span>
                         </h6>
                         <h6 class="text-left">
-                            <span style="font-family: Arial; font-size: 17px;" class="font-weight-bold mb-1">Payment Method: </span>
-                            <span style="font-family: Arial; font-size: 17px;" id="payment_Type"></span>
+                            <span  style="font-family: Arial; font-size: 17px;" class="font-weight-bold mb-1">Payment Method: </span>
+                            <span  style="font-family: Arial; font-size: 17px;" id="payment_Type"></span>
                         </h6>
                         <h6 class="text-left">
-                            <span style="font-family: Arial; font-size: 17px;" class="font-weight-bold mb-1">Last Payment Date: </span>
-                            <span style="font-family: Arial; font-size: 17px;" id="payment_Date"></span>
+                            <span  style="font-family: Arial; font-size: 17px;" class="font-weight-bold mb-1">Last Payment Date: </span>
+                            <span  style="font-family: Arial; font-size: 17px;" id="payment_Date"></span>
                         </h6>
                     </div>
 
@@ -250,11 +248,11 @@
                             <div class="d-flex justify-content-between">
                                 <div class="text-left">
                                     <hr class="signature-line">
-                                    <div style="font-family: Arial; font-size: 17px;" class="signature-label">Authorized By</div>
+                                    <div  style="font-family: Arial; font-size: 17px;" class="signature-label">Authorized By</div>
                                 </div>
                                 <div class="text-right">
                                     <hr class="signature-line">
-                                    <div style="font-family: Arial; font-size: 17px;" class="signature-label">Received By</div>
+                                    <div  style="font-family: Arial; font-size: 17px;" class="signature-label">Received By</div>
                                 </div>
                             </div>
                         </div>
@@ -262,8 +260,8 @@
                 </div>
 
                 <div class="invoice-info">
-                    <h5 style="font-family: Arial; font-size: 17px;" class="font-weight-bold mb-1">Description</h5>
-                    <p style="font-family: Arial; font-size: 17px;" id="invoice_Description" class="mb-0"></p>
+                    <h5  style="font-family: Arial; font-size: 17px;" class="font-weight-bold mb-1">Description</h5>
+                    <p  style="font-family: Arial; font-size: 17px;" id="invoice_Description" class="mb-0"></p>
                 </div>
 
                 <div class="row mt-4">
@@ -281,9 +279,7 @@
 
 				<!-- Print Button -->
 				<div class="no-print" style="text-align: center; margin-top:50px;">
-					<button onclick="window.location.href = 'pos.php';" class="btn btn-back"><i class="fa fa-arrow-left" aria-hidden="true"></i> Back</button>
 					<button onclick="window.print();" class="btn btn-primary"><i class="fa fa-print" aria-hidden="true"></i> Print</button>
-                    <button onclick="sendInvoiceEmail(this)" class="btn btn-info"> <i class="fa fa-share" aria-hidden="true"></i> Send Email </button>
    				</div>
             </div>
             <!-- /Invoice Container -->
@@ -302,16 +298,16 @@
     <script src="assets/js/script.js"></script>
 
     <script>
-        // Fetch invoice data from viewInvoiceData.php
+        // Fetch invoice data from viewInvoiceCustomerCopy.php
         function fetchInvoiceData(invoiceId) {
             $.ajax({
-                url: '../../API/POS/viewInvoiceData.php', // Update with actual path
+                url: '../../API/Public/viewInvoiceDataCopy.php', // Update with actual path
                 type: 'GET',
                 data: { Invoice_Id: invoiceId },
                 dataType: 'json',
                 success: function(response) {
                     if (response.success === 'false') {
-                        window.location.href = 'pos.php';
+                        window.location.reload();
                     } else {
                         populateInvoiceData(response);
                     }
@@ -319,15 +315,6 @@
                 error: function(xhr, status, error) {
                     console.error('AJAX Error: ', status, error);
                 }
-            });
-        }
-
-        // Utility function to clean and format numbers
-        function formatAmount(value) {
-            var cleanValue = value ? value.toString().replace(/,/g, '') : '0';
-            return parseFloat(cleanValue).toLocaleString(undefined, {
-                minimumFractionDigits: 2,
-                maximumFractionDigits: 2
             });
         }
 
@@ -347,33 +334,98 @@
             document.getElementById('sub_Total').innerText = invoice.Sub_Total;
             document.getElementById('discount_Total').innerText = invoice.Discount_Total;
 
-            // Service Charge
-            if (invoice.ServiceCharge_IsPercentage === "1") {
-                $('#service_Charge').text('(%): ' + formatAmount(invoice.ServiceCharge)).show();
-            } else {
-                $('#service_Charge').text('(LKR): ' + formatAmount(invoice.ServiceCharge)).show();
-            }
 
-            // Tax Charge
-            if (invoice.Tax_IsPercentage === "1") {
-                $('#tax').text('(%): ' + formatAmount(invoice.Tax)).show();
-            } else {
-                $('#tax').text('(LKR): ' + formatAmount(invoice.Tax)).show();
-            }
+                            //Service Charge
+                            if (invoice.ServiceCharge_IsPercentage === "1") {
+                                
+                                var serviceCharge = parseFloat(invoice.ServiceCharge);  // Ensure serviceCharge is treated as a float
+                                
+                                // Set the formatted service charge text in the #serviceCharge element
+                                document.getElementById('service_Charge').innerText = invoice.ServiceCharge;
+                                $('#service_Charge').text('(%): '+serviceCharge.toLocaleString(undefined, {
+                                    minimumFractionDigits: 2,
+                                    maximumFractionDigits: 2
+                                })).show();
 
-            // VAT Charge
-            if (invoice.Vat_IsPercentage === "1") {
-                $('#vat').text('(%): ' + formatAmount(invoice.Vat)).show();
-            } else {
-                $('#vat').text('(LKR): ' + formatAmount(invoice.Vat)).show();
-            }
+                            } else {
 
-            // Delivery Charge
-            if (invoice.Delivery_IsPercentage === "1") {
-                $('#delivery_Charge').text('(%): ' + formatAmount(invoice.Delivery)).show();
-            } else {
-                $('#delivery_Charge').text('(LKR): ' + formatAmount(invoice.Delivery)).show();
-            }
+                                var serviceCharge = parseFloat(response.ServiceCharge);  // Ensure serviceCharge is treated as a float
+                        
+                                // Set the formatted service charge text in the #serviceCharge element
+                                $('#service_Charge').text('(LKR): '+serviceCharge.toLocaleString(undefined, {
+                                    minimumFractionDigits: 2,
+                                    maximumFractionDigits: 2
+                                })).show();
+                            }
+
+                            //Tax Charge
+                            if (invoice.Tax_IsPercentage === "1") {
+                                
+                                var tax = parseFloat(invoice.Tax);  // Ensure tax is treated as a float
+                                
+                                // Set the formatted tax charge text in the #tax element
+                                document.getElementById('tax').innerText = invoice.Tax;
+                                $('#tax').text('(%): '+tax.toLocaleString(undefined, {
+                                    minimumFractionDigits: 2,
+                                    maximumFractionDigits: 2
+                                })).show();
+
+                            } else {
+
+                                var tax = parseFloat(invoice.Tax);  // Ensure tax is treated as a float
+                        
+                                // Set the formatted tax charge text in the #tax element
+                                $('#tax').text('(LKR): '+tax.toLocaleString(undefined, {
+                                    minimumFractionDigits: 2,
+                                    maximumFractionDigits: 2
+                                })).show();
+                            }
+
+                            //Vat Charge
+                            if (invoice.Vat_IsPercentage === "1") {
+                                
+                                var vat = parseFloat(invoice.Vat);  // Ensure vat is treated as a float
+                                
+                                // Set the formatted vat charge text in the #vat element
+                                document.getElementById('vat').innerText = invoice.Tax;
+                                $('#vat').text('(%): '+vat.toLocaleString(undefined, {
+                                    minimumFractionDigits: 2,
+                                    maximumFractionDigits: 2
+                                })).show();
+
+                            } else {
+
+                                var vat = parseFloat(invoice.Vat);  // Ensure vat is treated as a float
+                        
+                                // Set the formatted vat charge text in the #vat element
+                                $('#vat').text('(LKR): '+vat.toLocaleString(undefined, {
+                                    minimumFractionDigits: 2,
+                                    maximumFractionDigits: 2
+                                })).show();
+                            }
+
+                            //Delivery Charge
+                            if (invoice.Delivery_IsPercentage === "1") {
+                                
+                                var delivery = parseFloat(invoice.Delivery);  // Ensure delivery is treated as a float
+                                
+                                // Set the formatted delivery charge text in the #delivery_Charge element
+                                document.getElementById('delivery_Charge').innerText = invoice.Delivery;
+                                $('#delivery_Charge').text('(%): '+delivery.toLocaleString(undefined, {
+                                    minimumFractionDigits: 2,
+                                    maximumFractionDigits: 2
+                                })).show();
+
+                            } else {
+
+                                var delivery = parseFloat(invoice.Delivery);  // Ensure delivery is treated as a float
+                        
+                                // Set the formatted delivery charge text in the #delivery_Charge element
+                                $('#delivery_Charge').text('(LKR): '+delivery.toLocaleString(undefined, {
+                                    minimumFractionDigits: 2,
+                                    maximumFractionDigits: 2
+                                })).show();
+                            }
 
             document.getElementById('grand_Total').innerText = invoice.Grand_Total;
             document.getElementById('paid_Amount').innerText = invoice.Paid_Amount;
@@ -404,37 +456,6 @@
                 productTable.innerHTML += row;
             });
         }
-
-        function sendInvoiceEmail(buttonElement) {
-        // Ensure invoiceData is fetched first
-        if (!invoiceData) {
-            alert('Invoice data is not loaded yet.');
-            return;
-        }
-
-        // Get Invoice No dynamically from the button's data-invoice-no attribute
-        const invoiceNo = buttonElement.getAttribute('data-invoice-no');
-
-        // Get customer email from invoice data
-        const customerEmail = invoiceData.InvoiceData.Customer_Email; // Example: dynamically fetched from invoiceData
-
-        // If no email address, show a message and stop sending
-        if (!customerEmail) {
-            alert('Customer email not available. Cannot send email.');
-            return;
-        } else {
-            alert('Customer email available. Invoice No: ' + invoiceNo);
-        }
-
-        // Create the link with Invoice No
-        const invoiceLink = `http://localhost/Orbis_Solutions_Inventory_System/AdminPortal/Views/printInvoiceCustomerCopy.php?Invoice_No=${invoiceNo}`;
-
-        // Prepare the email content
-        const emailContent = generateEmailContent(invoiceData, invoiceLink);
-
-        // Send the email via AJAX request
-        sendEmail(customerEmail, emailContent);
-    }
 
         // Example: Fetch and populate invoice data for a specific Invoice_Id
         const invoiceId = '<?php echo $invoiceNo; ?>'; // Replace with actual Invoice_Id
