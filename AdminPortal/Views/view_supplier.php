@@ -100,10 +100,66 @@
   				margin-top: 8px;
 				width: 100%;
 			}
+
+			/* Black Back Button */
+				.btn-back {
+				background-color: black;
+				color: white;
+				border: none;
+			}
+
+			.btn-back:hover {
+				background-color: #333;
+				color: white;
+			}
+
+			/* Full-Screen Loader */
+			#pageLoader {
+				position: fixed;
+				top: 0;
+				left: 0;
+				width: 100%;
+				height: 100%;
+				background: rgba(255, 255, 255, 0.9);
+				display: flex;
+				justify-content: center;
+				align-items: center;
+				z-index: 9999;
+			}
+
+			/* Spinner Animation */
+			.spinner {
+				width: 50px;
+				height: 50px;
+				border: 5px solid #be3235;
+				border-top: 5px solid transparent;
+				border-radius: 50%;
+				animation: spin 1s linear infinite;
+			}
+
+			@keyframes spin {
+				0% {
+					transform: rotate(0deg);
+				}
+
+				100% {
+					transform: rotate(360deg);
+				}
+			}
+			/* Full-Screen Loader */
 		</style>
 
     </head>
     <body>
+
+		<!-- Full-Screen Loader -->
+		<div id="pageLoader">
+			<div class="loader-content" style="display: flex; flex-direction: column; align-items: center;">
+				<div class="spinner"></div>
+				<div style="margin-top: 10px; font-size: 16px;">Loading . . .</div>
+			</div>
+		</div>
+		<!-- /Full-Screen Loader -->
 	
 		<!-- Main Wrapper -->
         <div class="main-wrapper">
@@ -277,14 +333,6 @@
 						</div>
 					</div>
 					<!-- /Model Alerts -->
-
-					<!-- /Update-Alerts
-						<div style="display:none" id="UpdateSuccessAlert" class="alert alert-info" role="alert"><i class="fa fa-check-circle" aria-hidden="true"></i> <b>Success!</b> Data Updated Successfully</div>
-						<div style="display:none" id="UpdateFailedAlert" class="alert alert-danger" role="alert"><i class="fa fa-exclamation-circle" aria-hidden="true"></i><b>Failed!</b> Data Update Unsuccessfull</div>
-
-						<div style="display:none" id="DeleteSuccessAlert" class="alert alert-danger" role="alert"><i class="fa fa-check-circle" aria-hidden="true"></i> <b>Success!</b> Data Deleted Successfully</div>
-						<div style="display:none" id="DeleteFailedAlert" class="alert alert-danger" role="alert"><i class="fa fa-exclamation-circle" aria-hidden="true"></i><b>Failed!</b> Data Delete Unsuccessfull</div>
-					< /Delete-Alerts -->
 				
 					<!-- Page Header -->
 					<div class="page-header">
@@ -378,6 +426,11 @@
 											    </tbody>
 										    </table>
 									    </div>
+											<!-- Back Button -->
+											<div class="form-group text-right mt-5">
+												<button onclick="window.history.back();" class="btn btn-back"><i class="fa fa-arrow-left" aria-hidden="true"></i> Back to List</button>
+											</div>
+											<!-- Back Button -->
     								</div>
 								</div>
 					</div>
@@ -493,7 +546,7 @@
 
         // Function to show and hide alerts based on response
 		function showUpdateAlerts(response) {
-			// Hide the Add Supplier modal before showing any alert modals
+			// Hide the Update Supplier modal before showing any alert modals
 			$('#Update_Supplier').modal('hide');
 			
 			if (response.success === 'true') {
@@ -509,7 +562,7 @@
 		}
 
 		function showDeleteAlerts(response) {
-			// Hide the Add Supplier modal before showing any alert modals
+			// Hide the Delete Supplier modal before showing any alert modals
 			$('#Delete_Supplier').modal('hide');
 			
 			if (response.success === 'true') {
@@ -610,6 +663,9 @@
 
         // Function to add product to inventory
         function addToInventory(productId) {
+
+			$('#pageLoader').show(); // Show loader before sending
+
             $.ajax({
                 type: 'GET',
                 url: '../../API/Admin/addInventory.php',
@@ -623,6 +679,9 @@
                 },
                 error: function (xhr, status, error) {
                     console.error('Error:', status, error);
+                },
+				complete: function () {
+                    $('#pageLoader').hide(); // Hide loader after response (success or error)
                 }
             });
         }
@@ -641,7 +700,10 @@
 
         // Function to edit a supplier
         $('#updateSupplierForm').submit(function (event) {
+
             event.preventDefault();
+			$('#pageLoader').show(); // Show loader before sending
+
             $.ajax({
                 type: 'POST',
                 url: '../../API/Admin/updateSupplier.php',
@@ -662,6 +724,9 @@
                     console.error('Error:', status, error);
 					$('#Update_Supplier').modal('hide');
 					$('#UpdateFailedModel').modal('show');
+                },
+				complete: function () {
+                    $('#pageLoader').hide(); // Hide loader after response (success or error)
                 }
             });
         });
@@ -674,7 +739,11 @@
 
         // Function to delete a supplier
         $('#deleteSupplierForm').submit(function (event) {
+
             event.preventDefault();
+			
+			$('#pageLoader').show(); // Show loader before sending
+
             $.ajax({
                 type: 'POST',
                 url: '../../API/Admin/deleteSupplier.php',
@@ -695,6 +764,9 @@
                     console.error('Error:', status, error);
 					$('#Delete_Supplier').modal('hide');
 					$('#DeleteFailedModel').modal('show');
+                },
+				complete: function () {
+                    $('#pageLoader').hide(); // Hide loader after response (success or error)
                 }
             });
         });
@@ -723,6 +795,24 @@
         });
     });
 </script>
+
+	<!-- Loader Script -->
+	<script>
+        let startTime = performance.now(); // Capture the start time when the page starts loading
+
+        window.addEventListener("load", function () {
+            let endTime = performance.now(); // Capture the end time when the page is fully loaded
+            let loadTime = endTime - startTime; // Calculate the total loading time
+
+            // Ensure the loader stays for at least 500ms but disappears dynamically based on actual load time
+            let delay = Math.max(loadTime); 
+
+            setTimeout(function () {
+                document.getElementById("pageLoader").style.display = "none";
+            }, delay);
+        });
+    </script>
+    <!-- /Loader Script -->
 
 		
     </body>

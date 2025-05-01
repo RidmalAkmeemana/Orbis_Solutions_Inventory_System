@@ -98,10 +98,66 @@
   				margin-top: 8px;
 				width: 100%;
 			}
+
+			/* Black Back Button */
+			.btn-back {
+				background-color: black;
+				color: white;
+				border: none;
+			}
+
+			.btn-back:hover {
+				background-color: #333;
+				color: white;
+			}
+
+			/* Full-Screen Loader */
+			#pageLoader {
+				position: fixed;
+				top: 0;
+				left: 0;
+				width: 100%;
+				height: 100%;
+				background: rgba(255, 255, 255, 0.9);
+				display: flex;
+				justify-content: center;
+				align-items: center;
+				z-index: 9999;
+			}
+
+			/* Spinner Animation */
+			.spinner {
+				width: 50px;
+				height: 50px;
+				border: 5px solid #be3235;
+				border-top: 5px solid transparent;
+				border-radius: 50%;
+				animation: spin 1s linear infinite;
+			}
+
+			@keyframes spin {
+				0% {
+					transform: rotate(0deg);
+				}
+
+				100% {
+					transform: rotate(360deg);
+				}
+			}
+			/* Full-Screen Loader */
 		</style>
 
     </head>
     <body>
+
+		<!-- Full-Screen Loader -->
+		<div id="pageLoader">
+			<div class="loader-content" style="display: flex; flex-direction: column; align-items: center;">
+				<div class="spinner"></div>
+				<div style="margin-top: 10px; font-size: 16px;">Loading . . .</div>
+			</div>
+		</div>
+		<!-- /Full-Screen Loader -->
 	
 		<!-- Main Wrapper -->
         <div class="main-wrapper">
@@ -155,15 +211,92 @@
             <div class="page-wrapper">
                 <div class="content container-fluid">
 
-					<!-- /Update-Alerts -->
-						<div style="display:none" id="UpdateSuccessAlert" class="alert alert-info" role="alert"><i class="fa fa-check-circle" aria-hidden="true"></i> <b>Success!</b> Data Updated Successfully</div>
-						<div style="display:none" id="UpdateFailedAlert" class="alert alert-danger" role="alert"><i class="fa fa-exclamation-circle" aria-hidden="true"></i><b>Failed!</b> Data Update Unsuccessfull</div>
-					<!-- /Update-Alerts -->
+					<!-- /Model Alerts -->
+					<div class="modal fade" id="UpdateSuccessModel" role="dialog">
+						<div class="modal-dialog modal-dialog-centered">
+						<!-- Modal content-->
+						<div class="modal-content text-center">
+							<div class="modal-body mt-4">
+								<i class="fa fa-check-circle animate__animated animate__tada animate__infinite" style="font-size: 100px; margin-top:20px; color:#26af48;" aria-hidden="true"></i>
+								<h3 class="modal-title"><b>Success</b></h3>
+								<p>Record Updated Successfully !</p>
+							</div>
+								<div class="modal-body">
+									<button style="width:20%;" type="button" class="btn btn-primary" id="OkBtn" data-dismiss="modal">OK</button>
+								</div>
+							</div>
+						
+						</div>
+					</div>
 
-					<!-- /Delete-Alerts -->
-						<div style="display:none" id="DeleteSuccessAlert" class="alert alert-danger" role="alert"><i class="fa fa-check-circle" aria-hidden="true"></i> <b>Success!</b> Data Deleted Successfully</div>
-						<div style="display:none" id="DeleteFailedAlert" class="alert alert-danger" role="alert"><i class="fa fa-exclamation-circle" aria-hidden="true"></i><b>Failed!</b> Data Delete Unsuccessfull</div>
-					<!-- /Delete-Alerts -->
+					<div class="modal fade" id="UpdateDuplicateModel" role="dialog">
+						<div class="modal-dialog modal-dialog-centered">
+						<!-- Modal content-->
+						<div class="modal-content text-center">
+							<div class="modal-body mt-4">
+								<i class="fa fa-exclamation-circle animate__animated animate__tada animate__infinite" style="font-size: 100px; margin-top:20px; color:#e63c3c;" aria-hidden="true"></i>
+								<h3 class="modal-title"><b>Error</b></h3>
+								<p>Record Already Exist !</p>
+							</div>
+								<div class="modal-body">
+									<button style="width:20%;" type="button" class="btn btn-primary" id="OkBtn" data-dismiss="modal">OK</button>
+								</div>
+							</div>
+						
+						</div>
+					</div>
+
+					<div class="modal fade" id="UpdateFailedModel" role="dialog">
+						<div class="modal-dialog modal-dialog-centered">
+						<!-- Modal content-->
+						<div class="modal-content text-center">
+							<div class="modal-body mt-4">
+								<i class="fa fa-exclamation-circle animate__animated animate__tada animate__infinite" style="font-size: 100px; margin-top:20px; color:#e63c3c;" aria-hidden="true"></i>
+								<h3 class="modal-title"><b>Error</b></h3>
+								<p>Record Not Updated !</p>
+							</div>
+								<div class="modal-body">
+									<button style="width:20%;" type="button" class="btn btn-primary" id="OkBtn" data-dismiss="modal">OK</button>
+								</div>
+							</div>
+						
+						</div>
+					</div>
+
+					<div class="modal fade" id="DeleteSuccessModel" role="dialog">
+						<div class="modal-dialog modal-dialog-centered">
+						<!-- Modal content-->
+						<div class="modal-content text-center">
+							<div class="modal-body mt-4">
+								<i class="fa fa-check-circle animate__animated animate__tada animate__infinite" style="font-size: 100px; margin-top:20px; color:#26af48;" aria-hidden="true"></i>
+								<h3 class="modal-title"><b>Success</b></h3>
+								<p>Record Deleted Successfully !</p>
+							</div>
+								<div class="modal-body">
+									<button style="width:20%;" type="button" class="btn btn-primary" id="OkBtn" data-dismiss="modal">OK</button>
+								</div>
+							</div>
+						
+						</div>
+					</div>
+
+					<div class="modal fade" id="DeleteFailedModel" role="dialog">
+						<div class="modal-dialog modal-dialog-centered">
+						<!-- Modal content-->
+						<div class="modal-content text-center">
+							<div class="modal-body mt-4">
+								<i class="fa fa-exclamation-circle animate__animated animate__tada animate__infinite" style="font-size: 100px; margin-top:20px; color:#e63c3c;" aria-hidden="true"></i>
+								<h3 class="modal-title"><b>Error</b></h3>
+								<p>Record Not Deleted !</p>
+							</div>
+								<div class="modal-body">
+									<button style="width:20%;" type="button" class="btn btn-primary" id="OkBtn" data-dismiss="modal">OK</button>
+								</div>
+							</div>
+						
+						</div>
+					</div>
+					<!-- /Model Alerts -->
 				
 					<!-- Page Header -->
 					<div class="page-header">
@@ -244,6 +377,11 @@
 											    </tbody>
 										    </table>
 									    </div>
+										<!-- Back Button -->
+										<div class="form-group text-right mt-5">
+											<button onclick="window.history.back();" class="btn btn-back"><i class="fa fa-arrow-left" aria-hidden="true"></i> Back to List</button>
+										</div>
+										<!-- Back Button -->
     								</div>
 								</div>
 					</div>
@@ -334,32 +472,36 @@
 
 		<script>
     $(document).ready(function () {
-    // Function to hide alerts
-    function hideAlerts() {
-        $('#UpdateSuccessAlert, #UpdateFailedAlert, #DeleteSuccessAlert, #DeleteFailedAlert').fadeOut(3000);
-    }
 
-    // Function to show and hide alerts based on response for updating
-    function showUpdateAlerts(success, error) {
-        if (success === 'true') {
-            $('#UpdateSuccessAlert').fadeIn();
-            hideAlerts();
-        } else {
-            $('#UpdateFailedAlert').fadeIn();
-            hideAlerts();
-        }
-    }
+		// Function to show and hide alerts based on response
+		function showUpdateAlerts(response) {
+			// Hide the Update Brand modal before showing any alert modals
+			$('#Update_Brand').modal('hide');
+			
+			if (response.success === 'true') {
+				// Show UpdateSuccessModel only if success is true
+				$('#UpdateSuccessModel').modal('show');
+			} else if (response.success === 'false' && response.error === 'duplicate') {
+				// Show UpdateDuplicateModel only if success is false and error is duplicate
+				$('#UpdateDuplicateModel').modal('show');
+			} else {
+				// Show UpdateFailedModel for any other failure scenario
+				$('#UpdateFailedModel').modal('show');
+			}
+		}
 
-    // Function to show and hide alerts based on response for deleting
-    function showDeleteAlerts(success, error) {
-        if (success === 'true') {
-            $('#DeleteSuccessAlert').fadeIn();
-            hideAlerts();
-        } else {
-            $('#DeleteFailedAlert').fadeIn();
-            hideAlerts();
-        }
-    }
+		function showDeleteAlerts(response) {
+			// Hide the Delete Brand modal before showing any alert modals
+			$('#Delete_Brand').modal('hide');
+			
+			if (response.success === 'true') {
+				// Show DeleteSuccessModel only if success is true
+				$('#DeleteSuccessModel').modal('show');
+			} else {
+				// Show DeleteFailedModel for any other failure scenario
+				$('#DeleteFailedModel').modal('show');
+			}
+		}
 
     // Function to fetch and display brand data
     function fetchBrandData(Brand_Id) {
@@ -431,47 +573,83 @@
 
     // Function to edit a brand
     $('#updateBrandForm').submit(function (event) {
+
         event.preventDefault();
+
+		$('#pageLoader').show(); // Show loader before sending
+
         $.ajax({
             type: 'POST',
             url: '../../API/Admin/updateBrand.php',
             data: $(this).serialize(),
             success: function (response) {
-                showUpdateAlerts(response.success, response.error);
-                if (response.success === 'true') {
-                    $('#Update_Brand').modal('hide');
-                    setTimeout(function () {
-                        window.location.href = 'add_brand.php';
-                    }, 3000);
+                    // Parse the response as a JSON object (if not already parsed)
+					if (typeof response === 'string') {
+						response = JSON.parse(response);
+					}
+					
+					// Show the appropriate modal based on response
+					showUpdateAlerts(response);
+
+					// Log the response for debugging
+					console.log(response);
+                },
+                error: function (xhr, status, error) {
+                    console.error('Error:', status, error);
+					$('#Update_Brand').modal('hide');
+					$('#UpdateFailedModel').modal('show');
+                },
+				complete: function () {
+                    $('#pageLoader').hide(); // Hide loader after response (success or error)
                 }
-            },
-            error: function (xhr, status, error) {
-                console.error('Error:', status, error);
-            }
         });
     });
 
+	// Handle the "Ok" button click in the UpdateSuccessModel
+	$('#UpdateSuccessModel #OkBtn').on('click', function () {
+			// Refresh the page when "Ok" is clicked
+			window.location.href = 'add_brand.php';
+		});
+
     // Function to delete a brand
     $('#deleteBrandForm').submit(function (event) {
+
         event.preventDefault();
+
+		$('#pageLoader').show(); // Show loader before sending
+		
         $.ajax({
             type: 'POST',
             url: '../../API/Admin/deleteBrand.php',
             data: $(this).serialize(),
             success: function (response) {
-                showDeleteAlerts(response.success, response.error);
-                if (response.success === 'true') {
-                    $('#Delete_Brand').modal('hide');
-                    setTimeout(function () {
-                        window.location.href = 'add_brand.php';
-                    }, 3000);
+                    // Parse the response as a JSON object (if not already parsed)
+					if (typeof response === 'string') {
+						response = JSON.parse(response);
+					}
+					
+					// Show the appropriate modal based on response
+					showDeleteAlerts(response);
+
+					// Log the response for debugging
+					console.log(response);
+                },
+                error: function (xhr, status, error) {
+                    console.error('Error:', status, error);
+					$('#Delete_Brand').modal('hide');
+					$('#DeleteFailedModel').modal('show');
+                },
+				complete: function () {
+                    $('#pageLoader').hide(); // Hide loader after response (success or error)
                 }
-            },
-            error: function (xhr, status, error) {
-                console.error('Error:', status, error);
-            }
         });
     });
+
+	// Handle the "Ok" button click in the DeleteSuccessModel
+	$('#DeleteSuccessModel #OkBtn').on('click', function () {
+			// Refresh the page when "Ok" is clicked
+			window.location.href = 'add_brand.php';
+		});
 
     // Count characters in textarea
     let myText = document.getElementById("my-text");
@@ -492,6 +670,24 @@
 });
 
 </script>
+
+<!-- Loader Script -->
+<script>
+        let startTime = performance.now(); // Capture the start time when the page starts loading
+
+        window.addEventListener("load", function () {
+            let endTime = performance.now(); // Capture the end time when the page is fully loaded
+            let loadTime = endTime - startTime; // Calculate the total loading time
+
+            // Ensure the loader stays for at least 500ms but disappears dynamically based on actual load time
+            let delay = Math.max(loadTime); 
+
+            setTimeout(function () {
+                document.getElementById("pageLoader").style.display = "none";
+            }, delay);
+        });
+    </script>
+    <!-- /Loader Script -->
 		
     </body>
 
