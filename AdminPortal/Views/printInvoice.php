@@ -1,4 +1,5 @@
 <?php 
+    include '../../API/Connection/uploadurl.php';
     require_once '../../API/Connection/validator.php';
     require_once '../../API/Connection/config.php';
 	require_once '../../API/Connection/ScreenPermission.php';
@@ -82,6 +83,42 @@
             background-color: #333;
             color: white;
         }
+
+        /* Full-Screen Loader */
+        #pageLoader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.9);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
+
+        /* Spinner Animation */
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid #be3235;
+            border-top: 5px solid transparent;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+        /* Full-Screen Loader */
+
     </style>
 
     <!--[if lt IE 9]>
@@ -91,6 +128,78 @@
 </head>
 
 <body>
+
+            <!-- Full-Screen Loader -->
+            <div id="pageLoader">
+                <div class="loader-content" style="display: flex; flex-direction: column; align-items: center;">
+                    <div class="spinner"></div>
+                    <div style="margin-top: 10px; font-size: 16px;">Loading . . .</div>
+                </div>
+            </div>
+            <!-- /Full-Screen Loader -->
+
+            <!-- Model Alerts -->
+            <div class="modal fade" id="EmailSuccessModel" role="dialog">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content text-center">
+                        <div class="modal-body mt-4">
+                            <i class="fa fa-check-circle animate__animated animate__tada animate__infinite" style="font-size: 100px; margin-top:20px; color:#26af48;" aria-hidden="true"></i>
+                            <h3 class="modal-title"><b>Success</b></h3>
+                            <p>Customer Email Sent Successfully !</p>
+                        </div>
+                        <div class="modal-body">
+                            <button style="width:20%;" type="button" class="btn btn-primary" id="OkBtn" data-dismiss="modal">OK</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal fade" id="EmailErrorModel" role="dialog">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content text-center">
+                        <div class="modal-body mt-4">
+                            <i class="fa fa-exclamation-circle animate__animated animate__tada animate__infinite" style="font-size: 100px; margin-top:20px; color:#e63c3c;" aria-hidden="true"></i>
+                            <h3 class="modal-title"><b>Error</b></h3>
+                            <p>Customer Email Not Available !</p>
+                        </div>
+                        <div class="modal-body">
+                            <button style="width:20%;" type="button" class="btn btn-primary" id="OkBtn1" data-dismiss="modal">OK</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal fade" id="AlertErrorModel" role="dialog">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content text-center">
+                        <div class="modal-body mt-4">
+                            <i class="fa fa-exclamation-circle animate__animated animate__tada animate__infinite" style="font-size: 100px; margin-top:20px; color:#e63c3c;" aria-hidden="true"></i>
+                            <h3 class="modal-title"><b>Error</b></h3>
+                            <p>Invoice Data Is Not Loaded yet !</p>
+                        </div>
+                        <div class="modal-body">
+                            <button style="width:20%;" type="button" class="btn btn-primary" id="OkBtn1" data-dismiss="modal">OK</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal fade" id="SentFailedModel" role="dialog">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content text-center">
+                        <div class="modal-body mt-4">
+                            <i class="fa fa-exclamation-circle animate__animated animate__tada animate__infinite" style="font-size: 100px; margin-top:20px; color:#e63c3c;" aria-hidden="true"></i>
+                            <h3 class="modal-title"><b>Error</b></h3>
+                            <p>Customer Email Sent Failed !</p>
+                        </div>
+                        <div class="modal-body">
+                            <button style="width:20%;" type="button" class="btn btn-primary" id="OkBtn1" data-dismiss="modal">OK</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- /Model Alerts -->
+
             <!-- Invoice Container -->
             <div class="invoice-container">
                 <div class="row align-items-center"> <!-- Added align-items-center to vertically align content -->
@@ -302,16 +411,46 @@
     <script src="assets/js/script.js"></script>
 
     <script>
+        // Global variable to store invoice data        
+        let invoiceData = null;
+        let CompanyName = '';
+        let CompanyAddress = '';
+        let CompanyEmail = '';
+        let CompanyTel1 = 'N/A';
+        let CompanyTel2 = 'N/A';
+        let CompanyTel3 = 'N/A';
+
+        function fetchCompanyDetails() {
+            $.ajax({
+                type: 'GET',
+                url: '../../API/Admin/getCompanyDetails.php',
+                dataType: 'json',
+                success: function (response) {
+                    CompanyName = response.Company_Name;
+                    CompanyAddress = response.Company_Address;
+                    CompanyEmail = response.Company_Email;
+                    CompanyTel1 = response.Company_Tel1 && response.Company_Tel1.trim() !== '' ? response.Company_Tel1 : 'N/A';
+                    CompanyTel2 = response.Company_Tel2 && response.Company_Tel2.trim() !== '' ? response.Company_Tel2 : 'N/A';
+                    CompanyTel3 = response.Company_Tel3 && response.Company_Tel3.trim() !== '' ? response.Company_Tel3 : 'N/A';
+                },
+                error: function (xhr, status, error) {
+                    console.error('Error fetching company details:', status, error);
+                }
+            });
+        }
+
         // Fetch invoice data from viewInvoiceData.php
         function fetchInvoiceData(invoiceId) {
             $.ajax({
                 url: '../../API/POS/viewInvoiceData.php', // Update with actual path
                 type: 'GET',
-                data: { Invoice_Id: invoiceId },
+                data: {
+                    Invoice_Id: invoiceId
+                },
                 dataType: 'json',
                 success: function(response) {
                     if (response.success === 'false') {
-                        window.location.href = 'pos.php';
+                        window.location.reload();
                     } else {
                         populateInvoiceData(response);
                     }
@@ -321,6 +460,8 @@
                 }
             });
         }
+
+        fetchCompanyDetails();
 
         // Utility function to clean and format numbers
         function formatAmount(value) {
@@ -333,6 +474,9 @@
 
         // Function to populate invoice data
         function populateInvoiceData(data) {
+
+            invoiceData = data;
+
             const invoice = data.InvoiceData;
             const paymentDate = invoice.Payment_Date ? invoice.Payment_Date : 'N/A';
             const invoiceDecription = invoice.Description ? invoice.Description : 'N/A';
@@ -346,6 +490,7 @@
             document.getElementById('status').innerText = invoice.Status;
             document.getElementById('sub_Total').innerText = invoice.Sub_Total;
             document.getElementById('discount_Total').innerText = invoice.Discount_Total;
+
 
             // Service Charge
             if (invoice.ServiceCharge_IsPercentage === "1") {
@@ -406,40 +551,94 @@
         }
 
         function sendInvoiceEmail(buttonElement) {
-        // Ensure invoiceData is fetched first
-        if (!invoiceData) {
-            alert('Invoice data is not loaded yet.');
-            return;
+            // Ensure invoiceData is fetched first
+            if (!invoiceData) {
+                $('#AlertErrorModel').modal('show');
+                return;
+            }
+
+            // Get Invoice No dynamically from the button's data-invoice-no attribute
+            const invoiceNo = invoiceData.InvoiceData.Invoice_No;
+            const customerName = invoiceData.InvoiceData.Customer_Name;
+            const customerEmail = invoiceData.InvoiceData.Customer_Email; // Example: dynamically fetched from invoiceData
+            const invoiceLink = `<?php echo $base_url ?>Public/Views/emailInvoiceCustomerCopy.php?Invoice_No=${invoiceNo}`;
+
+            // If no email address, show a message and stop sending
+            if (!customerEmail) {
+                $('#EmailErrorModel').modal('show');
+                return;
+            }
+
+            // Email subject and content
+            const emailSubject = `Customer Invoice - ${invoiceNo}`;
+            const emailBody = `
+                <b>Dear ${customerName},</b><br><br>
+                Please click on the link below to download your invoice:<br>
+                <a href="${invoiceLink}" target="_blank">${invoiceLink}</a><br><br>
+                <b>Thanks & Regards,</b><br>
+                <h4>${CompanyName}</h4>
+                <b>Address: </b>${CompanyAddress}<br>
+                <b>Email: </b>${CompanyEmail}<br>
+                <b>Contact No: </b>${CompanyTel1} | ${CompanyTel2} | ${CompanyTel3}
+            `;
+
+            // Send email via AJAX (implement sendEmail on server)
+            sendEmail(CompanyEmail, CompanyName, customerEmail, emailSubject, emailBody);
         }
 
-        // Get Invoice No dynamically from the button's data-invoice-no attribute
-        const invoiceNo = buttonElement.getAttribute('data-invoice-no');
+        // Example sendEmail function using AJAX
+        function sendEmail(from, name, to, subject, body) {
 
-        // Get customer email from invoice data
-        const customerEmail = invoiceData.InvoiceData.Customer_Email; // Example: dynamically fetched from invoiceData
+            $('#pageLoader').show(); // Show loader before sending
 
-        // If no email address, show a message and stop sending
-        if (!customerEmail) {
-            alert('Customer email not available. Cannot send email.');
-            return;
-        } else {
-            alert('Customer email available. Invoice No: ' + invoiceNo);
+            $.ajax({
+                url: '../../sendEmailHandler.php', // Update to your actual email sending endpoint
+                type: 'POST',
+                data: {
+                    from: from,
+                    name: name,
+                    to: to,
+                    subject: subject,
+                    body: body
+                },
+                success: function (response) {
+                    if (response.success === true) {
+                        $('#EmailSuccessModel').modal('show');
+                    } else {
+                        $('#SentFailedModel').modal('show');
+                    }
+                },
+                error: function (xhr, status, error) {
+                    $('#SentFailedModel').modal('show');
+                },
+                complete: function () {
+                    $('#pageLoader').hide(); // Hide loader after response (success or error)
+                }
+            });
         }
-
-        // Create the link with Invoice No
-        const invoiceLink = `http://localhost/Orbis_Solutions_Inventory_System/AdminPortal/Views/printInvoiceCustomerCopy.php?Invoice_No=${invoiceNo}`;
-
-        // Prepare the email content
-        const emailContent = generateEmailContent(invoiceData, invoiceLink);
-
-        // Send the email via AJAX request
-        sendEmail(customerEmail, emailContent);
-    }
 
         // Example: Fetch and populate invoice data for a specific Invoice_Id
         const invoiceId = '<?php echo $invoiceNo; ?>'; // Replace with actual Invoice_Id
         fetchInvoiceData(invoiceId);
     </script>
+
+    <!-- Loader Script -->
+    <script>
+        let startTime = performance.now(); // Capture the start time when the page starts loading
+
+        window.addEventListener("load", function () {
+            let endTime = performance.now(); // Capture the end time when the page is fully loaded
+            let loadTime = endTime - startTime; // Calculate the total loading time
+
+            // Ensure the loader stays for at least 500ms but disappears dynamically based on actual load time
+            let delay = Math.max(loadTime); 
+
+            setTimeout(function () {
+                document.getElementById("pageLoader").style.display = "none";
+            }, delay);
+        });
+    </script>
+    <!-- /Loader Script -->
 </body>
 
 </html>

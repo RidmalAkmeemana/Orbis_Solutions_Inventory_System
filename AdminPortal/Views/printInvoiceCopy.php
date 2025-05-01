@@ -88,6 +88,42 @@ $invoiceNo = $_REQUEST['Invoice_No'];
             background-color: #333;
             color: white;
         }
+
+        /* Full-Screen Loader */
+        #pageLoader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.9);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
+
+        /* Spinner Animation */
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid #be3235;
+            border-top: 5px solid transparent;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+        /* Full-Screen Loader */
+
     </style>
 
     <!--[if lt IE 9]>
@@ -97,6 +133,15 @@ $invoiceNo = $_REQUEST['Invoice_No'];
 </head>
 
 <body>
+
+    <!-- Full-Screen Loader -->
+    <div id="pageLoader">
+        <div class="loader-content" style="display: flex; flex-direction: column; align-items: center;">
+            <div class="spinner"></div>
+            <div style="margin-top: 10px; font-size: 16px;">Loading . . .</div>
+        </div>
+    </div>
+    <!-- /Full-Screen Loader -->
 
     <!-- Model Alerts -->
     <div class="modal fade" id="EmailSuccessModel" role="dialog">
@@ -136,6 +181,21 @@ $invoiceNo = $_REQUEST['Invoice_No'];
                     <i class="fa fa-exclamation-circle animate__animated animate__tada animate__infinite" style="font-size: 100px; margin-top:20px; color:#e63c3c;" aria-hidden="true"></i>
                     <h3 class="modal-title"><b>Error</b></h3>
                     <p>Invoice Data Is Not Loaded yet !</p>
+                </div>
+                <div class="modal-body">
+                    <button style="width:20%;" type="button" class="btn btn-primary" id="OkBtn1" data-dismiss="modal">OK</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="SentFailedModel" role="dialog">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content text-center">
+                <div class="modal-body mt-4">
+                    <i class="fa fa-exclamation-circle animate__animated animate__tada animate__infinite" style="font-size: 100px; margin-top:20px; color:#e63c3c;" aria-hidden="true"></i>
+                    <h3 class="modal-title"><b>Error</b></h3>
+                    <p>Customer Email Sent Failed !</p>
                 </div>
                 <div class="modal-body">
                     <button style="width:20%;" type="button" class="btn btn-primary" id="OkBtn1" data-dismiss="modal">OK</button>
@@ -517,41 +577,47 @@ $invoiceNo = $_REQUEST['Invoice_No'];
             // Email subject and content
             const emailSubject = `Customer Invoice - ${invoiceNo}`;
             const emailBody = `
-                Dear ${customerName},<br><br>
+                <b>Dear ${customerName},</b><br><br>
                 Please click on the link below to download your invoice:<br>
                 <a href="${invoiceLink}" target="_blank">${invoiceLink}</a><br><br>
-                Thanks & Regards,<br>
-                ${CompanyName}<br>
-                ${CompanyAddress}<br>
-                Email: ${CompanyEmail}<br>
-                Contact No: ${CompanyTel1} | ${CompanyTel2} | ${CompanyTel3}
+                <b>Thanks & Regards,</b><br>
+                <h4>${CompanyName}</h4>
+                <b>Address: </b>${CompanyAddress}<br>
+                <b>Email: </b>${CompanyEmail}<br>
+                <b>Contact No: </b>${CompanyTel1} | ${CompanyTel2} | ${CompanyTel3}
             `;
 
-            console.log(emailSubject);
-            console.log(emailBody);
-
-            // Optional: show success message immediately
-            $('#EmailSuccessModel').modal('show');
-
             // Send email via AJAX (implement sendEmail on server)
-            sendEmail(customerEmail, emailSubject, emailBody);
+            sendEmail(CompanyEmail, CompanyName, customerEmail, emailSubject, emailBody);
         }
 
         // Example sendEmail function using AJAX
-        function sendEmail(to, subject, body) {
+        function sendEmail(from, name, to, subject, body) {
+
+            $('#pageLoader').show(); // Show loader before sending
+
             $.ajax({
-                url: 'path/to/sendEmailHandler.php', // Update to your actual email sending endpoint
+                url: '../../sendEmailHandler.php', // Update to your actual email sending endpoint
                 type: 'POST',
                 data: {
+                    from: from,
+                    name: name,
                     to: to,
                     subject: subject,
                     body: body
                 },
                 success: function (response) {
-                    console.log('Email sent:', response);
+                    if (response.success === true) {
+                        $('#EmailSuccessModel').modal('show');
+                    } else {
+                        $('#SentFailedModel').modal('show');
+                    }
                 },
                 error: function (xhr, status, error) {
-                    console.error('Email sending failed:', error);
+                    $('#SentFailedModel').modal('show');
+                },
+                complete: function () {
+                    $('#pageLoader').hide(); // Hide loader after response (success or error)
                 }
             });
         }
@@ -560,6 +626,24 @@ $invoiceNo = $_REQUEST['Invoice_No'];
         const invoiceId = '<?php echo $invoiceNo; ?>'; // Replace with actual Invoice_Id
         fetchInvoiceData(invoiceId);
     </script>
+
+    <!-- Loader Script -->
+    <script>
+        let startTime = performance.now(); // Capture the start time when the page starts loading
+
+        window.addEventListener("load", function () {
+            let endTime = performance.now(); // Capture the end time when the page is fully loaded
+            let loadTime = endTime - startTime; // Calculate the total loading time
+
+            // Ensure the loader stays for at least 500ms but disappears dynamically based on actual load time
+            let delay = Math.max(loadTime); 
+
+            setTimeout(function () {
+                document.getElementById("pageLoader").style.display = "none";
+            }, delay);
+        });
+    </script>
+    <!-- /Loader Script -->
 </body>
 
 </html>

@@ -63,7 +63,7 @@
         .mt-4 {
             margin-top: 1.5rem;
         }
-        
+
         /* Print styles */
         @media print {
             .no-print {
@@ -80,6 +80,41 @@
             background-color: #333;
             color: white;
         }
+
+        /* Full-Screen Loader */
+        #pageLoader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.9);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
+
+        /* Spinner Animation */
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid #be3235;
+            border-top: 5px solid transparent;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+        /* Full-Screen Loader */
     </style>
 
     <!--[if lt IE 9]>
@@ -89,6 +124,16 @@
 </head>
 
 <body>
+
+            <!-- Full-Screen Loader -->
+            <div id="pageLoader">
+                <div class="loader-content" style="display: flex; flex-direction: column; align-items: center;">
+                    <div class="spinner"></div>
+                    <div style="margin-top: 10px; font-size: 16px;">Loading . . .</div>
+                </div>
+            </div>
+            <!-- /Full-Screen Loader -->            
+
             <!-- Invoice Container -->
             <div class="invoice-container">
                 <div class="row align-items-center"> <!-- Added align-items-center to vertically align content -->
@@ -156,15 +201,15 @@
                     <table class="table">
                         <thead>
                             <tr>
-                                <th  style="font-family: Arial; font-size: 17px;">Product Id</th>
-                                <th  style="font-family: Arial; font-size: 17px;">Product Name</th>
-                                <th  style="font-family: Arial; font-size: 17px;" class="text-center">Qty</th>
-                                <th  style="font-family: Arial; font-size: 17px;" class="text-nowrap text-right">Unit Price</th>
-                                <th  style="font-family: Arial; font-size: 17px;" class="text-nowrap text-right">Discount Price</th>
-                                <th  style="font-family: Arial; font-size: 17px;" class="text-right">Total Price</th>
+                                <th style="font-family: Arial; font-size: 17px;">Product Id</th>
+                                <th style="font-family: Arial; font-size: 17px;">Product Name</th>
+                                <th style="font-family: Arial; font-size: 17px;" class="text-center">Qty</th>
+                                <th style="font-family: Arial; font-size: 17px;" class="text-nowrap text-right">Unit Price</th>
+                                <th style="font-family: Arial; font-size: 17px;" class="text-nowrap text-right">Discount Price</th>
+                                <th style="font-family: Arial; font-size: 17px;" class="text-right">Total Price</th>
                             </tr>
                         </thead>
-                        <tbody id="product_list"  style="font-family: Arial; font-size: 17px;">
+                        <tbody id="product_list" style="font-family: Arial; font-size: 17px;">
                             <tr></tr>
                         </tbody>
                     </table>
@@ -228,16 +273,16 @@
                     <!-- Left Column -->
                     <div class="col-sm-6 col-lg-6 m-b-20">
                         <h6 class="text-left">
-                            <span  style="font-family: Arial; font-size: 17px;" class="font-weight-bold mb-1">Item Count: </span>
-                            <span  style="font-family: Arial; font-size: 17px;" id="item_Count"></span>
+                            <span style="font-family: Arial; font-size: 17px;" class="font-weight-bold mb-1">Item Count: </span>
+                            <span style="font-family: Arial; font-size: 17px;" id="item_Count"></span>
                         </h6>
                         <h6 class="text-left">
-                            <span  style="font-family: Arial; font-size: 17px;" class="font-weight-bold mb-1">Payment Method: </span>
-                            <span  style="font-family: Arial; font-size: 17px;" id="payment_Type"></span>
+                            <span style="font-family: Arial; font-size: 17px;" class="font-weight-bold mb-1">Payment Method: </span>
+                            <span style="font-family: Arial; font-size: 17px;" id="payment_Type"></span>
                         </h6>
                         <h6 class="text-left">
-                            <span  style="font-family: Arial; font-size: 17px;" class="font-weight-bold mb-1">Last Payment Date: </span>
-                            <span  style="font-family: Arial; font-size: 17px;" id="payment_Date"></span>
+                            <span style="font-family: Arial; font-size: 17px;" class="font-weight-bold mb-1">Last Payment Date: </span>
+                            <span style="font-family: Arial; font-size: 17px;" id="payment_Date"></span>
                         </h6>
                     </div>
 
@@ -248,11 +293,11 @@
                             <div class="d-flex justify-content-between">
                                 <div class="text-left">
                                     <hr class="signature-line">
-                                    <div  style="font-family: Arial; font-size: 17px;" class="signature-label">Authorized By</div>
+                                    <div style="font-family: Arial; font-size: 17px;" class="signature-label">Authorized By</div>
                                 </div>
                                 <div class="text-right">
                                     <hr class="signature-line">
-                                    <div  style="font-family: Arial; font-size: 17px;" class="signature-label">Received By</div>
+                                    <div style="font-family: Arial; font-size: 17px;" class="signature-label">Received By</div>
                                 </div>
                             </div>
                         </div>
@@ -260,8 +305,8 @@
                 </div>
 
                 <div class="invoice-info">
-                    <h5  style="font-family: Arial; font-size: 17px;" class="font-weight-bold mb-1">Description</h5>
-                    <p  style="font-family: Arial; font-size: 17px;" id="invoice_Description" class="mb-0"></p>
+                    <h5 style="font-family: Arial; font-size: 17px;" class="font-weight-bold mb-1">Description</h5>
+                    <p style="font-family: Arial; font-size: 17px;" id="invoice_Description" class="mb-0"></p>
                 </div>
 
                 <div class="row mt-4">
@@ -298,7 +343,7 @@
     <script src="assets/js/script.js"></script>
 
     <script>
-        // Fetch invoice data from viewInvoiceCustomerCopy.php
+        // Fetch invoice data from viewInvoiceData.php
         function fetchInvoiceData(invoiceId) {
             $.ajax({
                 url: '../../API/Public/viewInvoiceDataCopy.php', // Update with actual path
@@ -307,7 +352,7 @@
                 dataType: 'json',
                 success: function(response) {
                     if (response.success === 'false') {
-                        window.location.reload();
+                        window.location.href = 'pos.php';
                     } else {
                         populateInvoiceData(response);
                     }
@@ -315,6 +360,15 @@
                 error: function(xhr, status, error) {
                     console.error('AJAX Error: ', status, error);
                 }
+            });
+        }
+
+        // Utility function to clean and format numbers
+        function formatAmount(value) {
+            var cleanValue = value ? value.toString().replace(/,/g, '') : '0';
+            return parseFloat(cleanValue).toLocaleString(undefined, {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
             });
         }
 
@@ -334,98 +388,33 @@
             document.getElementById('sub_Total').innerText = invoice.Sub_Total;
             document.getElementById('discount_Total').innerText = invoice.Discount_Total;
 
+            // Service Charge
+            if (invoice.ServiceCharge_IsPercentage === "1") {
+                $('#service_Charge').text('(%): ' + formatAmount(invoice.ServiceCharge)).show();
+            } else {
+                $('#service_Charge').text('(LKR): ' + formatAmount(invoice.ServiceCharge)).show();
+            }
 
-                            //Service Charge
-                            if (invoice.ServiceCharge_IsPercentage === "1") {
-                                
-                                var serviceCharge = parseFloat(invoice.ServiceCharge);  // Ensure serviceCharge is treated as a float
-                                
-                                // Set the formatted service charge text in the #serviceCharge element
-                                document.getElementById('service_Charge').innerText = invoice.ServiceCharge;
-                                $('#service_Charge').text('(%): '+serviceCharge.toLocaleString(undefined, {
-                                    minimumFractionDigits: 2,
-                                    maximumFractionDigits: 2
-                                })).show();
+            // Tax Charge
+            if (invoice.Tax_IsPercentage === "1") {
+                $('#tax').text('(%): ' + formatAmount(invoice.Tax)).show();
+            } else {
+                $('#tax').text('(LKR): ' + formatAmount(invoice.Tax)).show();
+            }
 
-                            } else {
+            // VAT Charge
+            if (invoice.Vat_IsPercentage === "1") {
+                $('#vat').text('(%): ' + formatAmount(invoice.Vat)).show();
+            } else {
+                $('#vat').text('(LKR): ' + formatAmount(invoice.Vat)).show();
+            }
 
-                                var serviceCharge = parseFloat(response.ServiceCharge);  // Ensure serviceCharge is treated as a float
-                        
-                                // Set the formatted service charge text in the #serviceCharge element
-                                $('#service_Charge').text('(LKR): '+serviceCharge.toLocaleString(undefined, {
-                                    minimumFractionDigits: 2,
-                                    maximumFractionDigits: 2
-                                })).show();
-                            }
-
-                            //Tax Charge
-                            if (invoice.Tax_IsPercentage === "1") {
-                                
-                                var tax = parseFloat(invoice.Tax);  // Ensure tax is treated as a float
-                                
-                                // Set the formatted tax charge text in the #tax element
-                                document.getElementById('tax').innerText = invoice.Tax;
-                                $('#tax').text('(%): '+tax.toLocaleString(undefined, {
-                                    minimumFractionDigits: 2,
-                                    maximumFractionDigits: 2
-                                })).show();
-
-                            } else {
-
-                                var tax = parseFloat(invoice.Tax);  // Ensure tax is treated as a float
-                        
-                                // Set the formatted tax charge text in the #tax element
-                                $('#tax').text('(LKR): '+tax.toLocaleString(undefined, {
-                                    minimumFractionDigits: 2,
-                                    maximumFractionDigits: 2
-                                })).show();
-                            }
-
-                            //Vat Charge
-                            if (invoice.Vat_IsPercentage === "1") {
-                                
-                                var vat = parseFloat(invoice.Vat);  // Ensure vat is treated as a float
-                                
-                                // Set the formatted vat charge text in the #vat element
-                                document.getElementById('vat').innerText = invoice.Tax;
-                                $('#vat').text('(%): '+vat.toLocaleString(undefined, {
-                                    minimumFractionDigits: 2,
-                                    maximumFractionDigits: 2
-                                })).show();
-
-                            } else {
-
-                                var vat = parseFloat(invoice.Vat);  // Ensure vat is treated as a float
-                        
-                                // Set the formatted vat charge text in the #vat element
-                                $('#vat').text('(LKR): '+vat.toLocaleString(undefined, {
-                                    minimumFractionDigits: 2,
-                                    maximumFractionDigits: 2
-                                })).show();
-                            }
-
-                            //Delivery Charge
-                            if (invoice.Delivery_IsPercentage === "1") {
-                                
-                                var delivery = parseFloat(invoice.Delivery);  // Ensure delivery is treated as a float
-                                
-                                // Set the formatted delivery charge text in the #delivery_Charge element
-                                document.getElementById('delivery_Charge').innerText = invoice.Delivery;
-                                $('#delivery_Charge').text('(%): '+delivery.toLocaleString(undefined, {
-                                    minimumFractionDigits: 2,
-                                    maximumFractionDigits: 2
-                                })).show();
-
-                            } else {
-
-                                var delivery = parseFloat(invoice.Delivery);  // Ensure delivery is treated as a float
-                        
-                                // Set the formatted delivery charge text in the #delivery_Charge element
-                                $('#delivery_Charge').text('(LKR): '+delivery.toLocaleString(undefined, {
-                                    minimumFractionDigits: 2,
-                                    maximumFractionDigits: 2
-                                })).show();
-                            }
+            // Delivery Charge
+            if (invoice.Delivery_IsPercentage === "1") {
+                $('#delivery_Charge').text('(%): ' + formatAmount(invoice.Delivery)).show();
+            } else {
+                $('#delivery_Charge').text('(LKR): ' + formatAmount(invoice.Delivery)).show();
+            }
 
             document.getElementById('grand_Total').innerText = invoice.Grand_Total;
             document.getElementById('paid_Amount').innerText = invoice.Paid_Amount;
@@ -461,6 +450,24 @@
         const invoiceId = '<?php echo $invoiceNo; ?>'; // Replace with actual Invoice_Id
         fetchInvoiceData(invoiceId);
     </script>
+
+    <!-- Loader Script -->
+    <script>
+        let startTime = performance.now(); // Capture the start time when the page starts loading
+
+        window.addEventListener("load", function () {
+            let endTime = performance.now(); // Capture the end time when the page is fully loaded
+            let loadTime = endTime - startTime; // Calculate the total loading time
+
+            // Ensure the loader stays for at least 500ms but disappears dynamically based on actual load time
+            let delay = Math.max(loadTime); 
+
+            setTimeout(function () {
+                document.getElementById("pageLoader").style.display = "none";
+            }, delay);
+        });
+    </script>
+    <!-- /Loader Script -->
 </body>
 
 </html>
