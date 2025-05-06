@@ -442,10 +442,6 @@
             }
         });
 
-		function hideAlerts() {
-            $('#SaveSuccessAlert, #SaveFailedAlert').fadeOut(3000);
-        }
-
     });
 	</script>
 
