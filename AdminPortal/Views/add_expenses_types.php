@@ -62,6 +62,42 @@
         <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
 
 		<style>
+
+			/* Full-Screen Loader */
+			#pageLoader {
+				position: fixed;
+				top: 0;
+				left: 0;
+				width: 100%;
+				height: 100%;
+				background: rgba(255, 255, 255, 0.9);
+				display: flex;
+				justify-content: center;
+				align-items: center;
+				z-index: 9999;
+			}
+
+			/* Spinner Animation */
+			.spinner {
+				width: 50px;
+				height: 50px;
+				border: 5px solid #be3235;
+				border-top: 5px solid transparent;
+				border-radius: 50%;
+				animation: spin 1s linear infinite;
+			}
+
+			@keyframes spin {
+				0% {
+					transform: rotate(0deg);
+				}
+
+				100% {
+					transform: rotate(360deg);
+				}
+			}
+			/* Full-Screen Loader */
+
 			.select2-container--default .select2-selection--single {
 				height: 38px; /* Adjust this value as needed */
 				padding: 6px;
@@ -89,6 +125,15 @@
 
     </head>
     <body>
+
+		<!-- Full-Screen Loader -->
+		<div id="pageLoader">
+			<div class="loader-content" style="display: flex; flex-direction: column; align-items: center;">
+				<div class="spinner"></div>
+				<div style="margin-top: 10px; font-size: 16px;">Loading . . .</div>
+			</div>
+		</div>
+		<!-- /Full-Screen Loader -->
 	
 		<!-- Main Wrapper -->
         <div class="main-wrapper">
@@ -390,7 +435,10 @@
 
 		// Function to add a new expensetype
 		$('#addExpenseTypeForm').submit(function (event) {
+
 			event.preventDefault();
+
+			$('#pageLoader').show(); // Show loader before sending
 			
 			$.ajax({
 				type: 'POST',
@@ -410,10 +458,13 @@
 				},
 				error: function (xhr, status, error) {
 					console.error('Error:', status, error);
-					// Hide the Add ExpenseType modal in case of any AJAX errors and show failure modal
+					// Hide the Add Supplier modal in case of any AJAX errors and show failure modal
 					$('#Add_ExpenseType').modal('hide');
 					$('#SaveFailedModel').modal('show');
-				}
+				},
+				complete: function () {
+                    $('#pageLoader').hide(); // Hide loader after response (success or error)
+                }
 			});
 		});
 
@@ -447,6 +498,24 @@
 
     });
 	</script>
+
+	<!-- Loader Script -->
+    <script>
+        let startTime = performance.now(); // Capture the start time when the page starts loading
+
+        window.addEventListener("load", function () {
+            let endTime = performance.now(); // Capture the end time when the page is fully loaded
+            let loadTime = endTime - startTime; // Calculate the total loading time
+
+            // Ensure the loader stays for at least 500ms but disappears dynamically based on actual load time
+            let delay = Math.max(loadTime); 
+
+            setTimeout(function () {
+                document.getElementById("pageLoader").style.display = "none";
+            }, delay);
+        });
+    </script>
+    <!-- /Loader Script -->
 		
     </body>
 </html>

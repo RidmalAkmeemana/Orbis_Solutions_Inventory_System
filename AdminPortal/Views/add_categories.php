@@ -394,7 +394,6 @@
                 type: 'POST',
                 url: '../../API/Admin/addNewCategory.php',
                 data: $(this).serialize(),
-				
 				success: function (response) {
 					// Parse the response as a JSON object (if not already parsed)
 					if (typeof response === 'string') {

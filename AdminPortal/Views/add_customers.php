@@ -61,8 +61,54 @@
 			<script src="assets/js/respond.min.js"></script>
 		<![endif]-->
 
+		<style>
+			/* Full-Screen Loader */
+			#pageLoader {
+				position: fixed;
+				top: 0;
+				left: 0;
+				width: 100%;
+				height: 100%;
+				background: rgba(255, 255, 255, 0.9);
+				display: flex;
+				justify-content: center;
+				align-items: center;
+				z-index: 9999;
+			}
+
+			/* Spinner Animation */
+			.spinner {
+				width: 50px;
+				height: 50px;
+				border: 5px solid #be3235;
+				border-top: 5px solid transparent;
+				border-radius: 50%;
+				animation: spin 1s linear infinite;
+			}
+
+			@keyframes spin {
+				0% {
+					transform: rotate(0deg);
+				}
+
+				100% {
+					transform: rotate(360deg);
+				}
+			}
+			/* Full-Screen Loader */
+		</style>
+
     </head>
     <body>
+
+		<!-- Full-Screen Loader -->
+		<div id="pageLoader">
+			<div class="loader-content" style="display: flex; flex-direction: column; align-items: center;">
+				<div class="spinner"></div>
+				<div style="margin-top: 10px; font-size: 16px;">Loading . . .</div>
+			</div>
+		</div>
+		<!-- /Full-Screen Loader -->
 	
 		<!-- Main Wrapper -->
         <div class="main-wrapper">
@@ -139,10 +185,58 @@
 						</div>
 					</div>
 
-					<!-- /Alerts -->
-					<div style="display:none" id="SaveSuccessAlert" class="alert alert-success" role="alert"><i class="fa fa-check-circle" aria-hidden="true"></i> <b>Success!</b> Data Saved Successfully</div>
-					<div style="display:none" id="SaveFailedAlert" class="alert alert-danger" role="alert"><i class="fa fa-exclamation-circle" aria-hidden="true"></i><b>Failed!</b> Data Saved Unsuccessfull</div>
-					<!-- /Alerts -->
+					<!-- /Model Alerts -->
+					<div class="modal fade" id="SaveSuccessModel" role="dialog">
+						<div class="modal-dialog modal-dialog-centered">
+						<!-- Modal content-->
+						<div class="modal-content text-center">
+							<div class="modal-body mt-4">
+								<i class="fa fa-check-circle animate__animated animate__tada animate__infinite" style="font-size: 100px; margin-top:20px; color:#26af48;" aria-hidden="true"></i>
+								<h3 class="modal-title"><b>Success</b></h3>
+								<p>Record Saved Successfully !</p>
+							</div>
+								<div class="modal-body">
+									<button style="width:20%;" type="button" class="btn btn-primary" id="OkBtn" data-dismiss="modal">OK</button>
+								</div>
+							</div>
+						
+						</div>
+					</div>
+
+					<div class="modal fade" id="SaveDuplicateModel" role="dialog">
+						<div class="modal-dialog modal-dialog-centered">
+						<!-- Modal content-->
+						<div class="modal-content text-center">
+							<div class="modal-body mt-4">
+								<i class="fa fa-exclamation-circle animate__animated animate__tada animate__infinite" style="font-size: 100px; margin-top:20px; color:#e63c3c;" aria-hidden="true"></i>
+								<h3 class="modal-title"><b>Error</b></h3>
+								<p>Record Already Exist !</p>
+							</div>
+								<div class="modal-body">
+									<button style="width:20%;" type="button" class="btn btn-primary" id="OkBtn" data-dismiss="modal">OK</button>
+								</div>
+							</div>
+						
+						</div>
+					</div>
+
+					<div class="modal fade" id="SaveFailedModel" role="dialog">
+						<div class="modal-dialog modal-dialog-centered">
+						<!-- Modal content-->
+						<div class="modal-content text-center">
+							<div class="modal-body mt-4">
+								<i class="fa fa-exclamation-circle animate__animated animate__tada animate__infinite" style="font-size: 100px; margin-top:20px; color:#e63c3c;" aria-hidden="true"></i>
+								<h3 class="modal-title"><b>Error</b></h3>
+								<p>Record Not Saved !</p>
+							</div>
+								<div class="modal-body">
+									<button style="width:20%;" type="button" class="btn btn-primary" id="OkBtn" data-dismiss="modal">OK</button>
+								</div>
+							</div>
+						
+						</div>
+					</div>
+					<!-- /Model Alerts -->
 
 					<!-- /Page Header -->
 					<div class="row">
@@ -297,61 +391,63 @@
             }
         });
 
-		function hideAlerts() {
-            $('#SaveSuccessAlert, #SaveFailedAlert').fadeOut(3000);
-        }
-
-        // Function to show and hide alerts based on response
-        function showHideAlerts(success, error) {
-            if (success === 'true') {
-                $('#SaveSuccessAlert').fadeIn();
-                hideAlerts();
-            } else if (success === 'false' && error === 'duplicate') {
-                $('#SaveDuplicateAlert').fadeIn();
-                hideAlerts();
-            } else {
-                $('#SaveFailedAlert').fadeIn();
-                hideAlerts();
-            }
-        }
+		// Function to show and hide alerts based on response
+		function showSaveAlerts(response) {
+			// Hide the Add Supplier modal before showing any alert modals
+			$('#Add_Customer').modal('hide');
+			
+			if (response.success === 'true') {
+				// Show SaveSuccessModel only if success is true
+				$('#SaveSuccessModel').modal('show');
+			} else if (response.success === 'false' && response.error === 'duplicate') {
+				// Show SaveDuplicateModel only if success is false and error is duplicate
+				$('#SaveDuplicateModel').modal('show');
+			} else {
+				// Show SaveFailedModel for any other failure scenario
+				$('#SaveFailedModel').modal('show');
+			}
+		}
 
         // Function to add a new customer
         $('#addCustomerForm').submit(function (event) {
+
             event.preventDefault();
+
+			$('#pageLoader').show(); // Show loader before sending
+
             $.ajax({
                 type: 'POST',
                 url: '../../API/Admin/addNewCustomer.php',
                 data: $(this).serialize(),
-                success: function (response) {
-					showHideAlerts(response.success, response.error);
-                    if (response.success === 'true') {
-						
-                        $('#SaveSuccessAlert').fadeIn();
-                        // Hide modal after 3 seconds
-                        $('#Add_Customer').modal('hide');
-                        setTimeout(function () {
-                            window.location.href = 'add_customers.php';
-                        }, 3000);
-						console.log(response.success);
-
-                    } 
-					else
-					{
-						// Handle other responses if needed
-						$('#SaveFailedAlert').fadeIn();
-                        // Hide modal after 3 seconds
-                        $('#Add_Customer').modal('hide');
-                        setTimeout(function () {
-                            window.location.href = 'add_customers.php';
-                        }, 3000);
-                        console.log(response.error);
+				success: function (response) {
+					// Parse the response as a JSON object (if not already parsed)
+					if (typeof response === 'string') {
+						response = JSON.parse(response);
 					}
-                },
-                error: function (xhr, status, error) {
-                    console.error('Error:', status, error);
+					
+					// Show the appropriate modal based on response
+					showSaveAlerts(response);
+
+					// Log the response for debugging
+					console.log(response);
+				},
+				error: function (xhr, status, error) {
+					console.error('Error:', status, error);
+					// Hide the Add Supplier modal in case of any AJAX errors and show failure modal
+					$('#Add_Customer').modal('hide');
+					$('#SaveFailedModel').modal('show');
+				},
+				complete: function () {
+                    $('#pageLoader').hide(); // Hide loader after response (success or error)
                 }
             });
         });
+
+		// Handle the "Ok" button click in the SaveSuccessModel
+		$('#SaveSuccessModel #OkBtn').on('click', function () {
+			// Refresh the page when "Ok" is clicked
+			window.location.href = 'add_customers.php';
+		});
 
         // Count characters in textarea
         let myText = document.getElementById("my-text");
@@ -369,13 +465,26 @@
                 result.style.color = "#333";
             }
         });
-
-		function hideAlerts() {
-            $('#SaveSuccessAlert, #SaveFailedAlert').fadeOut(3000);
-        }
-
     });
 	</script>
+
+	<!-- Loader Script -->
+    <script>
+        let startTime = performance.now(); // Capture the start time when the page starts loading
+
+        window.addEventListener("load", function () {
+            let endTime = performance.now(); // Capture the end time when the page is fully loaded
+            let loadTime = endTime - startTime; // Calculate the total loading time
+
+            // Ensure the loader stays for at least 500ms but disappears dynamically based on actual load time
+            let delay = Math.max(loadTime); 
+
+            setTimeout(function () {
+                document.getElementById("pageLoader").style.display = "none";
+            }, delay);
+        });
+    </script>
+    <!-- /Loader Script -->
 		
     </body>
 </html>
