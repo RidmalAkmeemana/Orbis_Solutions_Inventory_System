@@ -1,458 +1,650 @@
-<?php 
-    require_once '../../API/Connection/validator.php';
-    require_once '../../API/Connection/config.php';
-	require_once '../../API/Connection/ScreenPermission.php';
+<?php
+require_once '../../API/Connection/validator.php';
+require_once '../../API/Connection/config.php';
+require_once '../../API/Connection/ScreenPermission.php';
 
-    // Fetch Company Name from the database
-	$companyName = ""; // Default name if query fails
+// Fetch Company Name from the database
+$companyName = ""; // Default name if query fails
 
-	$query = "SELECT Company_Name FROM tbl_company_info LIMIT 1"; 
-	$result = mysqli_query($conn, $query);
+$query = "SELECT Company_Name FROM tbl_company_info LIMIT 1";
+$result = mysqli_query($conn, $query);
 
-	if ($result && mysqli_num_rows($result) > 0) {
-		$row = mysqli_fetch_assoc($result);
-		$companyName = $row['Company_Name'];
-	}
+if ($result && mysqli_num_rows($result) > 0) {
+    $row = mysqli_fetch_assoc($result);
+    $companyName = $row['Company_Name'];
+}
 
-	// Fetch user permissions (assuming you have a function for this)
-    $username = $_SESSION['user'];
-    $query = mysqli_query($conn, "SELECT * FROM `tbl_user` WHERE `username` = '$username'") or die(mysqli_error());
-    $fetch = mysqli_fetch_array($query);
-    $user_status = $fetch['Status'];
+// Fetch user permissions (assuming you have a function for this)
+$username = $_SESSION['user'];
+$query = mysqli_query($conn, "SELECT * FROM `tbl_user` WHERE `username` = '$username'") or die(mysqli_error());
+$fetch = mysqli_fetch_array($query);
+$user_status = $fetch['Status'];
 
-    // Check if user has access to updateRole.php
-    $has_access_to_edit_role = false;
-    $permission_query = mysqli_query($conn, "SELECT * FROM `tbl_backend_permissions` WHERE `Role` = '$user_status' AND `Backend_Id` = 127") or die(mysqli_error());
-    if (mysqli_num_rows($permission_query) > 0) {
-        $has_access_to_edit_role = true;
-    }
+// Check if user has access to updateRole.php
+$has_access_to_edit_role = false;
+$permission_query = mysqli_query($conn, "SELECT * FROM `tbl_backend_permissions` WHERE `Role` = '$user_status' AND `Backend_Id` = 127") or die(mysqli_error());
+if (mysqli_num_rows($permission_query) > 0) {
+    $has_access_to_edit_role = true;
+}
 
-	// Check if user has access to deleteRole.php
-    $has_access_to_delete_role = false;
-    $permission_query = mysqli_query($conn, "SELECT * FROM `tbl_backend_permissions` WHERE `Role` = '$user_status' AND `Backend_Id` = 128") or die(mysqli_error());
-    if (mysqli_num_rows($permission_query) > 0) {
-        $has_access_to_delete_role = true;
-    }
+// Check if user has access to deleteRole.php
+$has_access_to_delete_role = false;
+$permission_query = mysqli_query($conn, "SELECT * FROM `tbl_backend_permissions` WHERE `Role` = '$user_status' AND `Backend_Id` = 128") or die(mysqli_error());
+if (mysqli_num_rows($permission_query) > 0) {
+    $has_access_to_delete_role = true;
+}
 
-    // Check if user has access to savePermissions.php
-    $has_access_to_save_permission = false;
-    $permission_query = mysqli_query($conn, "SELECT * FROM `tbl_backend_permissions` WHERE `Role` = '$user_status' AND `Backend_Id` = 130") or die(mysqli_error());
-    if (mysqli_num_rows($permission_query) > 0) {
-        $has_access_to_save_permission = true;
-    }
+// Check if user has access to savePermissions.php
+$has_access_to_save_permission = false;
+$permission_query = mysqli_query($conn, "SELECT * FROM `tbl_backend_permissions` WHERE `Role` = '$user_status' AND `Backend_Id` = 130") or die(mysqli_error());
+if (mysqli_num_rows($permission_query) > 0) {
+    $has_access_to_save_permission = true;
+}
 
-    // Check if user has access to viewUserData.php
-    $has_access_to_view_user_data = false;
-    $permission_query = mysqli_query($conn, "SELECT * FROM `tbl_backend_permissions` WHERE `Role` = '$user_status' AND `Backend_Id` = 136") or die(mysqli_error());
-    if (mysqli_num_rows($permission_query) > 0) {
-        $has_access_to_view_user_data = true;
-    }
+// Check if user has access to viewUserData.php
+$has_access_to_view_user_data = false;
+$permission_query = mysqli_query($conn, "SELECT * FROM `tbl_backend_permissions` WHERE `Role` = '$user_status' AND `Backend_Id` = 136") or die(mysqli_error());
+if (mysqli_num_rows($permission_query) > 0) {
+    $has_access_to_view_user_data = true;
+}
 ?>
 
 
 <!DOCTYPE html>
 <html lang="en">
-    
+
 <!-- Mirrored from dreamguys.co.in/demo/doccure/admin/specialities.html by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 30 Nov 2019 04:12:49 GMT -->
+
 <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
-        <title><?php echo($companyName); ?> - User Roles</title>
-		
-		<!-- Favicon -->
-        <link rel="shortcut icon" type="image/x-icon" href="assets/img/favicon.png">
-		
-		<!-- Bootstrap CSS -->
-        <link rel="stylesheet" href="assets/css/bootstrap.min.css">
-		
-		<!-- Fontawesome CSS -->
-        <link rel="stylesheet" href="assets/css/font-awesome.min.css">
-		
-		<!-- Feathericon CSS -->
-        <link rel="stylesheet" href="assets/css/feathericon.min.css">
-		
-		<!-- Datatables CSS -->
-		<link rel="stylesheet" href="assets/plugins/datatables/datatables.min.css">
-		
-		<!-- Main CSS -->
-        <link rel="stylesheet" href="assets/css/style.css">
-		
-		<!--[if lt IE 9]>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
+    <title><?php echo ($companyName); ?> - User Roles</title>
+
+    <!-- Favicon -->
+    <link rel="shortcut icon" type="image/x-icon" href="assets/img/favicon.png">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="assets/css/bootstrap.min.css">
+
+    <!-- Fontawesome CSS -->
+    <link rel="stylesheet" href="assets/css/font-awesome.min.css">
+
+    <!-- Feathericon CSS -->
+    <link rel="stylesheet" href="assets/css/feathericon.min.css">
+
+    <!-- Datatables CSS -->
+    <link rel="stylesheet" href="assets/plugins/datatables/datatables.min.css">
+
+    <!-- Main CSS -->
+    <link rel="stylesheet" href="assets/css/style.css">
+
+    <!--[if lt IE 9]>
 			<script src="assets/js/html5shiv.min.js"></script>
 			<script src="assets/js/respond.min.js"></script>
 		<![endif]-->
 
 
-		<style>
-			.background-container 
-			{
-    			background-size: cover;
-    			background-position: center;
-    			height: 250px; /* Adjust the height as needed */
-    			display: flex;
-    			align-items: center;
-    			justify-content: center;
-    			text-align: center;
-			}
+    <style>
+        .background-container {
+            background-size: cover;
+            background-position: center;
+            height: 250px;
+            /* Adjust the height as needed */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
 
-			.tag-cloud 
-			{
-  				display: inline-block;
-  				padding: 8px 20px;
-  				border-radius: 5px;
-  				background-color: #be3235;
-				color:#ffff;
-  				margin-top: 8px;
-				width: 100%;
-			}
-		</style>
+        .tag-cloud {
+            display: inline-block;
+            padding: 8px 20px;
+            border-radius: 5px;
+            background-color: #be3235;
+            color: #ffff;
+            margin-top: 8px;
+            width: 100%;
+        }
 
-    </head>
-    <body>
-	
-		<!-- Main Wrapper -->
-        <div class="main-wrapper">
-		
-			<!-- Header -->
-            <div class="header">
-			
-				<!-- Logo -->
-                <div class="header-left">
-                    <a href="home.php" class="logo">
-						<img src="assets/img/logo.png" alt="Logo">
-					</a>
-					<a href="home.php" class="logo logo-small">
-						<img src="assets/img/logo-small.png" alt="Logo" width="30" height="30">
-					</a>
-                </div>
-				<!-- /Logo -->
-				
-				<a href="javascript:void(0);" id="toggle_btn">
-					<i class="fe fe-text-align-left"></i>
-				</a>
-				
-				<!-- Mobile Menu Toggle -->
-				<a class="mobile_btn" id="mobile_btn">
-					<i class="fa fa-bars"></i>
-				</a>
-				<!-- /Mobile Menu Toggle -->
-				
-				<!-- Header Right Menu -->
-				<ul class="nav user-menu">
-					
-					<!-- User Menu -->
-					<?php 
-    					require 'usermenu.php';
-					?>
-					<!-- /User Menu -->
-					
-				</ul>
-				<!-- /Header Right Menu -->
-				
+        /* Black Back Button */
+        .btn-back {
+            background-color: black;
+            color: white;
+            border: none;
+        }
+
+        .btn-back:hover {
+            background-color: #333;
+            color: white;
+        }
+
+        /* Full-Screen Loader */
+        #pageLoader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.9);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
+
+        /* Spinner Animation */
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid #be3235;
+            border-top: 5px solid transparent;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* Full-Screen Loader */
+    </style>
+
+</head>
+
+<body>
+
+
+    <!-- Full-Screen Loader -->
+    <div id="pageLoader">
+        <div class="loader-content" style="display: flex; flex-direction: column; align-items: center;">
+            <div class="spinner"></div>
+            <div style="margin-top: 10px; font-size: 16px;">Loading . . .</div>
+        </div>
+    </div>
+    <!-- /Full-Screen Loader -->
+
+    <!-- Main Wrapper -->
+    <div class="main-wrapper">
+
+        <!-- Header -->
+        <div class="header">
+
+            <!-- Logo -->
+            <div class="header-left">
+                <a href="home.php" class="logo">
+                    <img src="assets/img/logo.png" alt="Logo">
+                </a>
+                <a href="home.php" class="logo logo-small">
+                    <img src="assets/img/logo-small.png" alt="Logo" width="30" height="30">
+                </a>
             </div>
-			<!-- /Header -->
-			
-			<!-- Sidebar -->
-				<?php 
-    				require 'sidebar.php';
-				?>
-			<!-- /Sidebar -->
-			
-			<!-- Page Wrapper -->
-            <div class="page-wrapper">
-                <div class="content container-fluid">
+            <!-- /Logo -->
 
-					<!-- /Update-Alerts -->
-						<div style="display:none" id="UpdateSuccessAlert" class="alert alert-info" role="alert"><i class="fa fa-check-circle" aria-hidden="true"></i> <b> Success!</b> Data Updated Successfully</div>
-						<div style="display:none" id="UpdateFailedAlert" class="alert alert-danger" role="alert"><i class="fa fa-exclamation-circle" aria-hidden="true"></i><b> Failed!</b> Data Update Unsuccessfull</div>
-					<!-- /Update-Alerts -->
+            <a href="javascript:void(0);" id="toggle_btn">
+                <i class="fe fe-text-align-left"></i>
+            </a>
 
-					<!-- /Delete-Alerts -->
-						<div style="display:none" id="DeleteSuccessAlert" class="alert alert-danger" role="alert"><i class="fa fa-check-circle" aria-hidden="true"></i> <b> Success!</b> Data Deleted Successfully</div>
-						<div style="display:none" id="DeleteFailedAlert" class="alert alert-danger" role="alert"><i class="fa fa-exclamation-circle" aria-hidden="true"></i><b> Failed!</b> Data Delete Unsuccessfull</div>
-					<!-- /Delete-Alerts -->
-				
-					<!-- Page Header -->
-					<div class="page-header">
-						 <?php
-                    			$Role_Id = $_REQUEST["Role_Id"]; 
-                    			$query1 = mysqli_query($conn, "SELECT * FROM tbl_roles WHERE `Role_Id` = '$Role_Id'") or die(mysqli_error());
-                    			$fetch1 = mysqli_fetch_array($query1);
-                    	?>
+            <!-- Mobile Menu Toggle -->
+            <a class="mobile_btn" id="mobile_btn">
+                <i class="fa fa-bars"></i>
+            </a>
+            <!-- /Mobile Menu Toggle -->
 
-								<!-- Edit and Delete Buttons -->
-    							<div class="row">
-        							<div class="col-md-12 text-left">
-										<?php if ($has_access_to_edit_role): ?>
-                                			<a href="#Update_Role" data-toggle="modal" class="btn btn bg-primary-light"><i class="fe fe-pencil"></i> Edit</a>
-                            			<?php else: ?>
-                                			<a style="display:none;" href="#" data-toggle="modal" class="btn btn bg-primary-light"><i class="fe fe-pencil"></i> Edit</a>
-                            			<?php endif; ?>
+            <!-- Header Right Menu -->
+            <ul class="nav user-menu">
 
-										<?php if ($has_access_to_delete_role): ?>
-                                			<a href="#Delete_Role" data-toggle="modal" class="btn btn bg-danger-light"><i class="fe fe-trash"></i> Delete</a>
-                            			<?php else: ?>
-                                			<a style="display:none;" href="#" data-toggle="modal" class="btn btn bg-danger-light"><i class="fe fe-trash"></i> Delete</a>
-                            			<?php endif; ?>
-        							</div>
-    							</div>
+                <!-- User Menu -->
+                <?php
+                require 'usermenu.php';
+                ?>
+                <!-- /User Menu -->
 
-								<div class="row">
-    								<div class="col-md-12 text-center mt-4 position-relative">
-        								<div class="background-container" style="background-image: url('assets/img/cover.png');">
-            								<div class="col-md-12 text-center mt-4">
-                								<h5 class="page-title">
-                    								<h1 class="text-xs font-weight-bold text-uppercase mb-1" id="roleName"></h1>
-                                                    <h5 class="text-xs font-weight-bold text-uppercase mb-1" id="roleId"></h5>
-                    									<a href="home.php" class="breadcrumb-item" style="color: black;"><i class="fa fa-home"></i> Home</a>
-                    									<a href="add_roles.php" class="breadcrumb-item active">User Roles</a>
-                								</h5>
-            								</div>
-        								</div>
-    								</div>
+            </ul>
+            <!-- /Header Right Menu -->
 
-									<div class="col-md-12 text-left mt-4">
-        								<h3 class="page-title">
-            								<h3 class="text-xs font-weight-bold mb-1">Screen Permission</h3>
-        								</h3>
-    								</div>
+        </div>
+        <!-- /Header -->
 
-									<div class="col-md-12 text-left mt-4">
-										<div id="screensList" class="row"></div>
-									</div>
+        <!-- Sidebar -->
+        <?php
+        require 'sidebar.php';
+        ?>
+        <!-- /Sidebar -->
 
-                                    <div class="col-md-12 text-left mt-4">
-										<!-- /Permission-Alerts -->
-						                    <div style="display:none" id="PermissionSuccessAlert" class="alert alert-warning" role="alert"><i class="fa fa-check-circle" aria-hidden="true"></i> <b> Success!</b> User Permission Updated Successfully</div>
-						                    <div style="display:none" id="PermissionFailedAlert" class="alert alert-danger" role="alert"><i class="fa fa-exclamation-circle" aria-hidden="true"></i><b> Failed!</b> User Permission Update Unsuccessfull</div>
-					                    <!-- /Permission-Alerts -->
-									</div>
+        <!-- Page Wrapper -->
+        <div class="page-wrapper">
+            <div class="content container-fluid">
+                <!-- /Model Alerts -->
+                <div class="modal fade" id="UpdateSuccessModel" role="dialog">
+                    <div class="modal-dialog modal-dialog-centered">
+                        <!-- Modal content-->
+                        <div class="modal-content text-center">
+                            <div class="modal-body mt-4">
+                                <i class="fa fa-check-circle animate__animated animate__tada animate__infinite" style="font-size: 100px; margin-top:20px; color:#26af48;" aria-hidden="true"></i>
+                                <h3 class="modal-title"><b>Success</b></h3>
+                                <p>Record Updated Successfully !</p>
+                            </div>
+                            <div class="modal-body">
+                                <button style="width:20%;" type="button" class="btn btn-primary" id="OkBtn" data-dismiss="modal">OK</button>
+                            </div>
+                        </div>
 
-    								<div class="col-md-12 text-left mt-4">
-        								<h5 class="page-title">
-            								<h5 class="tag-cloud text-xs font-weight-bold mb-1">User List</h5>
-        								</h5>
-                                        <br><br>
-                                        <div class="table-responsive">
-										    <table class="datatable table table-hover table-center mb-0">
-											    <thead>
-												    <tr>
-													    <th>User ID</th>
-													    <th>Full Name</th>
-                                                        <th>Username</th>
-                                                        <th>User Role</th>
+                    </div>
+                </div>
 
-													    <?php if ($has_access_to_view_user_data): ?>
-                                							<th>Action</th>
-                            							<?php else: ?>
-                                							<th style="display:none;">Action</th>
-                            							<?php endif; ?>
-												    </tr>
-											    </thead>
-											
-											    <tbody id="usersList">
-												    <!-- Data will be populated here -->
-											    </tbody>
-										    </table>
-									    </div>
-    								</div>
-								</div>
-					</div>
-				</div>
-			</div>
+                <div class="modal fade" id="UpdateDuplicateModel" role="dialog">
+                    <div class="modal-dialog modal-dialog-centered">
+                        <!-- Modal content-->
+                        <div class="modal-content text-center">
+                            <div class="modal-body mt-4">
+                                <i class="fa fa-exclamation-circle animate__animated animate__tada animate__infinite" style="font-size: 100px; margin-top:20px; color:#e63c3c;" aria-hidden="true"></i>
+                                <h3 class="modal-title"><b>Error</b></h3>
+                                <p>Record Already Exist !</p>
+                            </div>
+                            <div class="modal-body">
+                                <button style="width:20%;" type="button" class="btn btn-primary" id="OkBtn" data-dismiss="modal">OK</button>
+                            </div>
+                        </div>
 
-			<!-- Edit Details Modal-->
-			<div class="modal fade" id="Update_Role" aria-hidden="true" role="dialog">
-				<div class="modal-dialog modal-dialog-centered" role="document" >
-					<div class="modal-content">
-						<div class="modal-header">
-							<h5 class="modal-title">Edit User Role Details</h5>
-							<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-								<span aria-hidden="true">&times;</span>
-							</button>
-						</div>
-						<div class="modal-body">
-							<form method="POST" action="../../API/Admin/updateRole.php" id="updateRoleForm" enctype="multipart/form-data">
-								<div class="row form-row">
+                    </div>
+                </div>
 
-									<div class="col-12">
-										<div class="form-group">
-											<label>User Role Name</label><label class="text-danger">*</label>
-											<input style="display:none;" type="text" name="Role_Id" class="form-control" required="" readonly="true" value="<?php echo $fetch1['Role_Id']; ?>">
-											<input type="text" name="Role_Name" class="form-control" required="" value="<?php echo $fetch1['Role_Name']; ?>">
-										</div>
-									</div>
-									
-								</div>
-								<button type="submit" name="edit" class="btn btn-primary btn-block">Update Changes</button>
-							</form>
-						</div>
-					</div>
-				</div>
-			</div>
-			<!--/Edit Details Modal -->
+                <div class="modal fade" id="UpdateFailedModel" role="dialog">
+                    <div class="modal-dialog modal-dialog-centered">
+                        <!-- Modal content-->
+                        <div class="modal-content text-center">
+                            <div class="modal-body mt-4">
+                                <i class="fa fa-exclamation-circle animate__animated animate__tada animate__infinite" style="font-size: 100px; margin-top:20px; color:#e63c3c;" aria-hidden="true"></i>
+                                <h3 class="modal-title"><b>Error</b></h3>
+                                <p>Record Not Updated !</p>
+                            </div>
+                            <div class="modal-body">
+                                <button style="width:20%;" type="button" class="btn btn-primary" id="OkBtn" data-dismiss="modal">OK</button>
+                            </div>
+                        </div>
 
-			<!-- Delete Modal -->
-			<div class="modal fade" id="Delete_Role" aria-hidden="true" role="dialog">
-				<div class="modal-dialog modal-dialog-centered" role="document" >
-					<div class="modal-content">
-						<div class="modal-header">
-							<h5 class="modal-title">Delete</h5>
-							<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-								<span aria-hidden="true">&times;</span>
-							</button>
-						</div>
-						<div class="modal-body">
-							<div class="form-content p-2">
-								<h4 class="modal-title">Delete <?php echo $fetch1['Role_Name']; ?></h4>
-								<p class="mb-4">Are you sure want to delete ?</p>
+                    </div>
+                </div>
 
-								<form method="POST" action="../../API/Admin/deleteRole.php" id="deleteRoleForm" enctype="multipart/form-data">
-									<input style="display: none;" type="text" name="Role_Id" value="<?php echo $fetch1['Role_Id']; ?>">
-									<button type="submit" name="delete" class="btn btn-primary btn-block">Delete </button>
-								</form>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-			<!--/Delete Modal -->
+                <div class="modal fade" id="DeleteSuccessModel" role="dialog">
+                    <div class="modal-dialog modal-dialog-centered">
+                        <!-- Modal content-->
+                        <div class="modal-content text-center">
+                            <div class="modal-body mt-4">
+                                <i class="fa fa-check-circle animate__animated animate__tada animate__infinite" style="font-size: 100px; margin-top:20px; color:#26af48;" aria-hidden="true"></i>
+                                <h3 class="modal-title"><b>Success</b></h3>
+                                <p>Record Deleted Successfully !</p>
+                            </div>
+                            <div class="modal-body">
+                                <button style="width:20%;" type="button" class="btn btn-primary" id="OkBtn" data-dismiss="modal">OK</button>
+                            </div>
+                        </div>
 
-		<!-- /Main Wrapper -->
+                    </div>
+                </div>
+
+                <div class="modal fade" id="DeleteFailedModel" role="dialog">
+                    <div class="modal-dialog modal-dialog-centered">
+                        <!-- Modal content-->
+                        <div class="modal-content text-center">
+                            <div class="modal-body mt-4">
+                                <i class="fa fa-exclamation-circle animate__animated animate__tada animate__infinite" style="font-size: 100px; margin-top:20px; color:#e63c3c;" aria-hidden="true"></i>
+                                <h3 class="modal-title"><b>Error</b></h3>
+                                <p>Record Not Deleted !</p>
+                            </div>
+                            <div class="modal-body">
+                                <button style="width:20%;" type="button" class="btn btn-primary" id="OkBtn" data-dismiss="modal">OK</button>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="modal fade" id="PermissionSuccessModel" role="dialog">
+                    <div class="modal-dialog modal-dialog-centered">
+                        <!-- Modal content-->
+                        <div class="modal-content text-center">
+                            <div class="modal-body mt-4">
+                                <i class="fa fa-check-circle animate__animated animate__tada animate__infinite" style="font-size: 100px; margin-top:20px; color:#26af48;" aria-hidden="true"></i>
+                                <h3 class="modal-title"><b>Success</b></h3>
+                                <p>User Permission Updated Successfully !</p>
+                            </div>
+                            <div class="modal-body">
+                                <button style="width:20%;" type="button" class="btn btn-primary" id="OkBtn" data-dismiss="modal">OK</button>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="modal fade" id="PermissionFailedModel" role="dialog">
+                    <div class="modal-dialog modal-dialog-centered">
+                        <!-- Modal content-->
+                        <div class="modal-content text-center">
+                            <div class="modal-body mt-4">
+                                <i class="fa fa-exclamation-circle animate__animated animate__tada animate__infinite" style="font-size: 100px; margin-top:20px; color:#e63c3c;" aria-hidden="true"></i>
+                                <h3 class="modal-title"><b>Error</b></h3>
+                                <p>User Permission Update Unsuccessfull !</p>
+                            </div>
+                            <div class="modal-body">
+                                <button style="width:20%;" type="button" class="btn btn-primary" id="OkBtn" data-dismiss="modal">OK</button>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="modal fade" id="NoUserAssignModels" role="dialog">
+                    <div class="modal-dialog modal-dialog-centered">
+                        <!-- Modal content-->
+                        <div class="modal-content text-center">
+                            <div class="modal-body mt-4">
+                                <i class="fa fa-exclamation-circle animate__animated animate__tada animate__infinite" style="font-size: 100px; margin-top:20px; color:#e63c3c;" aria-hidden="true"></i>
+                                <h3 class="modal-title"><b>Error</b></h3>
+                                <p>No Users Assign to This Role Please Add Users !</p>
+                            </div>
+                            <div class="modal-body">
+                                <button style="width:20%;" type="button" class="btn btn-primary" id="OkBtn" data-dismiss="modal">OK</button>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <!-- /Model Alerts -->
+
+                <!-- Page Header -->
+                <div class="page-header">
+                    <?php
+                    $Role_Id = $_REQUEST["Role_Id"];
+                    $query1 = mysqli_query($conn, "SELECT * FROM tbl_roles WHERE `Role_Id` = '$Role_Id'") or die(mysqli_error());
+                    $fetch1 = mysqli_fetch_array($query1);
+                    ?>
+
+                    <!-- Edit and Delete Buttons -->
+                    <div class="row">
+                        <div class="col-md-12 text-left">
+                            <?php if ($has_access_to_edit_role): ?>
+                                <a href="#Update_Role" data-toggle="modal" class="btn btn bg-primary-light"><i class="fe fe-pencil"></i> Edit</a>
+                            <?php else: ?>
+                                <a style="display:none;" href="#" data-toggle="modal" class="btn btn bg-primary-light"><i class="fe fe-pencil"></i> Edit</a>
+                            <?php endif; ?>
+
+                            <?php if ($has_access_to_delete_role): ?>
+                                <a href="#Delete_Role" data-toggle="modal" class="btn btn bg-danger-light"><i class="fe fe-trash"></i> Delete</a>
+                            <?php else: ?>
+                                <a style="display:none;" href="#" data-toggle="modal" class="btn btn bg-danger-light"><i class="fe fe-trash"></i> Delete</a>
+                            <?php endif; ?>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-12 text-center mt-4 position-relative">
+                            <div class="background-container" style="background-image: url('assets/img/cover.png');">
+                                <div class="col-md-12 text-center mt-4">
+                                    <h5 class="page-title">
+                                        <h1 class="text-xs font-weight-bold text-uppercase mb-1" id="roleName"></h1>
+                                        <h5 class="text-xs font-weight-bold text-uppercase mb-1" id="roleId"></h5>
+                                        <a href="home.php" class="breadcrumb-item" style="color: black;"><i class="fa fa-home"></i> Home</a>
+                                        <a href="add_roles.php" class="breadcrumb-item active">User Roles</a>
+                                    </h5>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-12 text-left mt-4">
+                            <h3 class="page-title">
+                                <h3 class="text-xs font-weight-bold mb-1">Screen Permission</h3>
+                            </h3>
+                        </div>
+
+                        <div class="col-md-12 text-left mt-4">
+                            <div id="screensList" class="row"></div>
+                        </div>
+
+                        <div class="col-md-12 text-left mt-4">
+                            <h5 class="page-title">
+                                <h5 class="tag-cloud text-xs font-weight-bold mb-1">User List</h5>
+                            </h5>
+                            <br><br>
+                            <div class="table-responsive">
+                                <table class="datatable table table-hover table-center mb-0">
+                                    <thead>
+                                        <tr>
+                                            <th>User ID</th>
+                                            <th>Full Name</th>
+                                            <th>Username</th>
+                                            <th>User Role</th>
+
+                                            <?php if ($has_access_to_view_user_data): ?>
+                                                <th>Action</th>
+                                            <?php else: ?>
+                                                <th style="display:none;">Action</th>
+                                            <?php endif; ?>
+                                        </tr>
+                                    </thead>
+
+                                    <tbody id="usersList">
+                                        <!-- Data will be populated here -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Edit Details Modal-->
+        <div class="modal fade" id="Update_Role" aria-hidden="true" role="dialog">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Edit User Role Details</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form method="POST" action="../../API/Admin/updateRole.php" id="updateRoleForm" enctype="multipart/form-data">
+                            <div class="row form-row">
+
+                                <div class="col-12">
+                                    <div class="form-group">
+                                        <label>User Role Name</label><label class="text-danger">*</label>
+                                        <input style="display:none;" type="text" name="Role_Id" class="form-control" required="" readonly="true" value="<?php echo $fetch1['Role_Id']; ?>">
+                                        <input type="text" name="Role_Name" class="form-control" required="" value="<?php echo $fetch1['Role_Name']; ?>">
+                                    </div>
+                                </div>
+
+                            </div>
+                            <button type="submit" name="edit" class="btn btn-primary btn-block">Update Changes</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--/Edit Details Modal -->
+
+        <!-- Delete Modal -->
+        <div class="modal fade" id="Delete_Role" aria-hidden="true" role="dialog">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Delete</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-content p-2">
+                            <h4 class="modal-title">Delete <?php echo $fetch1['Role_Name']; ?></h4>
+                            <p class="mb-4">Are you sure want to delete ?</p>
+
+                            <form method="POST" action="../../API/Admin/deleteRole.php" id="deleteRoleForm" enctype="multipart/form-data">
+                                <input style="display: none;" type="text" name="Role_Id" value="<?php echo $fetch1['Role_Id']; ?>">
+                                <button type="submit" name="delete" class="btn btn-primary btn-block">Delete </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--/Delete Modal -->
+
+        <!-- /Main Wrapper -->
 
         <!-- Footer -->
-		<?php 
-    		require 'footer.php';
-		?>
-		<!-- /Footer -->
-		
-		<!-- jQuery -->
+        <?php
+        require 'footer.php';
+        ?>
+        <!-- /Footer -->
+
+        <!-- jQuery -->
         <script src="assets/js/jquery-3.2.1.min.js"></script>
-		
-		<!-- Bootstrap Core JS -->
+
+        <!-- Bootstrap Core JS -->
         <script src="assets/js/popper.min.js"></script>
         <script src="assets/js/bootstrap.min.js"></script>
-		
-		<!-- Slimscroll JS -->
+
+        <!-- Slimscroll JS -->
         <script src="assets/plugins/slimscroll/jquery.slimscroll.min.js"></script>
-		
-		<!-- Datatables JS -->
-		<script src="assets/plugins/datatables/jquery.dataTables.min.js"></script>
-		<script src="assets/plugins/datatables/datatables.min.js"></script>
-		
-		<!-- Custom JS -->
-		<script  src="assets/js/script.js"></script>
 
-		<script>
-    var hasAccessToSavePermissions = <?php echo $has_access_to_save_permission ? 'true' : 'false'; ?>;
+        <!-- Datatables JS -->
+        <script src="assets/plugins/datatables/jquery.dataTables.min.js"></script>
+        <script src="assets/plugins/datatables/datatables.min.js"></script>
 
-    $(document).ready(function () {
-        // Function to hide all alerts
-        function hideAlerts() {
-            $('#UpdateSuccessAlert, #UpdateFailedAlert, #DeleteSuccessAlert, #DeleteFailedAlert, #InventorySuccessAlert, #PermissionSuccessAlert, #PermissionFailedAlert').fadeOut(3000);
-        }
+        <!-- Custom JS -->
+        <script src="assets/js/script.js"></script>
 
-        // Function to show and hide alerts based on response for updating
-        function showUpdateAlerts(success) {
-            if (success) {
-                $('#UpdateSuccessAlert').fadeIn();
-            } else {
-                $('#UpdateFailedAlert').fadeIn();
-            }
-            hideAlerts();
-        }
+        <script>
+            var hasAccessToSavePermissions = <?php echo $has_access_to_save_permission ? 'true' : 'false'; ?>;
 
-        // Function to show and hide alerts based on response for deleting
-        function showDeleteAlerts(success) {
-            if (success) {
-                $('#DeleteSuccessAlert').fadeIn();
-            } else {
-                $('#DeleteFailedAlert').fadeIn();
-            }
-            hideAlerts();
-        }
+            $(document).ready(function() {
 
-        // Function to show and hide alerts based on response for permission updating
-        function showPermissionAlerts(success) {
-            if (success) {
-                $('#PermissionSuccessAlert').fadeIn();
-            } else {
-                $('#PermissionFailedAlert').fadeIn();
-            }
-            hideAlerts();
-        }
+                // Function to show and hide alerts based on response
+                function showUpdateAlerts(response) {
+                    // Hide the Update Role modal before showing any alert modals
+                    $('#Update_Role').modal('hide');
 
-        // Function to fetch and display role data
-        function fetchRoleData(Role_Id) {
-            $.ajax({
-                type: 'GET',
-                url: '../../API/Admin/viewRoleData.php',
-                data: { Role_Id: Role_Id },
-                dataType: 'json',
-                success: function (response) {
-                    if (response.success === "false") {
-                        console.error('Failed to fetch role data');
-                        return;
-                    }
-
-                    $('#roleName').text(response.roleData.Role_Name);
-                    $('#roleId').text(response.roleData.Role_Id);
-
-                    // Destroy existing DataTable, if any
-                    $('.datatable').DataTable().destroy();
-
-                    // Initialize DataTable
-                    var table = $('.datatable').DataTable({
-                        searching: true, // Enable search
-                    });
-
-                    // Clear existing rows
-                    table.clear();
-
-                    // Populate user list
-                    if (response.users.length > 0) {
-                        $.each(response.users, function (index, user) {
-
-                            var hasAccessToViewUserData = <?php echo json_encode($has_access_to_view_user_data); ?>;
-
-                            let actions = '';
-							if (hasAccessToViewUserData) {
-								actions = '<a href="view_user.php?Id=' + user.Id + '" class="btn btn-sm bg-success-light add-to-inventory"><i class="fe fe-eye"></i> View </a>';
-							} else {
-								actions = '<a style="display:none;" href="#"><i class="fe fe-eye"></i> View </a>';
-							}
-
-                            table.row.add([
-                                user.Id,
-                                `${user.First_Name} ${user.Last_Name}`,
-                                user.Username,
-                                user.Status,
-                                actions
-                            ]);
-                        });
+                    if (response.success === 'true') {
+                        // Show UpdateSuccessModel only if success is true
+                        $('#UpdateSuccessModel').modal('show');
+                    } else if (response.success === 'false' && response.error === 'duplicate') {
+                        // Show UpdateDuplicateModel only if success is false and error is duplicate
+                        $('#UpdateDuplicateModel').modal('show');
                     } else {
-                        console.log('No data received.');
+                        // Show UpdateFailedModel for any other failure scenario
+                        $('#UpdateFailedModel').modal('show');
                     }
+                }
 
-                    // Draw the table
-                    table.draw();
+                function showDeleteAlerts(response) {
+                    // Hide the Delete Role modal before showing any alert modals
+                    $('#Delete_Role').modal('hide');
 
-                    // Construct screen list
-                    let screenList = '';
-                    if (Object.keys(response.screens).length > 0) {
-                        $.each(response.screens, function (category, subCategories) {
-                            let categoryId = category.replace(/ /g, '');
-                            screenList += `
+                    if (response.success === 'true') {
+                        // Show DeleteSuccessModel only if success is true
+                        $('#DeleteSuccessModel').modal('show');
+                    } else {
+                        // Show DeleteFailedModel for any other failure scenario
+                        $('#DeleteFailedModel').modal('show');
+                    }
+                }
+
+                function showPermissionAlerts(response) {
+                    if (response.success === true) {
+                        // Show PermissionSuccessModel only if success is true
+                        $('#PermissionSuccessModel').modal('show');
+                    } else {
+                        // Show PermissionFailedModel for any other failure scenario
+                        $('#PermissionFailedModel').modal('show');
+                    }
+                }
+
+                function showNoUserAssignAlert()
+                {
+                    $('#NoUserAssignModels').modal('show');
+                }
+
+                // Function to fetch and display role data
+                function fetchRoleData(Role_Id) {
+                    $.ajax({
+                        type: 'GET',
+                        url: '../../API/Admin/viewRoleData.php',
+                        data: {
+                            Role_Id: Role_Id
+                        },
+                        dataType: 'json',
+                        success: function(response) {
+                            if (response.success === "false") {
+                                console.error('Failed to fetch role data');
+                                return;
+                            }
+
+                            $('#roleName').text(response.roleData.Role_Name);
+                            $('#roleId').text(response.roleData.Role_Id);
+
+                            // Destroy existing DataTable, if any
+                            $('.datatable').DataTable().destroy();
+
+                            // Initialize DataTable
+                            var table = $('.datatable').DataTable({
+                                searching: true, // Enable search
+                            });
+
+                            // Clear existing rows
+                            table.clear();
+
+                            // Populate user list
+                            if (response.users.length > 0) {
+                                $.each(response.users, function(index, user) {
+
+                                    var hasAccessToViewUserData = <?php echo json_encode($has_access_to_view_user_data); ?>;
+
+                                    let actions = '';
+                                    if (hasAccessToViewUserData) {
+                                        actions = '<a href="view_user.php?Id=' + user.Id + '" class="btn btn-sm bg-success-light add-to-inventory"><i class="fe fe-eye"></i> View </a>';
+                                    } else {
+                                        actions = '<a style="display:none;" href="#"><i class="fe fe-eye"></i> View </a>';
+                                    }
+
+                                    table.row.add([
+                                        user.Id,
+                                        `${user.First_Name} ${user.Last_Name}`,
+                                        user.Username,
+                                        user.Status,
+                                        actions
+                                    ]);
+                                });
+                            } else {
+                                console.log('No data received.');
+                            }
+
+                            // Draw the table
+                            table.draw();
+
+                            // Construct screen list
+                            let screenList = '';
+                            if (Object.keys(response.screens).length > 0) {
+                                $.each(response.screens, function(category, subCategories) {
+                                    let categoryId = category.replace(/ /g, '');
+                                    screenList += `
                                 <div class="col-md-12 text-left mt-4 category" data-category="${categoryId}">
                                     <h4 class="page-title">
                                         <h4 class="text-xs font-weight-bold mb-1">${category}</h4>
                                     </h4>
                                     <div class="row">
                             `;
-                            $.each(subCategories, function (subCategory, screens) {
-                                let allAssigned = screens.every(screen => screen.Assigned);
-                                let subCategoryId = subCategory.replace(/ /g, '');
-                                screenList += `
+                                    $.each(subCategories, function(subCategory, screens) {
+                                        let allAssigned = screens.every(screen => screen.Assigned);
+                                        let subCategoryId = subCategory.replace(/ /g, '');
+                                        screenList += `
                                     <div class="col-md-3 text-left mt-4 subCategory" data-category="${categoryId}" data-subcategory="${subCategoryId}">
                                         <p class="text-xs font-weight-bold mb-1">
                                             <input type="checkbox" id="${subCategoryId}" class="subCategoryCheckbox" ${allAssigned ? 'checked' : ''}>
@@ -460,10 +652,10 @@
                                         </p>
                                         <div class="pages">
                                 `;
-                                screens.forEach(function (screen) {
-                                    let screenId = screen.Screen_Id;
-                                    let screenName = screen.Screen_Name.replace(/ /g, '');
-                                    screenList += `
+                                        screens.forEach(function(screen) {
+                                            let screenId = screen.Screen_Id;
+                                            let screenName = screen.Screen_Name.replace(/ /g, '');
+                                            screenList += `
                                             <div style="display:none;" class="col-md-12 text-left mt-2">
                                                 <p class="text-xs font-weight-bold mb-1">
                                                     <input type="checkbox" id="${screenName}" class="pageCheckbox ${categoryId}-${subCategoryId}-pageCheckbox" data-screen-id="${screenId}" data-table-name="${screen.Table_Name}" ${screen.Assigned ? 'checked' : ''} disabled>
@@ -471,148 +663,214 @@
                                                 </p>
                                             </div>
                                         `;
+                                        });
+                                        screenList += `</div></div>`;
+                                    });
+                                    screenList += `</div></div>`;
                                 });
-                                screenList += `</div></div>`;
-                            });
-                            screenList += `</div></div>`;
-                        });
-                    } else {
-                        screenList = `
+                            } else {
+                                screenList = `
                             <div class="col-md-12 text-left mt-5">
                                 <p class="text-xs font-weight-bold mb-1">No screens available for this role</p>
                             </div>
                         `;
-                    }
+                            }
 
-                    if (hasAccessToSavePermissions) {
-                        screenList += `
+                            if (hasAccessToSavePermissions) {
+                                screenList += `
                             <div class="col-md-12 text-right mt-4">
                                 <button style="width:10%;" type="button" id="savePermissionsBtn" class="btn btn-primary"><i class="fa fa-floppy-o" aria-hidden="true"></i> Save Permission</button>
                             </div>
                         `;
-                    }
+                            }
 
-                    $('#screensList').html(screenList);
+                            $('#screensList').html(screenList);
 
-                    // Add event listener to subcategory checkboxes
-                    $('.subCategoryCheckbox').change(function () {
-                        let subCategoryId = $(this).attr('id');
-                        let categoryId = $(this).closest('.category').data('category');
-                        let isChecked = $(this).is(':checked');
-                        $(`.${categoryId}-${subCategoryId}-pageCheckbox`).prop('checked', isChecked);
-                    });
+                            // Add event listener to subcategory checkboxes
+                            $('.subCategoryCheckbox').change(function() {
+                                let subCategoryId = $(this).attr('id');
+                                let categoryId = $(this).closest('.category').data('category');
+                                let isChecked = $(this).is(':checked');
+                                $(`.${categoryId}-${subCategoryId}-pageCheckbox`).prop('checked', isChecked);
+                            });
 
-                    // Add event listener to save button
-                    if (hasAccessToSavePermissions) {
-                        $('#savePermissionsBtn').click(function () {
-                            let screenData = [];
-                            $('.pageCheckbox').each(function () {
-                                screenData.push({
-                                    Table_Name: $(this).data('table-name'),
-                                    ScreenId: $(this).data('screen-id'),
-                                    Checked: $(this).is(':checked')
+                            // Add event listener to save button
+                            if (hasAccessToSavePermissions) {
+                                $('#savePermissionsBtn').click(function() {
+                                    let screenData = [];
+                                    $('.pageCheckbox').each(function() {
+                                        screenData.push({
+                                            Table_Name: $(this).data('table-name'),
+                                            ScreenId: $(this).data('screen-id'),
+                                            Checked: $(this).is(':checked')
+                                        });
+                                    });
+
+                                    $('#pageLoader').show(); // Show loader before sending
+
+                                    // Send the screen data to savePermissions.php
+                                    $.ajax({
+                                        type: 'POST',
+                                        url: '../../API/Admin/savePermissions.php',
+                                        data: {
+                                            screenData: screenData,
+                                            Role_Id: Role_Id
+                                        },
+                                        success: function(response) {
+                                            if (response.success === 'true') {
+                                                showPermissionAlerts(response);
+                                            } else {
+                                                showPermissionAlerts(response);
+                                            }
+                                        },
+                                        error: function(xhr, status, error) {
+                                            showNoUserAssignAlert();
+                                            console.error('Error:', status, error);
+                                        },
+                                        complete: function() {
+                                            $('#pageLoader').hide(); // Hide loader after response (success or error)
+                                        }
+                                    });
                                 });
-                            });
-
-                            // Send the screen data to savePermissions.php
-                            $.ajax({
-                                type: 'POST',
-                                url: '../../API/Admin/savePermissions.php',
-                                data: { screenData: screenData, Role_Id: Role_Id },
-                                success: function (response) {
-                                    showPermissionAlerts(response.success);
-                                    if (response.success) {
-                                        setTimeout(function () {
-                                            window.location.href = 'add_roles.php';
-                                        }, 3000);
-                                    } else {
-                                        alert('Failed to save permissions');
-                                    }
-                                },
-                                error: function (xhr, status, error) {
-                                    console.error('Error:', status, error);
-                                }
-                            });
-                        });
-                    }
-                },
-                error: function (xhr, status, error) {
-                    console.error('Error:', status, error);
+                            }
+                        },
+                        error: function(xhr, status, error) {
+                            console.error('Error:', status, error);
+                        }
+                    });
                 }
-            });
-        }
 
-        // Get the Role_Id from the URL
-        const urlParams = new URLSearchParams(window.location.search);
-        const Role_Id = urlParams.get('Role_Id');
-        // Fetch and display role data
-        fetchRoleData(Role_Id);
+                // Handle the "Ok" button click in the InventorySuccessModel
+				$('#PermissionSuccessModel #OkBtn').on('click', function() {
+					// Refresh the page when "Ok" is clicked
+					window.location.href = 'add_roles.php';
+				});
 
-        // Function to edit a role
-        $('#updateRoleForm').submit(function (event) {
-            event.preventDefault();
-            $.ajax({
-                type: 'POST',
-                url: '../../API/Admin/updateRole.php',
-                data: $(this).serialize(),
-                success: function (response) {
-                    showUpdateAlerts(response.success);
-                    if (response.success) {
-                        $('#Update_Role').modal('hide');
-                        setTimeout(function () {
-                            window.location.href = 'add_roles.php';
-                        }, 3000);
+                // Get the Role_Id from the URL
+                const urlParams = new URLSearchParams(window.location.search);
+                const Role_Id = urlParams.get('Role_Id');
+                // Fetch and display role data
+                fetchRoleData(Role_Id);
+
+                // Function to edit a role
+                $('#updateRoleForm').submit(function(event) {
+
+                    event.preventDefault();
+
+                    $('#pageLoader').show(); // Show loader before sending
+
+                    $.ajax({
+                        type: 'POST',
+                        url: '../../API/Admin/updateRole.php',
+                        data: $(this).serialize(),
+                        success: function(response) {
+							// Parse the response as a JSON object (if not already parsed)
+							if (typeof response === 'string') {
+								response = JSON.parse(response);
+							}
+
+							// Show the appropriate modal based on response
+							showUpdateAlerts(response);
+
+							// Log the response for debugging
+							console.log(response);
+						},
+						error: function(xhr, status, error) {
+							console.error('Error:', status, error);
+							$('#Update_Role').modal('hide');
+							$('#UpdateFailedModel').modal('show');
+						},
+						complete: function() {
+							$('#pageLoader').hide(); // Hide loader after response (success or error)
+						}
+                    });
+                });
+
+                // Handle the "Ok" button click in the UpdateSuccessModel
+				$('#UpdateSuccessModel #OkBtn').on('click', function() {
+					// Refresh the page when "Ok" is clicked
+					window.location.href = 'add_roles.php';
+				});
+
+                // Function to delete a role
+                $('#deleteRoleForm').submit(function(event) {
+
+                    event.preventDefault();
+
+                    $('#pageLoader').show(); // Show loader before sending
+
+                    $.ajax({
+                        type: 'POST',
+                        url: '../../API/Admin/deleteRole.php',
+                        data: $(this).serialize(),
+                        success: function(response) {
+							// Parse the response as a JSON object (if not already parsed)
+							if (typeof response === 'string') {
+								response = JSON.parse(response);
+							}
+
+							// Show the appropriate modal based on response
+							showDeleteAlerts(response);
+
+							// Log the response for debugging
+							console.log(response);
+						},
+						error: function(xhr, status, error) {
+							console.error('Error:', status, error);
+							$('#Delete_Role').modal('hide');
+							$('#DeleteFailedModel').modal('show');
+						},
+						complete: function() {
+							$('#pageLoader').hide(); // Hide loader after response (success or error)
+						}
+                    });
+                });
+
+                // Handle the "Ok" button click in the DeleteSuccessModel
+				$('#DeleteSuccessModel #OkBtn').on('click', function() {
+					// Refresh the page when "Ok" is clicked
+					window.location.href = 'add_roles.php';
+				});
+
+                // Count characters in textarea
+                let myText = document.getElementById("my-text");
+                let result = document.getElementById("count-result");
+                myText.addEventListener("input", () => {
+                    let limit = 1000;
+                    let count = myText.value.length;
+                    result.textContent = `${count} / ${limit}`;
+
+                    if (count > limit) {
+                        myText.style.borderColor = "#F08080";
+                        result.style.color = "#F08080";
+                    } else {
+                        myText.style.borderColor = "#1ABC9C";
+                        result.style.color = "#333";
                     }
-                },
-                error: function (xhr, status, error) {
-                    console.error('Error:', status, error);
-                }
+                });
             });
-        });
+        </script>
 
-        // Function to delete a role
-        $('#deleteRoleForm').submit(function (event) {
-            event.preventDefault();
-            $.ajax({
-                type: 'POST',
-                url: '../../API/Admin/deleteRole.php',
-                data: $(this).serialize(),
-                success: function (response) {
-                    showDeleteAlerts(response.success);
-                    if (response.success) {
-                        $('#Delete_Role').modal('hide');
-                        setTimeout(function () {
-                            window.location.href = 'add_roles.php';
-                        }, 3000);
-                    }
-                },
-                error: function (xhr, status, error) {
-                    console.error('Error:', status, error);
-                }
-            });
-        });
+        <!-- Loader Script -->
+		<script>
+			let startTime = performance.now(); // Capture the start time when the page starts loading
 
-        // Count characters in textarea
-        let myText = document.getElementById("my-text");
-        let result = document.getElementById("count-result");
-        myText.addEventListener("input", () => {
-            let limit = 1000;
-            let count = myText.value.length;
-            result.textContent = `${count} / ${limit}`;
+			window.addEventListener("load", function() {
+				let endTime = performance.now(); // Capture the end time when the page is fully loaded
+				let loadTime = endTime - startTime; // Calculate the total loading time
 
-            if (count > limit) {
-                myText.style.borderColor = "#F08080";
-                result.style.color = "#F08080";
-            } else {
-                myText.style.borderColor = "#1ABC9C";
-                result.style.color = "#333";
-            }
-        });
-    });
-</script>
+				// Ensure the loader stays for at least 500ms but disappears dynamically based on actual load time
+				let delay = Math.max(loadTime);
 
+				setTimeout(function() {
+					document.getElementById("pageLoader").style.display = "none";
+				}, delay);
+			});
+		</script>
+		<!-- /Loader Script -->
 
-    </body>
+</body>
 
 <!-- Mirrored from dreamguys.co.in/demo/doccure/admin/specialities.html by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 30 Nov 2019 04:12:51 GMT -->
+
 </html>
