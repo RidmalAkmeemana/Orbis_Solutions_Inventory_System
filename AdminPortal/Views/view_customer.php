@@ -391,6 +391,11 @@ if (mysqli_num_rows($permission_query) > 0) {
 									</tbody>
 								</table>
 							</div>
+							<!-- Back Button -->
+							<div class="form-group text-right mt-5">
+								<button onclick="window.history.back();" class="btn btn-back"><i class="fa fa-arrow-left" aria-hidden="true"></i> Back to List</button>
+							</div>
+							<!-- Back Button -->
 						</div>
 					</div>
 				</div>
