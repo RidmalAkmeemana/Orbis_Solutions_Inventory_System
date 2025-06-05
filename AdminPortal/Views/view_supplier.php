@@ -708,7 +708,7 @@ if (mysqli_num_rows($permission_query) > 0) {
 				$('#updateSupplierForm').submit(function(event) {
 
 					event.preventDefault();
-					
+
 					$('#pageLoader').show(); // Show loader before sending
 
 					$.ajax({
@@ -803,7 +803,23 @@ if (mysqli_num_rows($permission_query) > 0) {
 			});
 		</script>
 
-		
+		<!-- Loader Script -->
+		<script>
+			let startTime = performance.now(); // Capture the start time when the page starts loading
+
+			window.addEventListener("load", function() {
+				let endTime = performance.now(); // Capture the end time when the page is fully loaded
+				let loadTime = endTime - startTime; // Calculate the total loading time
+
+				// Ensure the loader stays for at least 500ms but disappears dynamically based on actual load time
+				let delay = Math.max(loadTime);
+
+				setTimeout(function() {
+					document.getElementById("pageLoader").style.display = "none";
+				}, delay);
+			});
+		</script>
+		<!-- /Loader Script -->
 
 
 

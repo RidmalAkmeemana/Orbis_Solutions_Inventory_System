@@ -115,10 +115,57 @@ if ($result) {
             margin-bottom: 0;
             /* Remove default margin from label */
         }
+
+        /* Full-Screen Loader */
+        #pageLoader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.9);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
+
+        /* Spinner Animation */
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid #be3235;
+            border-top: 5px solid transparent;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* Full-Screen Loader */
     </style>
 </head>
 
 <body>
+
+    <!-- Full-Screen Loader -->
+    <div id="pageLoader">
+        <div class="loader-content" style="display: flex; flex-direction: column; align-items: center;">
+            <div class="spinner"></div>
+            <div style="margin-top: 10px; font-size: 16px;">Loading . . .</div>
+        </div>
+    </div>
+    <!-- /Full-Screen Loader -->
+
+
     <!-- Main Wrapper -->
     <div class="main-wrapper">
         <!-- Header -->
@@ -392,18 +439,18 @@ if ($result) {
                                                                     $Last_Name = $fetch['Last_Name'];
                                                                     $combinedInvoiceNumber = $invoiceNumber . $Id; // Combine Temp Invoice No + User Id
                                                                     ?>
-                                                                        <input style="display:none;" type="text" name="Invoice_Id" class="form-control text-right" value="<?php echo $combinedInvoiceNumber; ?>" readonly required>
-                                                                        <label for="customerSelect" class="mb-0" style="white-space: nowrap;">Customer Name:<label class="text-danger">*</label>
-                                                                            <select name="Customer_Id" id="customerSelect" class="form-control select2" required="">
-                                                                                <option selected disabled value="">Select Customer</option>
-                                                                                <?php
-                                                                                if (!empty($countryResult)) {
-                                                                                    foreach ($countryResult as $key => $value) {
-                                                                                        echo '<option value="' . $countryResult[$key]['Customer_Id'] . '">' . $countryResult[$key]['Customer_Name'] . '</option>';
-                                                                                    }
+                                                                    <input style="display:none;" type="text" name="Invoice_Id" class="form-control text-right" value="<?php echo $combinedInvoiceNumber; ?>" readonly required>
+                                                                    <label for="customerSelect" class="mb-0" style="white-space: nowrap;">Customer Name:<label class="text-danger">*</label>
+                                                                        <select name="Customer_Id" id="customerSelect" class="form-control select2" required="">
+                                                                            <option selected disabled value="">Select Customer</option>
+                                                                            <?php
+                                                                            if (!empty($countryResult)) {
+                                                                                foreach ($countryResult as $key => $value) {
+                                                                                    echo '<option value="' . $countryResult[$key]['Customer_Id'] . '">' . $countryResult[$key]['Customer_Name'] . '</option>';
                                                                                 }
-                                                                                ?>
-                                                                            </select>
+                                                                            }
+                                                                            ?>
+                                                                        </select>
                                                                 </h6>
                                                                 <small class="text-muted customer-outstandings" id="customerOutstandings" style="display: none;">Customer Outstandings (LKR): 0.00</small>
                                                             </h6>
@@ -692,6 +739,10 @@ if ($result) {
                 $('#customerSelect').on('change', function() {
                     var customerId = $(this).val();
                     if (customerId) {
+
+                        // Show loader before AJAX call
+                        $('#pageLoader').show();
+
                         $.ajax({
                             url: '../../API/POS/searchCustomer.php',
                             method: 'GET',
@@ -704,6 +755,9 @@ if ($result) {
                             },
                             error: function() {
                                 $('#customerOutstandings').text('Customer Outstandings (LKR): Error fetching data').show();
+                            },
+                            complete: function() {
+                                $('#pageLoader').hide();
                             }
                         });
                     } else {
@@ -732,6 +786,9 @@ if ($result) {
                         return;
                     }
 
+                    // Show loader before AJAX call
+                    $('#pageLoader').show();
+
                     $.ajax({
                         url: "../../API/POS/searchProductData.php",
                         method: "GET",
@@ -759,28 +816,34 @@ if ($result) {
                         },
                         error: function(xhr, status, error) {
                             alert("Unauthorized access");
+                        },
+                        complete: function() {
+                            $('#pageLoader').hide();
                         }
                     });
                 }
 
                 // Function to fetch and display system details
                 function fetchSystemDetails() {
+
+                    $('#pageLoader').show(); // Show loader before sending
+
                     $.ajax({
                         type: 'GET',
                         url: '../../API/Admin/getSystemConfiguration.php',
                         dataType: 'json',
-                        success: function (response) {
+                        success: function(response) {
 
                             //Service Charge
                             if (response.ServiceCharge_IsPercentage === "1") {
-                                
-                                var serviceCharge = parseFloat(response.ServiceCharge);  // Ensure serviceCharge is treated as a float
+
+                                var serviceCharge = parseFloat(response.ServiceCharge); // Ensure serviceCharge is treated as a float
                                 var serviceChargeIsPercentage = parseFloat(response.ServiceCharge_IsPercentage);
 
                                 $('#ServiceChargeIsPercentage').val(serviceChargeIsPercentage);
-                                
+
                                 // Set the formatted service charge text in the #serviceCharge element
-                                $('#serviceCharge').text('(%): '+serviceCharge.toLocaleString(undefined, {
+                                $('#serviceCharge').text('(%): ' + serviceCharge.toLocaleString(undefined, {
                                     minimumFractionDigits: 2,
                                     maximumFractionDigits: 2
                                 })).show();
@@ -793,13 +856,13 @@ if ($result) {
 
                             } else {
 
-                                var serviceCharge = parseFloat(response.ServiceCharge);  // Ensure serviceCharge is treated as a float
+                                var serviceCharge = parseFloat(response.ServiceCharge); // Ensure serviceCharge is treated as a float
                                 var serviceChargeIsPercentage = parseFloat(response.ServiceCharge_IsPercentage);
 
                                 $('#ServiceChargeIsPercentage').val(serviceChargeIsPercentage);
-                                
+
                                 // Set the formatted service charge text in the #serviceCharge element
-                                $('#serviceCharge').text('(LKR): '+serviceCharge.toLocaleString(undefined, {
+                                $('#serviceCharge').text('(LKR): ' + serviceCharge.toLocaleString(undefined, {
                                     minimumFractionDigits: 2,
                                     maximumFractionDigits: 2
                                 })).show();
@@ -813,14 +876,14 @@ if ($result) {
 
                             // Tax Charge
                             if (response.Tax_IsPercentage === "1") {
-                                
-                                var taxCharge = parseFloat(response.Tax);  // Ensure taxCharge is treated as a float
+
+                                var taxCharge = parseFloat(response.Tax); // Ensure taxCharge is treated as a float
                                 var taxChargeIsPercentage = parseFloat(response.Tax_IsPercentage);
 
                                 $('#TaxIsPercentage').val(taxChargeIsPercentage);
-                                
+
                                 // Set the formatted tax charge text in the #taxCharge element
-                                $('#taxCharge').text('(%): '+taxCharge.toLocaleString(undefined, {
+                                $('#taxCharge').text('(%): ' + taxCharge.toLocaleString(undefined, {
                                     minimumFractionDigits: 2,
                                     maximumFractionDigits: 2
                                 })).show();
@@ -833,13 +896,13 @@ if ($result) {
 
 
                             } else {
-                                var taxCharge = parseFloat(response.Tax);  // Ensure taxCharge is treated as a float
+                                var taxCharge = parseFloat(response.Tax); // Ensure taxCharge is treated as a float
                                 var taxChargeIsPercentage = parseFloat(response.Tax_IsPercentage);
 
                                 $('#TaxIsPercentage').val(taxChargeIsPercentage);
-                                
+
                                 // Set the formatted service charge text in the #taxCharge element
-                                $('#taxCharge').text('(LKR): '+taxCharge.toLocaleString(undefined, {
+                                $('#taxCharge').text('(LKR): ' + taxCharge.toLocaleString(undefined, {
                                     minimumFractionDigits: 2,
                                     maximumFractionDigits: 2
                                 })).show();
@@ -853,14 +916,14 @@ if ($result) {
 
                             // VAT Charge
                             if (response.Vat_IsPercentage === "1") {
-                                
-                                var vatCharge = parseFloat(response.Vat);  // Ensure vatCharge is treated as a float
+
+                                var vatCharge = parseFloat(response.Vat); // Ensure vatCharge is treated as a float
                                 var vatChargeIsPercentage = parseFloat(response.Vat_IsPercentage);
 
                                 $('#VatIsPercentage').val(vatChargeIsPercentage);
-                                
+
                                 // Set the formatted vat charge text in the #vatCharge element
-                                $('#vatCharge').text('(%): '+vatCharge.toLocaleString(undefined, {
+                                $('#vatCharge').text('(%): ' + vatCharge.toLocaleString(undefined, {
                                     minimumFractionDigits: 2,
                                     maximumFractionDigits: 2
                                 })).show();
@@ -872,13 +935,13 @@ if ($result) {
                                 }));
 
                             } else {
-                                var vatCharge = parseFloat(response.Vat);  // Ensure vatCharge is treated as a float
+                                var vatCharge = parseFloat(response.Vat); // Ensure vatCharge is treated as a float
                                 var vatChargeIsPercentage = parseFloat(response.Vat_IsPercentage);
 
                                 $('#VatIsPercentage').val(vatChargeIsPercentage);
-                                
+
                                 // Set the formatted vat charge text in the #vatCharge element
-                                $('#vatCharge').text('(LKR): '+vatCharge.toLocaleString(undefined, {
+                                $('#vatCharge').text('(LKR): ' + vatCharge.toLocaleString(undefined, {
                                     minimumFractionDigits: 2,
                                     maximumFractionDigits: 2
                                 })).show();
@@ -892,14 +955,14 @@ if ($result) {
 
                             // Delivery Charge
                             if (response.Delivery_IsPercentage === "1") {
-                                
-                                var deliveryCharge = parseFloat(response.Delivery);  // Ensure deliveryCharge is treated as a float
+
+                                var deliveryCharge = parseFloat(response.Delivery); // Ensure deliveryCharge is treated as a float
                                 var deliveryChargeIsPercentage = parseFloat(response.Delivery_IsPercentage);
 
                                 $('#DeliveryIsPercentage').val(deliveryChargeIsPercentage);
-                                
+
                                 // Set the formatted delivery charge text in the #deliveryCharge element
-                                $('#deliveryCharge').text('(%): '+deliveryCharge.toLocaleString(undefined, {
+                                $('#deliveryCharge').text('(%): ' + deliveryCharge.toLocaleString(undefined, {
                                     minimumFractionDigits: 2,
                                     maximumFractionDigits: 2
                                 })).show();
@@ -911,13 +974,13 @@ if ($result) {
                                 }));
 
                             } else {
-                                var deliveryCharge = parseFloat(response.Delivery);  // Ensure deliveryCharge is treated as a float
+                                var deliveryCharge = parseFloat(response.Delivery); // Ensure deliveryCharge is treated as a float
                                 var deliveryChargeIsPercentage = parseFloat(response.Delivery_IsPercentage);
 
                                 $('#DeliveryIsPercentage').val(deliveryChargeIsPercentage);
-                                
+
                                 // Set the formatted delivery charge text in the #deliveryCharge element
-                                $('#deliveryCharge').text('(LKR): '+deliveryCharge.toLocaleString(undefined, {
+                                $('#deliveryCharge').text('(LKR): ' + deliveryCharge.toLocaleString(undefined, {
                                     minimumFractionDigits: 2,
                                     maximumFractionDigits: 2
                                 })).show();
@@ -929,8 +992,11 @@ if ($result) {
                                 }));
                             }
                         },
-                        error: function (xhr, status, error) {
+                        error: function(xhr, status, error) {
                             console.error('Error:', status, error);
+                        },
+                        complete: function () {
+                            $('#pageLoader').hide(); // Hide loader after response (success or error)
                         }
                     });
                 }
@@ -1365,7 +1431,7 @@ if ($result) {
 
                 $(document).on('input', '.paid-amount-input', function() {
                     var $input = $(this);
-                    var value = $input.val().replace(/[^0-9.,]/g, '');  // Remove all non-numeric characters except dot and comma
+                    var value = $input.val().replace(/[^0-9.,]/g, ''); // Remove all non-numeric characters except dot and comma
                     $input.val(value); // Set the cleaned value back to the input
                 });
 
@@ -1471,7 +1537,11 @@ if ($result) {
 
                 // Function to add a new invoice
                 $('#invoiceForm').submit(function(event) {
+
                     event.preventDefault();
+
+                    $('#pageLoader').show(); // Show loader before sending
+
                     $.ajax({
                         type: 'POST',
                         url: '../../API/POS/saveInvoice.php',
@@ -1490,6 +1560,9 @@ if ($result) {
                         error: function(xhr, status, error) {
                             console.error('Error:', status, error);
                             $('#SaveFailedModel').modal('show');
+                        },
+                        complete: function () {
+                            $('#pageLoader').hide(); // Hide loader after response (success or error)
                         }
                     });
                 });
@@ -1519,6 +1592,24 @@ if ($result) {
                 });
             });
         </script>
+
+        <!-- Loader Script -->
+        <script>
+            let startTime = performance.now(); // Capture the start time when the page starts loading
+
+            window.addEventListener("load", function() {
+                let endTime = performance.now(); // Capture the end time when the page is fully loaded
+                let loadTime = endTime - startTime; // Calculate the total loading time
+
+                // Ensure the loader stays for at least 500ms but disappears dynamically based on actual load time
+                let delay = Math.max(loadTime);
+
+                setTimeout(function() {
+                    document.getElementById("pageLoader").style.display = "none";
+                }, delay);
+            });
+        </script>
+        <!-- /Loader Script -->
 </body>
 
 </html>
