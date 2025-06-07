@@ -592,7 +592,7 @@
             $('#pageLoader').show(); // Show loader before sending
 
             $.ajax({
-                url: '../../sendEmailHandler.php', // Update to your actual email sending endpoint
+                url: '../../sendInvoiceEmail.php', // Update to your actual email sending endpoint
                 type: 'POST',
                 data: {
                     from: from,
