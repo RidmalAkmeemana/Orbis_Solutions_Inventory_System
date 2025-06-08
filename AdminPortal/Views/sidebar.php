@@ -163,3 +163,14 @@
         </div>
     </div>
 </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const activeItem = document.querySelector('.sidebar-menu li.active');
+        if (activeItem) {
+            const sidebarInner = document.querySelector('.sidebar-inner');
+            const offsetTop = activeItem.offsetTop;
+            sidebarInner.scrollTop = offsetTop - 100; // Adjust as needed
+        }
+    });
+</script>
