@@ -1,67 +1,55 @@
 <?php
 
-    require_once '../../API/Connection/validator.php';
-    require_once '../../API/Connection/config.php';
-    require_once '../../API/Connection/ScreenPermission.php';
+require_once '../../API/Connection/validator.php';
+require_once '../../API/Connection/config.php';
+require_once '../../API/Connection/ScreenPermission.php';
 
-    // Fetch Company Name from the database
-	$companyName = ""; // Default name if query fails
+// Fetch Company Name from the database
+$companyName = ""; // Default name if query fails
 
-	$query = "SELECT * FROM tbl_company_info LIMIT 1"; 
-	$result = mysqli_query($conn, $query);
+$query = "SELECT * FROM tbl_company_info LIMIT 1";
+$result = mysqli_query($conn, $query);
 
-	if ($result && mysqli_num_rows($result) > 0) {
-		$row = mysqli_fetch_assoc($result);
-		$companyName = $row['Company_Name'];
-        $companyAddress = $row['Company_Address'];
-        $companyEmail = $row['Company_Email'];
-        $companyTel1 = $row['Company_Tel1'];
-        $companyTel2 = $row['Company_Tel2'];
-        $companyTel3 = $row['Company_Tel3'];
-	}
+if ($result && mysqli_num_rows($result) > 0) {
+    $row = mysqli_fetch_assoc($result);
+    $companyName = $row['Company_Name'];
+    $companyAddress = $row['Company_Address'];
+    $companyEmail = $row['Company_Email'];
+    $companyTel1 = $row['Company_Tel1'];
+    $companyTel2 = $row['Company_Tel2'];
+    $companyTel3 = $row['Company_Tel3'];
+}
 
-    $Product_Id = $_REQUEST["Product_Id"];
-    $Brand_Id = $_REQUEST["Brand_Id"];
-    $Category_Id = $_REQUEST["Category_Id"];
-    $Supplier_Id = $_REQUEST["Supplier_Id"];
-    $QtyFrom = $_REQUEST["QtyFrom"];
-    $QtyTo = $_REQUEST["QtyTo"];
+$Product_Id = $_REQUEST["Product_Id"];
+$Brand_Id = $_REQUEST["Brand_Id"];
+$Category_Id = $_REQUEST["Category_Id"];
+$Supplier_Id = $_REQUEST["Supplier_Id"];
+$QtyFrom = $_REQUEST["QtyFrom"];
+$QtyTo = $_REQUEST["QtyTo"];
 
-    if($Brand_Id != 'ALL')
-    {
-        $query = mysqli_query($conn, "SELECT * FROM `tbl_brand` WHERE `Brand_Id` = '$Brand_Id'") or die(mysqli_error());
-        $fetch = mysqli_fetch_array($query);
-        $Brand_Name = $fetch['Brand_Name'];
-    }
+if ($Brand_Id != 'ALL') {
+    $query = mysqli_query($conn, "SELECT * FROM `tbl_brand` WHERE `Brand_Id` = '$Brand_Id'") or die(mysqli_error());
+    $fetch = mysqli_fetch_array($query);
+    $Brand_Name = $fetch['Brand_Name'];
+} else {
+    $Brand_Name = 'ALL';
+}
 
-    else
-    {
-        $Brand_Name = 'ALL';
-    }
+if ($Category_Id != 'ALL') {
+    $query = mysqli_query($conn, "SELECT * FROM `tbl_category` WHERE `Category_Id` = '$Category_Id'") or die(mysqli_error());
+    $fetch = mysqli_fetch_array($query);
+    $Category_Name = $fetch['Category_Name'];
+} else {
+    $Category_Name = 'ALL';
+}
 
-    if($Category_Id != 'ALL')
-    {
-        $query = mysqli_query($conn, "SELECT * FROM `tbl_category` WHERE `Category_Id` = '$Category_Id'") or die(mysqli_error());
-        $fetch = mysqli_fetch_array($query);
-        $Category_Name = $fetch['Category_Name'];
-    }
-
-    else
-    {
-        $Category_Name = 'ALL';
-    }
-
-    if($Supplier_Id != 'ALL')
-    {
-        $query = mysqli_query($conn, "SELECT * FROM `tbl_suppliers` WHERE `Supplier_Id` = '$Supplier_Id'") or die(mysqli_error());
-        $fetch = mysqli_fetch_array($query);
-        $Supplier_Name = $fetch['Supplier_Name'];
-    }
-
-    else
-    {
-        $Supplier_Name = 'ALL';
-    }
+if ($Supplier_Id != 'ALL') {
+    $query = mysqli_query($conn, "SELECT * FROM `tbl_suppliers` WHERE `Supplier_Id` = '$Supplier_Id'") or die(mysqli_error());
+    $fetch = mysqli_fetch_array($query);
+    $Supplier_Name = $fetch['Supplier_Name'];
+} else {
+    $Supplier_Name = 'ALL';
+}
 
 ?>
 
@@ -71,7 +59,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
-    <title><?php echo($companyName); ?> - Inventory Report</title>
+    <title><?php echo ($companyName); ?> - Inventory Report</title>
 
     <!-- Favicon -->
     <link rel="shortcut icon" type="image/x-icon" href="assets/img/favicon.png">
@@ -126,6 +114,42 @@
             background-color: #333;
             color: white;
         }
+
+        /* Full-Screen Loader */
+        #pageLoader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.9);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
+
+        /* Spinner Animation */
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid #be3235;
+            border-top: 5px solid transparent;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* Full-Screen Loader */
     </style>
 
     <!--[if lt IE 9]>
@@ -135,6 +159,16 @@
 </head>
 
 <body>
+
+    <!-- Full-Screen Loader -->
+    <div id="pageLoader">
+        <div class="loader-content" style="display: flex; flex-direction: column; align-items: center;">
+            <div class="spinner"></div>
+            <div style="margin-top: 10px; font-size: 16px;">Loading . . .</div>
+        </div>
+    </div>
+    <!-- /Full-Screen Loader -->
+
     <!-- Invoice Container -->
     <div class="invoice-container">
         <div class="row">
@@ -156,21 +190,21 @@
         <div class="row">
             <div style="font-family: Arial; font-size: 17px;" class="col-sm-12 m-b-20">
                 <ul class="list-unstyled mb-0">
-                    <li class="font-weight-bold mb-1"><?php echo($companyName); ?>,</li>
-                    <li>Email: <?php echo($companyEmail); ?></li>
+                    <li class="font-weight-bold mb-1"><?php echo ($companyName); ?>,</li>
+                    <li>Email: <?php echo ($companyEmail); ?></li>
                     <?php $companyTels = array_filter([$companyTel1, $companyTel2, $companyTel3]); ?>
                     <li>Tel: <?php echo implode(", ", $companyTels); ?></li>
-                    <?php 
-                        $companyAddress = $companyAddress; // Assume this is fetched from DB
-                        // Split address into multiple lines based on commas
-                        $addressParts = array_map('trim', explode(',', $companyAddress));
-                        
-                        // Format the address dynamically
-                        $addressLine1 = isset($addressParts[0]) ? "No: " . $addressParts[0] . "," : "";
-                        $addressLine2 = isset($addressParts[1]) ? $addressParts[1] . "," : "";
-                        $addressLine3 = isset($addressParts[2]) ? $addressParts[2] . "," : "";
-                        $addressLine4 = isset($addressParts[3]) ? $addressParts[3] . "," : "";
-                        $addressLine5 = isset($addressParts[4]) ? $addressParts[4] . "." : "";
+                    <?php
+                    $companyAddress = $companyAddress; // Assume this is fetched from DB
+                    // Split address into multiple lines based on commas
+                    $addressParts = array_map('trim', explode(',', $companyAddress));
+
+                    // Format the address dynamically
+                    $addressLine1 = isset($addressParts[0]) ? "No: " . $addressParts[0] . "," : "";
+                    $addressLine2 = isset($addressParts[1]) ? $addressParts[1] . "," : "";
+                    $addressLine3 = isset($addressParts[2]) ? $addressParts[2] . "," : "";
+                    $addressLine4 = isset($addressParts[3]) ? $addressParts[3] . "," : "";
+                    $addressLine5 = isset($addressParts[4]) ? $addressParts[4] . "." : "";
                     ?>
                     <?php if (!empty($addressLine1) || !empty($addressLine2)) echo "<li>$addressLine1 $addressLine2</li>"; ?>
                     <?php if (!empty($addressLine3) || !empty($addressLine4)) echo "<li>$addressLine3 $addressLine4</li>"; ?>
@@ -243,7 +277,7 @@
         </div>
 
         <div class="row mt-4">
-             <div class="col-sm-12 m-b-20 d-flex justify-content-center"> <!-- Added d-flex and justify-content-center -->
+            <div class="col-sm-12 m-b-20 d-flex justify-content-center"> <!-- Added d-flex and justify-content-center -->
                 <div class="invoice-details">
                     <p class="text-muted mb-0 text-center ">
                         <span style="font-family: Arial;">System Design By Orbis Solutions</span>
@@ -277,49 +311,49 @@
     <script src="assets/js/script.js"></script>
 
     <script>
-    // Fetch inventory data with filter parameters
-    function fetchInventoryData() {
-        const filterParams = {
-            Product_Id: "<?php echo addslashes($Product_Id); ?>",
-            Brand_Id: "<?php echo addslashes($Brand_Id); ?>",
-            Category_Id: "<?php echo addslashes($Category_Id); ?>",
-            Supplier_Id: "<?php echo addslashes($Supplier_Id); ?>",
-            QtyFrom: "<?php echo addslashes($QtyFrom); ?>",
-            QtyTo: "<?php echo addslashes($QtyTo); ?>"
-        };
+        // Fetch inventory data with filter parameters
+        function fetchInventoryData() {
+            const filterParams = {
+                Product_Id: "<?php echo addslashes($Product_Id); ?>",
+                Brand_Id: "<?php echo addslashes($Brand_Id); ?>",
+                Category_Id: "<?php echo addslashes($Category_Id); ?>",
+                Supplier_Id: "<?php echo addslashes($Supplier_Id); ?>",
+                QtyFrom: "<?php echo addslashes($QtyFrom); ?>",
+                QtyTo: "<?php echo addslashes($QtyTo); ?>"
+            };
 
-        $.ajax({
-            url: '../../API/Admin/getInventoryReportData.php', // Update with actual path
-            type: 'POST', // Use POST to match the server-side method
-            data: filterParams,
-            dataType: 'json',
-            success: function(response) {
-                if (response.success === 'false') {
-                    showNoDataFound();
-                } else {
-                    populateInventoryData(response);
+            $.ajax({
+                url: '../../API/Admin/getInventoryReportData.php', // Update with actual path
+                type: 'POST', // Use POST to match the server-side method
+                data: filterParams,
+                dataType: 'json',
+                success: function(response) {
+                    if (response.success === 'false') {
+                        showNoDataFound();
+                    } else {
+                        populateInventoryData(response);
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error('AJAX Error: ', status, error);
                 }
-            },
-            error: function(xhr, status, error) {
-                console.error('AJAX Error: ', status, error);
-            }
-        });
-    }
+            });
+        }
 
-    // Function to populate page data
-    function populateInventoryData(data) {
-        const page = data.pageData;
+        // Function to populate page data
+        function populateInventoryData(data) {
+            const page = data.pageData;
 
-        document.getElementById('total_Qty').innerText = page.Total_Qty || 0;
-        document.getElementById('total_Cost').innerText = page.Total_Cost.toLocaleString() || 0;
+            document.getElementById('total_Qty').innerText = page.Total_Qty || 0;
+            document.getElementById('total_Cost').innerText = page.Total_Cost.toLocaleString() || 0;
 
-        // Populate products
-        const products = data.productData;
-        const productTable = document.getElementById('product_list');
-        productTable.innerHTML = ''; // Clear previous rows
+            // Populate products
+            const products = data.productData;
+            const productTable = document.getElementById('product_list');
+            productTable.innerHTML = ''; // Clear previous rows
 
-        products.forEach((product) => {
-            const row = `
+            products.forEach((product) => {
+                const row = `
                 <tr>
                     <td>${product.Product_Id}</td>
                     <td>${product.Product_Name}</td>
@@ -328,30 +362,48 @@
                 </tr>
                 <tr></tr>
             `;
-            productTable.insertAdjacentHTML('beforeend', row);
-        });
-    }
+                productTable.insertAdjacentHTML('beforeend', row);
+            });
+        }
 
-    // Function to show "No Data Found" in the table
-    function showNoDataFound() {
-        document.getElementById('total_Qty').innerText = 0;
-        document.getElementById('total_Cost').innerText = '0.00';
+        // Function to show "No Data Found" in the table
+        function showNoDataFound() {
+            document.getElementById('total_Qty').innerText = 0;
+            document.getElementById('total_Cost').innerText = '0.00';
 
-        // Clear the product table and display "No Data Found"
-        const productTable = document.getElementById('product_list');
-        productTable.innerHTML = `
+            // Clear the product table and display "No Data Found"
+            const productTable = document.getElementById('product_list');
+            productTable.innerHTML = `
             <tr>
                 <td colspan="6" class="text-center">No Data Found for the Selected Filters</td>
             </tr>
             <tr></tr>
         `;
-    }
+        }
 
-    // Call fetch function on page load
-    $(document).ready(function() {
-        fetchInventoryData();
-    });
+        // Call fetch function on page load
+        $(document).ready(function() {
+            fetchInventoryData();
+        });
     </script>
+
+    <!-- Loader Script -->
+    <script>
+        let startTime = performance.now(); // Capture the start time when the page starts loading
+
+        window.addEventListener("load", function() {
+            let endTime = performance.now(); // Capture the end time when the page is fully loaded
+            let loadTime = endTime - startTime; // Calculate the total loading time
+
+            // Ensure the loader stays for at least 500ms but disappears dynamically based on actual load time
+            let delay = Math.max(loadTime);
+
+            setTimeout(function() {
+                document.getElementById("pageLoader").style.display = "none";
+            }, delay);
+        });
+    </script>
+    <!-- /Loader Script -->
 </body>
 
 </html>

@@ -563,7 +563,11 @@ if ($result && mysqli_num_rows($result) > 0) {
 			fetchCompanyDetails();
 
 			$('#updateCompanyForm').submit(function(event) {
+
 				event.preventDefault();
+
+				$('#pageLoader').show(); // Show loader before sending
+
 				$.ajax({
 					type: 'POST',
 					url: '../../API/Admin/updateCompany.php',
@@ -584,6 +588,9 @@ if ($result && mysqli_num_rows($result) > 0) {
 						console.error('Error:', status, error);
 						$('#Update_Company').modal('hide');
 						$('#UpdateFailedModel').modal('show');
+					},
+					complete: function() {
+						$('#pageLoader').hide(); // Hide loader after response (success or error)
 					}
 				});
 			});
@@ -640,7 +647,11 @@ if ($result && mysqli_num_rows($result) > 0) {
 			fetchSystemDetails();
 
 			$('#updateConfigurationForm').submit(function(event) {
+
 				event.preventDefault();
+
+				$('#pageLoader').show(); // Show loader before sending
+				
 				$.ajax({
 					type: 'POST',
 					url: '../../API/Admin/updateConfiguration.php',
@@ -661,6 +672,9 @@ if ($result && mysqli_num_rows($result) > 0) {
 						console.error('Error:', status, error);
 						$('#Update_Company').modal('hide');
 						$('#UpdateFailedModel').modal('show');
+					},
+					complete: function() {
+						$('#pageLoader').hide(); // Hide loader after response (success or error)
 					}
 				});
 			});
