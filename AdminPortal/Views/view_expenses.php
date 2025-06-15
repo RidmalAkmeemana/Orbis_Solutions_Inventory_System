@@ -49,7 +49,7 @@ if (mysqli_num_rows($permission_query) > 0) {
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
-	<title>O<?php echo ($companyName); ?> - Expenses</title>
+	<title><?php echo ($companyName); ?> - Expenses</title>
 
 	<!-- Favicon -->
 	<link rel="shortcut icon" type="image/x-icon" href="assets/img/favicon.png">
@@ -317,6 +317,57 @@ if (mysqli_num_rows($permission_query) > 0) {
 								<i class="fa fa-check-circle animate__animated animate__tada animate__infinite" style="font-size: 100px; margin-top:20px; color:#26af48;" aria-hidden="true"></i>
 								<h3 class="modal-title"><b>Success</b></h3>
 								<p>Record Deleted Successfully !</p>
+							</div>
+							<div class="modal-body">
+								<button style="width:20%;" type="button" class="btn btn-primary" id="OkBtn" data-dismiss="modal">OK</button>
+							</div>
+						</div>
+
+					</div>
+				</div>
+
+				<div class="modal fade" id="DeleteFailedModel" role="dialog">
+					<div class="modal-dialog modal-dialog-centered">
+						<!-- Modal content-->
+						<div class="modal-content text-center">
+							<div class="modal-body mt-4">
+								<i class="fa fa-exclamation-circle animate__animated animate__tada animate__infinite" style="font-size: 100px; margin-top:20px; color:#e63c3c;" aria-hidden="true"></i>
+								<h3 class="modal-title"><b>Error</b></h3>
+								<p>Record Not Deleted !</p>
+							</div>
+							<div class="modal-body">
+								<button style="width:20%;" type="button" class="btn btn-primary" id="OkBtn" data-dismiss="modal">OK</button>
+							</div>
+						</div>
+
+					</div>
+				</div>
+
+				<div class="modal fade" id="MaxAmountModel" role="dialog">
+					<div class="modal-dialog modal-dialog-centered">
+						<!-- Modal content-->
+						<div class="modal-content text-center">
+							<div class="modal-body mt-4">
+								<i class="fa fa-exclamation-circle animate__animated animate__tada animate__infinite" style="font-size: 100px; margin-top:20px; color:#e63c3c;" aria-hidden="true"></i>
+								<h3 class="modal-title"><b>Error</b></h3>
+								<p>Max Payable Amount Exeeded</p>
+							</div>
+							<div class="modal-body">
+								<button style="width:20%;" type="button" class="btn btn-primary" id="OkBtn" data-dismiss="modal">OK</button>
+							</div>
+						</div>
+
+					</div>
+				</div>
+
+				<div class="modal fade" id="PaidAlertModel" role="dialog">
+					<div class="modal-dialog modal-dialog-centered">
+						<!-- Modal content-->
+						<div class="modal-content text-center">
+							<div class="modal-body mt-4">
+								<i class="fa fa-exclamation-circle animate__animated animate__tada animate__infinite" style="font-size: 100px; margin-top:20px; color:#e63c3c;" aria-hidden="true"></i>
+								<h3 class="modal-title"><b>Error</b></h3>
+								<p>This Expense has Already been Paid</p>
 							</div>
 							<div class="modal-body">
 								<button style="width:20%;" type="button" class="btn btn-primary" id="OkBtn" data-dismiss="modal">OK</button>
@@ -1043,7 +1094,8 @@ if (mysqli_num_rows($permission_query) > 0) {
 					let dueAmount = parseFloat($('#Temp_Due_Amount').val()) || 0;
 
 					if (dueAmount === 0) {
-						alert("This Expense has already been Paid");
+						$('#Payment_Expense').modal('hide');
+						$('#PaidAlertModel').modal('show');
 						$(this).val('');
 					} else if (paidAmount === 0) {
 						$('#Due_Total').val(number_format(dueAmount, 2));
@@ -1053,7 +1105,8 @@ if (mysqli_num_rows($permission_query) > 0) {
 					} else {
 						// If Paid_Amount > Due_Total and dueAmount is not 0
 						$('#Due_Amount').val('0.00'); // Due_Total becomes 0
-						alert("Max Amount payable: " + number_format(dueAmount, 2));
+						$('#Payment_Expense').modal('hide');
+						$('#MaxAmountModel').modal('show');
 						$('#Paid_Amount').val(number_format(dueAmount, 2)); // Paid_Amount becomes Due_Amount
 					}
 				});

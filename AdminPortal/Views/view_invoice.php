@@ -323,6 +323,23 @@ if (mysqli_num_rows($permission_query) > 0) {
 
 					</div>
 				</div>
+
+				<div class="modal fade" id="AlreadyPaidModel" role="dialog">
+					<div class="modal-dialog modal-dialog-centered">
+						<!-- Modal content-->
+						<div class="modal-content text-center">
+							<div class="modal-body mt-4">
+								<i class="fa fa-exclamation-circle animate__animated animate__tada animate__infinite" style="font-size: 100px; margin-top:20px; color:#e63c3c;" aria-hidden="true"></i>
+								<h3 class="modal-title"><b>Error</b></h3>
+								<p>This Invoice has already been Paid !</p>
+							</div>
+							<div class="modal-body">
+								<button style="width:20%;" type="button" class="btn btn-primary" id="OkBtn" data-dismiss="modal">OK</button>
+							</div>
+						</div>
+
+					</div>
+				</div>
 				<!-- /Model Alerts -->
 
 				<!-- Page Header -->
@@ -341,9 +358,9 @@ if (mysqli_num_rows($permission_query) > 0) {
 								<a style="display:none;" href="#" data-toggle="modal" class="btn btn bg-primary-light"><i class="fa fa-usd" aria-hidden="true"></i> Payment</a>
 							<?php endif; ?>
 							<?php if ($has_access_to_delete_details): ?>
-								<a href="#Delete_Details" data-toggle="modal" class="btn btn bg-danger-light"><i class="fa fa-retweet"></i> Return</a>
+								<a href="#Delete_Details" data-toggle="modal" class="btn btn bg-danger-light"><i class="fa fa-retweet"></i> Delete</a>
 							<?php else: ?>
-								<a style="display:none;" href="#" data-toggle="modal" class="btn btn bg-danger-light"><i class="fa fa-retweet"></i> Return</a>
+								<a style="display:none;" href="#" data-toggle="modal" class="btn btn bg-danger-light"><i class="fa fa-retweet"></i> Delete</a>
 							<?php endif; ?>
 							<?php if ($has_access_to_print_invoice): ?>
 								<a href="printInvoiceCopy.php?Invoice_No=<?php echo $Invoice_Id ?>" class="btn btn bg-warning-light"><i class="fa fa-print" aria-hidden="true"></i> Re-Print</a>
@@ -1023,7 +1040,8 @@ if (mysqli_num_rows($permission_query) > 0) {
 					let balanceTotal = parseFloat($('#Temp_Balance_Total').val()) || 0;
 
 					if (dueTotal === 0) {
-						alert("This Invoice has already been Paid");
+						$('#Update_Details').modal('hide');
+						$('#AlreadyPaidModel').modal('show');
 						$(this).val('');
 					}
 

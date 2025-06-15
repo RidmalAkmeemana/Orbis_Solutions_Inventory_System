@@ -268,11 +268,13 @@ if ($result && mysqli_num_rows($result) > 0) {
                 </div>
                 <div class="modal-body">
                     <div class="form-content p-2">
-                        <h4 class="modal-title">Confirmation !</h4>
-                        <p class="mb-4">Are you sure want to Reverse The Last Payment ?</p>
-
                         <form method="POST" action="../../API/Admin/reverseExpensePayment.php" id="reversePaymentForm" enctype="multipart/form-data">
-                            <input style="display:none;" type="text" name="Expense_Id" value="<?php echo $fetch1['Expense_Id']; ?>">
+                        <div class="form-group">
+                            <input style="display:none;" type="text" name="Expense_Id" class="form-control" required="" readonly="true" value="<?php echo $fetch1['Expense_Id']; ?>">
+                            <input style="display:none;" type="text" name="Reverse_By" class="form-control" required="" readonly="true" value="<?php echo $fetch['Id']; ?>">
+                            <label>Reverse Reason</label><label class="text-danger">*</label>
+                            <input type="text" name="Reverse_Reason" class="form-control" required="">
+                        </div>
                             <button type="submit" name="reverse" class="btn btn-primary btn-block">Confirm </button>
                         </form>
                     </div>

@@ -59,7 +59,7 @@
 
                 <?php if (hasPermission($role, 'add_product-history.php', $conn)) { ?>
                 <li class="<?php echo ($currentPage == 'add_product-history.php' || $currentPage == 'view_product-details.php') ? 'active' : ''; ?>"> 
-                    <a href="add_product-history.php"><i class="fa fa-history"></i> <span>Product History</span></a>
+                    <a href="add_product-history.php"><i class="fa fa-history"></i> <span>Product Details</span></a>
                 </li>
                 <?php } ?>
 
@@ -106,6 +106,12 @@
                 <?php if (hasPermission($role, 'reverse_expense.php', $conn)) { ?>
                 <li class="<?php echo ($currentPage == 'reverse_expense.php') ? 'active' : ''; ?>"> 
                     <a href="reverse_expense.php"><i class="fa fa-undo"></i> <span>Reverse Expenses</span></a>
+                </li>
+                <?php } ?>
+
+                <?php if (hasPermission($role, 'expense_reverse-history.php', $conn)) { ?>
+                <li class="<?php echo ($currentPage == 'expense_reverse-history.php') ? 'active' : ''; ?>"> 
+                    <a href="expense_reverse-history.php"><i class="fa fa-history"></i> <span>Reversal History</span></a>
                 </li>
                 <?php } ?>
 
