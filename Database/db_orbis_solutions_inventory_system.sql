@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 06, 2025 at 11:45 AM
+-- Generation Time: Jun 15, 2025 at 09:49 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.0.30
 
@@ -82,7 +82,7 @@ INSERT INTO `tbl_backend` (`Backend_Id`, `Backend_Name`, `Screen_Category`, `Scr
 (141, 'viewInvoiceDataCopy.php', 'Invoice', 'View'),
 (142, 'getAllInvoiceData.php', 'Invoice', 'View'),
 (143, 'updateInvoice.php', 'Invoice', 'Payment'),
-(144, 'deleteInvoice.php', 'Invoice', 'Return'),
+(144, 'deleteInvoice.php', 'Invoice', 'Delete'),
 (145, 'viewInvoiceDetails.php', 'Invoice', 'View'),
 (146, 'getInventoryReportData.php', 'Reports', 'Inventory Report'),
 (147, 'getSalesReportData.php', 'Reports', 'Sales Report'),
@@ -97,23 +97,24 @@ INSERT INTO `tbl_backend` (`Backend_Id`, `Backend_Name`, `Screen_Category`, `Scr
 (156, 'viewExpenseTypeData.php', 'Expenses Types', 'View'),
 (157, 'updateExpensesTypes.php', 'Expenses Types', 'Edit'),
 (158, 'deleteExpensesTypes.php', 'Expenses Types', 'Delete'),
-(159, 'reversePayment.php', 'Reverse Payment', 'View'),
+(159, 'reversePayment.php', 'Invoice', 'Reversal'),
 (160, 'addNewExpense.php', 'Expenses', 'Add'),
 (161, 'getAllExpenseData.php', 'Expenses', 'View'),
 (162, 'viewExpenseData.php', 'Expenses', 'View'),
 (163, 'updateExpenses.php', 'Expenses', 'Edit'),
 (164, 'deleteExpenses.php', 'Expenses', 'Delete'),
 (165, 'expensePayment.php', 'Expenses', 'Payment'),
-(166, 'reverseExpensePayment.php', 'Reverse Expenses', 'View'),
-(167, 'getAllInvoicePaymentData.php', 'Reverse Payment', 'View'),
-(168, 'getAllExpensePaymentData.php', 'Reverse Expense', 'View'),
+(166, 'reverseExpensePayment.php', 'Expenses', 'Reversal'),
+(167, 'getAllInvoicePaymentData.php', 'Invoice', 'Reversal'),
+(168, 'getAllExpensePaymentData.php', 'Expenses', 'Reversal'),
 (169, 'getAllCashFlowData.php', 'Cash Flow', 'View'),
-(170, 'returnInvoice.php', 'Return Invoice', 'View'),
+(170, 'returnInvoice.php', 'Invoice', 'Return'),
 (171, 'getProductDetails.php', 'Products', 'Add'),
 (172, 'getCompanyDetails.php', 'System Information', 'View'),
 (173, 'updateCompany.php', 'System Information', 'View'),
 (174, 'getSystemConfiguration.php', 'System Information', 'View'),
-(175, 'updateConfiguration.php', 'System Information', 'View');
+(175, 'updateConfiguration.php', 'System Information', 'View'),
+(177, 'getExpensesReversalHistory.php', 'Expenses', 'Reversal History');
 
 -- --------------------------------------------------------
 
@@ -178,7 +179,6 @@ INSERT INTO `tbl_backend_permissions` (`Permission_Id`, `Role`, `Backend_Id`) VA
 (822, 'Super Admin', 142),
 (823, 'Super Admin', 145),
 (824, 'Super Admin', 143),
-(825, 'Super Admin', 144),
 (826, 'Super Admin', 146),
 (828, 'Super Admin', 148),
 (829, 'Super Admin', 149),
@@ -197,15 +197,8 @@ INSERT INTO `tbl_backend_permissions` (`Permission_Id`, `Role`, `Backend_Id`) VA
 (842, 'Super Admin', 162),
 (843, 'Super Admin', 163),
 (844, 'Super Admin', 164),
-(845, 'Super Admin', 165),
-(846, 'Super Admin', 166),
-(847, 'Super Admin', 168),
 (848, 'Super Admin', 169),
 (849, 'Super Admin', 170),
-(850, 'Admin', 100),
-(851, 'Admin', 104),
-(852, 'Admin', 109),
-(853, 'Admin', 120),
 (854, 'Admin', 101),
 (855, 'Admin', 105),
 (856, 'Admin', 110),
@@ -269,13 +262,19 @@ INSERT INTO `tbl_backend_permissions` (`Permission_Id`, `Role`, `Backend_Id`) VA
 (915, 'Admin', 166),
 (916, 'Admin', 168),
 (917, 'Admin', 169),
-(919, 'Admin', 115),
 (920, 'Admin', 165),
 (923, 'Super Admin', 147),
 (924, 'Super Admin', 172),
 (925, 'Super Admin', 173),
 (926, 'Super Admin', 174),
-(927, 'Super Admin', 175);
+(927, 'Super Admin', 175),
+(929, 'Admin', 109),
+(930, 'Admin', 120),
+(931, 'Super Admin', 144),
+(932, 'Super Admin', 165),
+(933, 'Super Admin', 166),
+(934, 'Super Admin', 168),
+(935, 'Super Admin', 177);
 
 -- --------------------------------------------------------
 
@@ -326,10 +325,18 @@ CREATE TABLE `tbl_cash_flow` (
 --
 
 INSERT INTO `tbl_cash_flow` (`Id`, `Income_Transaction_Id`, `Expense_Transaction_Id`, `Description`, `Income`, `Expense`, `Payment_Type`, `Update_Date`) VALUES
-(184, NULL, 52, 'Internet Bill Payment_1 - EXP0001', NULL, 7060.00, 'Cash', '2025-02-05 20:08:26'),
 (191, 12, NULL, 'Invoice Payment_1 - INVW000011', 15000.00, NULL, 'Cash', '2025-04-06 11:39:08'),
 (193, 14, NULL, 'Invoice Payment_1 - INVW000031', 45000.00, NULL, 'Cash', '2025-04-06 14:20:32'),
-(194, NULL, 55, 'Internet Bill Payment_1 - EXP0002', NULL, 5000.00, 'Cash', '2025-04-06 15:10:01');
+(195, 15, NULL, 'Invoice Payment_1 - INVW000091', 1752.55, NULL, 'Cash', '2025-04-27 18:53:42'),
+(196, 16, NULL, 'Invoice Payment_1 - INVW000101', 830.00, NULL, 'Cash', '2025-04-27 18:54:50'),
+(197, 17, NULL, 'Invoice Payment_1 - INVW000131', 5.00, NULL, 'Cash', '2025-04-27 21:21:24'),
+(198, 18, NULL, 'Invoice Payment_2 - INVW000131', 3531.24, NULL, 'Cash', '2025-04-27 21:22:30'),
+(200, 20, NULL, 'Invoice Payment_1 - INVR000161', 6874.00, NULL, 'Cash', '2025-05-01 14:47:58'),
+(201, 21, NULL, 'Invoice Payment_1 - INVR000171', 5769.00, NULL, 'Card', '2025-05-01 14:49:12'),
+(215, 26, NULL, 'Invoice Payment_1 - INVR000211', 1500.00, NULL, 'Cash', '2025-06-15 20:45:05'),
+(216, 27, NULL, 'Invoice Payment_1 - INVW000021', 3168.00, NULL, 'Cash', '2025-06-15 20:45:50'),
+(226, NULL, 74, 'Internet Bill Payment_1 - EXP0001', NULL, 8500.00, 'Cash', '2025-06-16 00:14:56'),
+(228, NULL, 76, 'Internet Bill Payment_2 - EXP0001', NULL, 8949.79, 'Cash', '2025-06-16 01:16:36');
 
 -- --------------------------------------------------------
 
@@ -418,7 +425,7 @@ CREATE TABLE `tbl_customers` (
 
 INSERT INTO `tbl_customers` (`Id`, `Customer_Id`, `Customer_Name`, `Customer_Address`, `Customer_Contact`, `Customer_Email`) VALUES
 (1, 'CUS0001', 'SHAN YAMAHA ', NULL, '0777917356', NULL),
-(4, 'CUS0002', 'Dananjaya', 'Ganemulla', '0777323252', NULL);
+(4, 'CUS0002', 'Dananjaya', 'Ganemulla', '0777323252', 'rajeewaakmeemana@gmail.com');
 
 -- --------------------------------------------------------
 
@@ -448,8 +455,7 @@ CREATE TABLE `tbl_expenses` (
 --
 
 INSERT INTO `tbl_expenses` (`Id`, `Expense_Id`, `Expense_Type_Id`, `User_Id`, `Expense_Title`, `Expense_Description`, `Expense_Amount`, `Doc`, `Status`, `Paid_Amount`, `Due_Amount`, `Payment_Type`, `Expence_Date`, `Payment_Date`) VALUES
-(30, 'EXP0001', 'ETP0001', 1, 'SLT Fiber', 'Pay', 7060.00, 'http://localhost/Orbis_Solutions_Inventory_System/Files/EXP0001.pdf', 'Fully Paid', 7060.00, 0.00, 'Cash', '2025-02-05 20:08:17', '2025-02-05 20:08:26'),
-(31, 'EXP0002', 'ETP0001', 1, 'Reload Bill', NULL, 5000.00, 'http://localhost/Orbis_Solutions_Inventory_System/Files/EXP0002.pdf', 'Fully Paid', 5000.00, 0.00, 'Cash', '2025-02-05 20:25:22', '2025-04-06 15:10:01');
+(39, 'EXP0001', 'ETP0001', 1, 'SLT Fiber', 'Pay 01', 17449.79, 'http://localhost/Orbis_Solutions_Inventory_System/Files/EXP0001.pdf', 'Fully Paid', 17449.79, 0.00, 'Cash', '2025-06-15 23:24:11', '2025-06-16 01:16:36');
 
 -- --------------------------------------------------------
 
@@ -490,7 +496,8 @@ CREATE TABLE `tbl_expenses_types` (
 --
 
 INSERT INTO `tbl_expenses_types` (`Id`, `Expense_Type_Id`, `Expense_Category_Id`, `Expense_Type`) VALUES
-(11, 'ETP0001', 'EXC0003', 'Internet Bill');
+(11, 'ETP0001', 'EXC0003', 'Internet Bill'),
+(12, 'ETP0002', 'EXC0003', 'Letter Charge');
 
 -- --------------------------------------------------------
 
@@ -516,8 +523,36 @@ CREATE TABLE `tbl_expense_payments` (
 --
 
 INSERT INTO `tbl_expense_payments` (`Id`, `Expense_Id`, `Payment_Id`, `Expense_Amount`, `Paid_Amount`, `Due_Amount`, `Payment_Type`, `Expense_Description`, `Payment_Date`, `Updated_By`) VALUES
-(52, 'EXP0001', 1, 7060.00, 7060.00, 0.00, 'Cash', 'Pay', '2025-02-05 20:08:26', 1),
-(55, 'EXP0002', 1, 5000.00, 5000.00, 0.00, 'Cash', NULL, '2025-04-06 15:10:01', 1);
+(74, 'EXP0001', 1, 17449.79, 8500.00, 8949.79, 'Cash', 'Pay 01', '2025-06-16 00:14:56', 1),
+(76, 'EXP0001', 2, 17449.79, 8949.79, 0.00, 'Cash', 'Pay 01', '2025-06-16 01:16:36', 1);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `tbl_expense_payments_history`
+--
+
+CREATE TABLE `tbl_expense_payments_history` (
+  `Id` int(11) NOT NULL,
+  `Expense_Id` varchar(11) NOT NULL,
+  `Payment_Id` int(11) NOT NULL,
+  `Expense_Amount` float(10,2) NOT NULL,
+  `Reverse_Amount` float(10,2) NOT NULL,
+  `Reverse_Reason` varchar(1000) DEFAULT NULL,
+  `Payment_Date` datetime NOT NULL,
+  `Reverse_Date` datetime NOT NULL,
+  `Reversed_By` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `tbl_expense_payments_history`
+--
+
+INSERT INTO `tbl_expense_payments_history` (`Id`, `Expense_Id`, `Payment_Id`, `Expense_Amount`, `Reverse_Amount`, `Reverse_Reason`, `Payment_Date`, `Reverse_Date`, `Reversed_By`) VALUES
+(76, 'EXP0001', 1, 17449.79, 8600.00, 'Invalid Payment Method', '2025-06-15 23:24:48', '2025-06-15 23:25:17', 1),
+(77, 'EXP0001', 2, 17449.79, 500.00, 'Wrong Entry', '2025-06-15 23:52:03', '2025-06-15 23:52:21', 2),
+(79, 'EXP0001', 1, 17449.79, 8600.00, 'Test', '2025-06-15 23:25:35', '2025-06-16 00:14:11', 1),
+(80, 'EXP0001', 2, 17449.79, 8500.00, 'Wrong Entry', '2025-06-16 00:15:05', '2025-06-16 01:16:12', 1);
 
 -- --------------------------------------------------------
 
@@ -560,10 +595,25 @@ CREATE TABLE `tbl_invoice` (
 
 INSERT INTO `tbl_invoice` (`Id`, `Invoice_Id`, `Customer_Id`, `User_Id`, `Sale_Type`, `Item_Count`, `Status`, `Sub_Total`, `Discount_Total`, `ServiceCharge_IsPercentage`, `ServiceCharge`, `Tax_IsPercentage`, `Tax`, `Vat_IsPercentage`, `Vat`, `Delivery_IsPercentage`, `Delivery`, `Profit_Total`, `Grand_Total`, `Paid_Amount`, `Balance_Total`, `Due_Total`, `Payment_Type`, `Description`, `Invoice_Date`, `Payment_Date`) VALUES
 (16, 'INVW000011', 'CUS0001', 1, 'Whole Sale', 2, 'Partially Paid', 20050.00, 750.00, 1, 10.00, 1, 2.00, 1, 4.00, 1, 5.00, 5850.00, 23353.00, 15000.00, 0.00, 8353.00, 'Cash', 'PAY 01', '2025-04-06 11:39:08', '2025-04-06 11:39:08'),
-(17, 'INVW000021', 'CUS0002', 1, 'Whole Sale', 1, 'Unpaid', 2300.00, 0.00, 1, 10.00, 1, 2.00, 1, 4.00, 0, 500.00, 800.00, 3168.00, 0.00, 0.00, 3168.00, 'Cash', NULL, '2025-04-06 11:40:37', NULL),
+(17, 'INVW000021', 'CUS0002', 1, 'Whole Sale', 1, 'Fully Paid', 2300.00, 0.00, 1, 10.00, 1, 2.00, 1, 4.00, 0, 500.00, 800.00, 3168.00, 8000.00, 4832.00, 0.00, 'Cash', 'Test', '2025-04-06 11:40:37', '2025-06-15 20:45:50'),
 (18, 'INVW000031', 'CUS0002', 1, 'Whole Sale', 4, 'Partially Paid', 63910.00, 2900.00, 1, 0.00, 1, 0.00, 1, 0.00, 0, 0.00, 17854.00, 61010.00, 45000.00, 0.00, 16010.00, 'Cash', 'Part Payment', '2025-04-06 14:20:32', '2025-04-06 14:20:32'),
 (19, 'INVW000041', 'CUS0002', 1, 'Whole Sale', 1, 'Unpaid', 2850.00, 0.00, 1, 0.00, 1, 0.00, 1, 0.00, 0, 0.00, 1095.00, 2850.00, 0.00, 0.00, 2850.00, 'N/A', NULL, '2025-04-06 15:03:42', NULL),
-(20, 'INVR000051', 'CUS0002', 1, 'Retail Sale', 1, 'Unpaid', 5250.00, 0.00, 1, 0.00, 1, 0.00, 1, 0.00, 0, 0.00, 3495.00, 5250.00, 0.00, 0.00, 5250.00, 'N/A', NULL, '2025-04-06 15:05:16', NULL);
+(20, 'INVR000051', 'CUS0002', 1, 'Retail Sale', 1, 'Unpaid', 5250.00, 0.00, 1, 0.00, 1, 0.00, 1, 0.00, 0, 0.00, 3495.00, 5250.00, 0.00, 0.00, 5250.00, 'Cash', NULL, '2025-04-06 15:05:16', NULL),
+(22, 'INVW000071', 'CUS0001', 1, 'Whole Sale', 1, 'Unpaid', 1490.00, 0.00, 1, 15.25, 1, 15.25, 1, 15.25, 1, 15.25, 590.00, 2398.90, 0.00, 0.00, 2398.90, 'N/A', NULL, '2025-04-27 18:16:45', NULL),
+(23, 'INVW000081', 'CUS0001', 1, 'Whole Sale', 1, 'Unpaid', 140.00, 0.00, 0, 1500.25, 0, 1500.25, 0, 1500.25, 0, 1600.00, 30.00, 6240.75, 0.00, 0.00, 6240.75, 'N/A', NULL, '2025-04-27 18:20:29', NULL),
+(24, 'INVW000091', 'CUS0002', 1, 'Whole Sale', 1, 'Fully Paid', 1150.00, 0.00, 0, 150.55, 0, 165.22, 0, 151.22, 0, 135.56, 400.00, 1752.55, 2000.00, 247.45, 0.00, 'Cash', 'Paid', '2025-04-27 18:53:42', '2025-04-27 18:53:42'),
+(25, 'INVW000101', 'CUS0002', 1, 'Whole Sale', 1, 'Fully Paid', 830.00, 0.00, 0, 0.00, 0, 0.00, 0, 0.00, 0, 0.00, 270.00, 830.00, 1000.00, 170.00, 0.00, 'Cash', NULL, '2025-04-27 18:54:50', '2025-04-27 18:54:50'),
+(26, 'INVW000111', 'CUS0001', 1, 'Whole Sale', 1, 'Unpaid', 1150.00, 0.00, 1, 0.00, 1, 0.00, 1, 0.00, 1, 0.00, 400.00, 1150.00, 0.00, 0.00, 1150.00, 'N/A', NULL, '2025-04-27 19:23:27', NULL),
+(27, 'INVW000121', 'CUS0002', 1, 'Whole Sale', 1, 'Unpaid', 770.00, 0.00, 1, 10.25, 1, 99.99, 1, 2.21, 1, 23.22, 165.00, 1814.66, 0.00, 0.00, 1814.66, 'N/A', NULL, '2025-04-27 19:48:49', NULL),
+(28, 'INVW000131', 'CUS0002', 1, 'Whole Sale', 1, 'Fully Paid', 1660.00, 0.00, 1, 10.22, 1, 10.22, 1, 2.21, 0, 1500.25, 540.00, 3536.24, 5005.00, 1468.76, 0.00, 'Cash', 'Fully Paid', '2025-04-27 21:21:24', '2025-04-27 21:22:30'),
+(29, 'INVW000141', 'CUS0002', 1, 'Whole Sale', 3, 'Unpaid', 25600.00, 500.00, 1, 10.22, 1, 10.22, 1, 2.21, 0, 1500.25, 8390.00, 32285.40, 0.00, 0.00, 32285.40, 'Card', NULL, '2025-04-27 21:23:50', NULL),
+(30, 'INVW000151', 'CUS0002', 1, 'Whole Sale', 1, 'Unpaid', 1190.00, 0.00, 1, 0.00, 1, 0.00, 1, 0.00, 0, 0.00, 390.00, 1190.00, 0.00, 0.00, 1190.00, 'N/A', NULL, '2025-05-01 14:45:35', NULL),
+(31, 'INVR000161', 'CUS0001', 1, 'Retail Sale', 2, 'Fully Paid', 6874.00, 0.00, 1, 0.00, 1, 0.00, 1, 0.00, 0, 0.00, 3438.00, 6874.00, 7000.00, 126.00, 0.00, 'Cash', 'Cash', '2025-05-01 14:47:58', '2025-05-01 14:47:58'),
+(32, 'INVR000171', 'CUS0002', 1, 'Retail Sale', 3, 'Fully Paid', 5769.00, 0.00, 1, 0.00, 1, 0.00, 1, 0.00, 0, 0.00, 2980.00, 5769.00, 5769.00, 0.00, 0.00, 'Card', 'Card Payment', '2025-05-01 14:49:12', '2025-05-01 14:49:12'),
+(33, 'INVW000181', 'CUS0002', 1, 'Whole Sale', 2, 'Unpaid', 1270.00, 0.00, 1, 0.00, 1, 0.00, 1, 0.00, 0, 0.00, 476.00, 1270.00, 0.00, 0.00, 1270.00, 'Bank Transfer', NULL, '2025-05-01 15:24:36', NULL),
+(34, 'INVW000191', 'CUS0002', 1, 'Whole Sale', 1, 'Unpaid', 1190.00, 0.00, 1, 0.00, 1, 0.00, 1, 0.00, 0, 0.00, 390.00, 1190.00, 0.00, 0.00, 1190.00, 'N/A', NULL, '2025-05-01 15:56:45', NULL),
+(35, 'INVW000201', 'CUS0002', 1, 'Whole Sale', 4, 'Unpaid', 135250.00, 2760.00, 1, 0.00, 1, 0.00, 1, 0.00, 0, 0.00, 40327.00, 132490.00, 0.00, 0.00, 132490.00, 'Cheque', NULL, '2025-06-05 19:38:29', NULL),
+(36, 'INVR000211', 'CUS0002', 1, 'Retail Sale', 1, 'Fully Paid', 1500.00, 0.00, 1, 0.00, 1, 0.00, 1, 0.00, 0, 0.00, 750.00, 1500.00, 5000.00, 3500.00, 0.00, 'Cash', 'test', '2025-06-05 19:54:03', '2025-06-15 20:45:05');
 
 -- --------------------------------------------------------
 
@@ -600,7 +650,31 @@ INSERT INTO `tbl_item` (`Id`, `Invoice_Id`, `Product_Id`, `Product_Detail_Id`, `
 (28, 'INVW000031', '21CF-6335-04', 66, 'CLUTCH CABLE', 866.00, 1290.00, 0.00, 22, 0.00, 28380.00, 19052.00, 9328.00),
 (29, 'INVW000031', '1GC-F530K-00', 4, 'BRAKE SHOE', 1022.00, 1290.00, 200.00, 12, 2400.00, 15480.00, 12264.00, 3216.00),
 (30, 'INVW000041', '1GC-E4450-00', 127, 'ELEMENT ASSY AIR', 585.00, 950.00, 0.00, 3, 0.00, 2850.00, 1755.00, 1095.00),
-(31, 'INVR000051', '1GC-E4450-00', 127, 'ELEMENT ASSY AIR', 585.00, 1750.00, 0.00, 3, 0.00, 5250.00, 1755.00, 3495.00);
+(31, 'INVR000051', '1GC-E4450-00', 127, 'ELEMENT ASSY AIR', 585.00, 1750.00, 0.00, 3, 0.00, 5250.00, 1755.00, 3495.00),
+(33, 'INVW000071', '058-SVM-RIGHT', 119, 'NTORQ MIRROR 2PCS', 900.00, 1490.00, 0.00, 1, 0.00, 1490.00, 900.00, 590.00),
+(34, 'INVW000081', '1014', 109, 'PHO12V 10/5W', 55.00, 70.00, 0.00, 2, 0.00, 140.00, 110.00, 30.00),
+(35, 'INVW000091', '045-BLA-NML', 115, 'SIGNAL LIGHT RIGHT', 750.00, 1150.00, 0.00, 1, 0.00, 1150.00, 750.00, 400.00),
+(36, 'INVW000101', '17950-KWP-900', 86, 'CHOCK CABLE', 560.00, 830.00, 0.00, 1, 0.00, 830.00, 560.00, 270.00),
+(37, 'INVW000111', '045-BLA-NMR', 114, 'SIGNAL LIGHT LEFT', 750.00, 1150.00, 0.00, 1, 0.00, 1150.00, 750.00, 400.00),
+(38, 'INVW000121', '1141A', 108, 'ORENGE BULB', 55.00, 70.00, 0.00, 11, 0.00, 770.00, 605.00, 165.00),
+(39, 'INVW000131', '17950-KWP-900', 86, 'CHOCK CABLE', 560.00, 830.00, 0.00, 2, 0.00, 1660.00, 1120.00, 540.00),
+(40, 'INVW000141', '1GC-E5473-00', 129, 'DUCT AIR', 380.00, 690.00, 0.00, 10, 0.00, 6900.00, 3800.00, 3100.00),
+(41, 'INVW000141', '1GC-E6620-20', 130, 'CLUTCH CARRIER ASSY', 5080.00, 7600.00, 0.00, 2, 0.00, 15200.00, 10160.00, 5040.00),
+(42, 'INVW000141', '1141A', 108, 'ORENGE BULB', 55.00, 60.00, 10.00, 50, 500.00, 3000.00, 2750.00, 250.00),
+(43, 'INVW000151', '037-SVMFZR', 113, 'FZV2 MIRROR RIGHT 2PCS', 800.00, 1190.00, 0.00, 1, 0.00, 1190.00, 800.00, 390.00),
+(44, 'INVR000161', '1GC-E7632-01', 22, 'WEIGHT', 159.00, 319.00, 0.00, 2, 0.00, 638.00, 318.00, 320.00),
+(45, 'INVR000161', '1GC-E7670-00', 10, 'SECONDARY SLIDING', 1559.00, 3118.00, 0.00, 2, 0.00, 6236.00, 3118.00, 3118.00),
+(46, 'INVR000171', '045-SVM-DNL', 116, 'DIO MIRROR LEFT 2PCS', 750.00, 1500.00, 0.00, 1, 0.00, 1500.00, 750.00, 750.00),
+(47, 'INVR000171', '1GC-E7641-10', 132, 'V BELT', 1880.00, 3950.00, 0.00, 1, 0.00, 3950.00, 1880.00, 2070.00),
+(48, 'INVR000171', '1GC-E7632-01', 22, 'WEIGHT', 159.00, 319.00, 0.00, 1, 0.00, 319.00, 159.00, 160.00),
+(49, 'INVW000181', '1GC-H3371-00', 134, 'HORN', 635.00, 980.00, 0.00, 1, 0.00, 980.00, 635.00, 345.00),
+(50, 'INVW000181', '1GC-E7632-01', 22, 'WEIGHT', 159.00, 290.00, 0.00, 1, 0.00, 290.00, 159.00, 131.00),
+(51, 'INVW000191', '037-SVMFZR', 113, 'FZV2 MIRROR RIGHT 2PCS', 800.00, 1190.00, 0.00, 1, 0.00, 1190.00, 800.00, 390.00),
+(52, 'INVW000201', '1GC-E7641-10', 132, 'V BELT', 1880.00, 2950.00, 0.00, 22, 0.00, 64900.00, 41360.00, 23540.00),
+(53, 'INVW000201', '1GC-E7632-01', 22, 'WEIGHT', 159.00, 290.00, 0.00, 11, 0.00, 3190.00, 1749.00, 1441.00),
+(54, 'INVW000201', '23100-KWP-D00', 101, 'V BELT', 1637.00, 2200.00, 0.00, 22, 0.00, 48400.00, 36014.00, 12386.00),
+(55, 'INVW000201', '1GC-H2310-00', 50, 'IGNITION COIL ASSY', 3260.00, 4000.00, 690.00, 4, 2760.00, 16000.00, 13040.00, 2960.00),
+(56, 'INVR000211', '045-BLA-NMR', 114, 'SIGNAL LIGHT LEFT', 750.00, 1500.00, 0.00, 1, 0.00, 1500.00, 750.00, 750.00);
 
 -- --------------------------------------------------------
 
@@ -628,7 +702,15 @@ CREATE TABLE `tbl_payments` (
 
 INSERT INTO `tbl_payments` (`Id`, `Invoice_Id`, `Payment_Id`, `Grand_Total`, `Paid_Amount`, `Balance_Total`, `Due_Total`, `Payment_Type`, `Description`, `Payment_Date`, `Updated_By`) VALUES
 (12, 'INVW000011', 1, 23353.00, 15000.00, 0.00, 8353.00, 'Cash', 'PAY 01', '2025-04-06 11:39:08', 1),
-(14, 'INVW000031', 1, 61010.00, 45000.00, 0.00, 16010.00, 'Cash', 'Part Payment', '2025-04-06 14:20:32', 1);
+(14, 'INVW000031', 1, 61010.00, 45000.00, 0.00, 16010.00, 'Cash', 'Part Payment', '2025-04-06 14:20:32', 1),
+(15, 'INVW000091', 1, 1752.55, 2000.00, 247.45, 0.00, 'Cash', 'Paid', '2025-04-27 18:53:42', 1),
+(16, 'INVW000101', 1, 830.00, 1000.00, 170.00, 0.00, 'Cash', NULL, '2025-04-27 18:54:50', 1),
+(17, 'INVW000131', 1, 3536.24, 5.00, 0.00, 3531.24, 'Cash', 'Fully Paid', '2025-04-27 21:21:24', 1),
+(18, 'INVW000131', 2, 3536.24, 5000.00, 1468.76, 0.00, 'Cash', 'Fully Paid', '2025-04-27 21:22:30', 1),
+(20, 'INVR000161', 1, 6874.00, 7000.00, 126.00, 0.00, 'Cash', 'Cash', '2025-05-01 14:47:58', 1),
+(21, 'INVR000171', 1, 5769.00, 5769.00, 0.00, 0.00, 'Card', 'Card Payment', '2025-05-01 14:49:12', 1),
+(26, 'INVR000211', 1, 1500.00, 5000.00, 3500.00, 0.00, 'Cash', 'test', '2025-06-15 20:45:05', 1),
+(27, 'INVW000021', 1, 3168.00, 8000.00, 4832.00, 0.00, 'Cash', 'Test', '2025-06-15 20:45:50', 1);
 
 -- --------------------------------------------------------
 
@@ -795,7 +877,8 @@ INSERT INTO `tbl_product` (`Id`, `Product_Id`, `Brand_Id`, `Category_Id`, `Produ
 (150, 'B62-F530K-00', 'YMARZR', 'SRVPT', 'BRAKE SHOE RAY'),
 (151, 'B62-F582U-10', 'YMARZR', 'BDPT', 'DISK BRAKE RIGHT RAY ZR'),
 (152, '2GS-SF4124-00', 'YMAFZV2', 'BDPT', 'AIR SHROUND'),
-(153, '10026552', 'HND', '2ND', 'Product 01');
+(153, '10026552', 'HND', '2ND', 'Product 01'),
+(155, '20240007', 'BAJ/WE', '2ND', 'qq');
 
 -- --------------------------------------------------------
 
@@ -827,7 +910,7 @@ INSERT INTO `tbl_product_details` (`Id`, `Product_Id`, `Cost`, `Landing_Cost`, `
 (4, '1GC-F530K-00', 295.00, 1022.00, 2044.00, 1490.00, 9, 'SUP0001', '2024-10-18 00:32:31', 'True'),
 (5, 'B97-F5364-00', 150.00, 520.00, 1039.00, 850.00, 5, 'SUP0001', '2024-10-18 00:32:31', 'True'),
 (9, '1GC-E7660-00', 505.00, 1750.00, 3499.00, 2540.00, 8, 'SUP0001', '2024-10-18 00:32:31', 'True'),
-(10, '1GC-E7670-00', 450.00, 1559.00, 3118.00, 2250.00, 8, 'SUP0001', '2024-10-18 00:32:31', 'True'),
+(10, '1GC-E7670-00', 450.00, 1559.00, 3118.00, 2250.00, 6, 'SUP0001', '2024-10-18 00:32:31', 'True'),
 (12, '54B-H3912-00', 125.00, 433.00, 866.00, 780.00, 35, 'SUP0001', '2024-10-18 00:32:31', 'True'),
 (13, '54B-H3922-00', 190.00, 658.00, 1317.00, 960.00, 35, 'SUP0001', '2024-10-18 00:32:31', 'True'),
 (14, '1GC-F5138-10', 57.00, 197.00, 395.00, 250.00, 90, 'SUP0001', '2024-10-18 00:32:31', 'True'),
@@ -838,7 +921,7 @@ INSERT INTO `tbl_product_details` (`Id`, `Product_Id`, `Cost`, `Landing_Cost`, `
 (19, '21C-F5364-00', 128.00, 443.00, 887.00, 750.00, 22, 'SUP0001', '2024-10-18 00:32:31', 'True'),
 (20, '21C-14340-00', 1570.00, 5440.00, 10880.00, 7560.00, 2, 'SUP0001', '2024-10-18 00:32:31', 'True'),
 (21, '5YY-H1950-10', 100.00, 346.00, 693.00, 850.00, 2, 'SUP0001', '2024-10-18 00:32:31', 'True'),
-(22, '1GC-E7632-01', 46.00, 159.00, 319.00, 290.00, 40, 'SUP0001', '2024-10-18 00:32:31', 'True'),
+(22, '1GC-E7632-01', 46.00, 159.00, 319.00, 290.00, 25, 'SUP0001', '2024-10-18 00:32:31', 'True'),
 (24, '1GC-F6351-00', 410.00, 1421.00, 2841.00, 1590.00, 35, 'SUP0001', '2024-10-18 00:32:31', 'True'),
 (25, '1GC-E7678-00', 172.00, 596.00, 1192.00, 890.00, 88, 'SUP0001', '2024-10-18 00:32:31', 'True'),
 (26, '1GC-E7678-10', 103.00, 357.00, 714.00, 560.00, 76, 'SUP0001', '2024-10-18 00:32:31', 'True'),
@@ -863,7 +946,7 @@ INSERT INTO `tbl_product_details` (`Id`, `Product_Id`, `Cost`, `Landing_Cost`, `
 (47, '2GS-WE660-60-10', 1780.00, 6167.00, 12335.00, 8690.00, 18, 'SUP0001', '2024-10-18 00:32:31', 'True'),
 (48, '2FS-F6331-00', 185.00, 641.00, 1282.00, 940.00, 16, 'SUP0001', '2024-10-18 00:32:31', 'True'),
 (49, '38B-E34400-10', 247.00, 856.00, 1712.00, 1240.00, 10, 'SUP0001', '2024-10-18 00:32:31', 'True'),
-(50, '1GC-H2310-00', 941.00, 3260.00, 6521.00, 4690.00, 8, 'SUP0001', '2024-10-18 00:32:31', 'True'),
+(50, '1GC-H2310-00', 941.00, 3260.00, 6521.00, 4690.00, 4, 'SUP0001', '2024-10-18 00:32:31', 'True'),
 (51, '21C-E6371-00', 295.00, 1022.00, 2044.00, 1490.00, 6, 'SUP0001', '2024-10-18 00:32:31', 'True'),
 (52, '2GS-E3907-11', 3915.00, 13565.00, 27130.00, 19580.00, 2, 'SUP0001', '2024-10-18 00:32:31', 'True'),
 (54, '2GS-F1651-00', 162.00, 561.00, 1123.00, 820.00, 8, 'SUP0001', '2024-10-18 00:32:31', 'True'),
@@ -897,7 +980,7 @@ INSERT INTO `tbl_product_details` (`Id`, `Product_Id`, `Cost`, `Landing_Cost`, `
 (83, '17210-KVT-D00', 223.00, 801.00, 1601.00, 1150.00, 7, 'SUP0001', '2024-10-18 00:32:31', 'True'),
 (84, '23205-KWP-D00', 1346.00, 4832.00, 9664.00, 6850.00, 15, 'SUP0001', '2024-10-18 00:32:31', 'True'),
 (85, '23224-KWP-900', 703.00, 2524.00, 5048.00, 3590.00, 20, 'SUP0001', '2024-10-18 00:32:31', 'True'),
-(86, '17950-KWP-900', 156.00, 560.00, 1120.00, 830.00, 12, 'SUP0001', '2024-10-18 00:32:31', 'True'),
+(86, '17950-KWP-900', 156.00, 560.00, 1120.00, 830.00, 9, 'SUP0001', '2024-10-18 00:32:31', 'True'),
 (87, '44830-KWP-901', 108.00, 388.00, 775.00, 580.00, 30, 'SUP0001', '2024-10-18 00:32:31', 'True'),
 (88, '06179-KZK-901', 415.00, 1490.00, 2980.00, 2150.00, 32, 'SUP0001', '2024-10-18 00:32:31', 'True'),
 (89, '88210-KZK-901', 190.00, 682.00, 1364.00, 890.00, 8, 'SUP0001', '2024-10-18 00:32:31', 'True'),
@@ -912,35 +995,35 @@ INSERT INTO `tbl_product_details` (`Id`, `Product_Id`, `Cost`, `Landing_Cost`, `
 (98, '91202-KWP-D01', 56.00, 201.00, 402.00, 280.00, 17, 'SUP0001', '2024-10-18 00:32:31', 'True'),
 (99, '12391-KWP-900', 324.00, 1163.00, 2326.00, 1690.00, 5, 'SUP0001', '2024-10-18 00:32:31', 'True'),
 (100, '91225-KWP-D01', 36.00, 129.00, 258.00, 180.00, 200, 'SUP0001', '2024-10-18 00:32:31', 'True'),
-(101, '23100-KWP-D00', 456.00, 1637.00, 3274.00, 2200.00, 50, 'SUP0001', '2024-10-18 00:32:31', 'True'),
+(101, '23100-KWP-D00', 456.00, 1637.00, 3274.00, 2200.00, 28, 'SUP0001', '2024-10-18 00:32:31', 'True'),
 (102, '43450-KZK-910', 246.00, 883.00, 1766.00, 1290.00, 8, 'SUP0001', '2024-10-18 00:32:31', 'True'),
 (103, '22123-KWN-780', 333.00, 1195.00, 2391.00, 1950.00, 40, 'SUP0001', '2024-10-18 00:32:31', 'True'),
 (104, '22110-KWPD00', 615.00, 2208.00, 4416.00, 2980.00, 40, 'SUP0001', '2024-10-18 00:32:31', 'True'),
 (105, '22011-KPL-940', 136.00, 488.00, 976.00, 560.00, 50, 'SUP0001', '2024-10-18 00:32:31', 'True'),
 (106, 'YFZ61', 310.00, 560.00, 1120.00, 940.00, 10, 'SUP0001', '2024-10-18 00:32:31', 'True'),
 (107, 'HAS61', 215.00, 422.00, 844.00, 650.00, 10, 'SUP0001', '2024-10-18 00:32:31', 'True'),
-(108, '1141A', 22.00, 55.00, 110.00, 70.00, 188, 'SUP0001', '2024-10-18 00:32:31', 'True'),
-(109, '1014', 17.00, 55.00, 110.00, 70.00, 170, 'SUP0001', '2024-10-18 00:32:31', 'True'),
+(108, '1141A', 22.00, 55.00, 110.00, 70.00, 127, 'SUP0001', '2024-10-18 00:32:31', 'True'),
+(109, '1014', 17.00, 55.00, 110.00, 70.00, 168, 'SUP0001', '2024-10-18 00:32:31', 'True'),
 (110, 'F00240517ENG', 110.00, 230.00, 460.00, 340.00, 20, 'SUP0001', '2024-10-18 00:32:31', 'True'),
 (111, '26024563 LUCAS', 1775.00, 4650.00, 9300.00, 6850.00, 2, 'SUP0001', '2024-10-18 00:32:31', 'True'),
 (112, '037-SVM-FZL', 222.00, 800.00, 1600.00, 1190.00, 1, 'SUP0001', '2024-10-18 00:32:31', 'True'),
-(113, '037-SVMFZR', 222.00, 800.00, 1600.00, 1190.00, 3, 'SUP0001', '2024-10-18 00:32:31', 'True'),
-(114, '045-BLA-NMR', 231.00, 750.00, 1500.00, 1150.00, 5, 'SUP0001', '2024-10-18 00:32:31', 'True'),
-(115, '045-BLA-NML', 231.00, 750.00, 1500.00, 1150.00, 1, 'SUP0001', '2024-10-18 00:32:31', 'True'),
-(116, '045-SVM-DNL', 125.00, 750.00, 1500.00, 1150.00, 5, 'SUP0001', '2024-10-18 00:32:31', 'True'),
+(113, '037-SVMFZR', 222.00, 800.00, 1600.00, 1190.00, 1, 'SUP0001', '2024-10-18 00:32:31', 'True'),
+(114, '045-BLA-NMR', 231.00, 750.00, 1500.00, 1150.00, 3, 'SUP0001', '2024-10-18 00:32:31', 'True'),
+(115, '045-BLA-NML', 231.00, 750.00, 1500.00, 1150.00, 0, 'SUP0001', '2024-10-18 00:32:31', 'True'),
+(116, '045-SVM-DNL', 125.00, 750.00, 1500.00, 1150.00, 4, 'SUP0001', '2024-10-18 00:32:31', 'True'),
 (117, '045-SVM-DNR', 125.00, 750.00, 1500.00, 1150.00, 10, 'SUP0001', '2024-10-18 00:32:31', 'True'),
 (118, '058-SVM- LEFT', 200.00, 900.00, 1800.00, 1490.00, 1, 'SUP0001', '2024-10-18 00:32:31', 'True'),
-(119, '058-SVM-RIGHT', 200.00, 900.00, 1800.00, 1490.00, 2, 'SUP0001', '2024-10-18 00:32:31', 'True'),
+(119, '058-SVM-RIGHT', 200.00, 900.00, 1800.00, 1490.00, 1, 'SUP0001', '2024-10-18 00:32:31', 'True'),
 (120, 'DIO BRAKE SHOE', 203.00, 380.00, 760.00, 590.00, 20, 'SUP0001', '2024-10-18 00:32:31', 'True'),
 (121, 'HS1/12V/35/35W', 41.72, 200.00, 400.00, 340.00, 100, 'SUP0001', '2024-10-18 00:32:31', 'True'),
 (122, 'R10W/12V/10W', 3.00, 12.00, 24.00, 20.00, 400, 'SUP0001', '2024-10-18 00:32:31', 'True'),
 (127, '1GC-E4450-00', 175.00, 585.00, 1750.00, 950.00, 34, 'SUP0001', '2024-11-29 03:01:39', 'True'),
-(129, '1GC-E5473-00', 115.00, 380.00, 1250.00, 690.00, 18, 'SUP0001', '2024-11-29 03:21:59', 'True'),
-(130, '1GC-E6620-20', 1521.00, 5080.00, 14500.00, 7600.00, 4, 'SUP0001', '2024-11-29 03:24:09', 'True'),
+(129, '1GC-E5473-00', 115.00, 380.00, 1250.00, 690.00, 8, 'SUP0001', '2024-11-29 03:21:59', 'True'),
+(130, '1GC-E6620-20', 1521.00, 5080.00, 14500.00, 7600.00, 2, 'SUP0001', '2024-11-29 03:24:09', 'True'),
 (131, '1GC-E7632-01	', 46.00, 151.00, 390.00, 290.00, 198, 'SUP0001', '2024-11-29 03:27:42', 'True'),
-(132, '1GC-E7641-10', 570.00, 1880.00, 3950.00, 2950.00, 42, 'SUP0001', '2024-11-29 03:29:59', 'True'),
+(132, '1GC-E7641-10', 570.00, 1880.00, 3950.00, 2950.00, 19, 'SUP0001', '2024-11-29 03:29:59', 'True'),
 (133, '1GC-H276A-00', 55.00, 182.00, 690.00, 350.00, 50, 'SUP0001', '2024-11-29 05:57:06', 'True'),
-(134, '1GC-H3371-00', 190.00, 635.00, 1750.00, 980.00, 10, 'SUP0001', '2024-11-29 06:03:15', 'True'),
+(134, '1GC-H3371-00', 190.00, 635.00, 1750.00, 980.00, 9, 'SUP0001', '2024-11-29 06:03:15', 'True'),
 (135, '1GC-H396U-00', 60.00, 200.00, 690.00, 350.00, 50, 'SUP0001', '2024-11-29 06:53:37', 'True'),
 (136, '1GC-H39700-00', 65.00, 210.00, 690.00, 350.00, 50, 'SUP0001', '2024-11-29 06:55:36', 'True'),
 (137, '1GC-H575200-00', 315.00, 1050.00, 2950.00, 1650.00, 10, 'SUP0001', '2024-11-29 06:57:24', 'True'),
@@ -1037,10 +1120,11 @@ INSERT INTO `tbl_screens` (`Screen_Id`, `Screen_Name`, `Screen_Category`, `Scree
 (327, 'view_expenses_types.php', 'Expenses Types', 'View'),
 (328, 'add_expenses.php', 'Expenses', 'View'),
 (329, 'view_expenses.php', 'Expenses', 'View'),
-(330, 'reverse_payment.php', 'Reverse Payment', 'View'),
-(331, 'reverse_expense.php', 'Reverse Expense', 'View'),
+(330, 'reverse_payment.php', 'Invoice', 'Reversal'),
+(331, 'reverse_expense.php', 'Expenses', 'Reversal'),
 (332, 'cash_flow.php', 'Cash Flow', 'View'),
-(333, 'settings.php', 'System Information', 'View');
+(333, 'settings.php', 'System Information', 'View'),
+(334, 'expense_reverse-history.php', 'Expenses', 'Reversal History');
 
 -- --------------------------------------------------------
 
@@ -1088,10 +1172,7 @@ INSERT INTO `tbl_screen_permissions` (`Permission_Id`, `Role`, `Screen_Id`) VALU
 (403, 'Super Admin', 330),
 (404, 'Super Admin', 328),
 (405, 'Super Admin', 329),
-(406, 'Super Admin', 331),
 (407, 'Super Admin', 332),
-(408, 'Admin', 302),
-(409, 'Admin', 306),
 (410, 'Admin', 303),
 (411, 'Admin', 307),
 (412, 'Admin', 305),
@@ -1125,7 +1206,11 @@ INSERT INTO `tbl_screen_permissions` (`Permission_Id`, `Role`, `Screen_Id`) VALU
 (440, 'Admin', 332),
 (443, 'Super Admin', 322),
 (444, 'Super Admin', 323),
-(446, 'Super Admin', 333);
+(446, 'Super Admin', 333),
+(447, 'Admin', 302),
+(448, 'Admin', 306),
+(449, 'Super Admin', 331),
+(450, 'Super Admin', 334);
 
 -- --------------------------------------------------------
 
@@ -1147,7 +1232,8 @@ CREATE TABLE `tbl_suppliers` (
 --
 
 INSERT INTO `tbl_suppliers` (`Id`, `Supplier_Id`, `Supplier_Name`, `Supplier_Address`, `Supplier_Contact`, `Supplier_Email`) VALUES
-(1, 'SUP0001', 'Popular Motorcycle Company', 'No.165/1,165/2,166/2a,166/2b,166/2c,166/2d,168/1a,8/1 Manali Express Way, Manjambakkam, Madhavaram-600103', '61096333', 'admin@populargroup.co.in');
+(1, 'SUP0001', 'Popular Motorcycle Company', 'No.165/1,165/2,166/2a,166/2b,166/2c,166/2d,168/1a,8/1 Manali Express Way, Manjambakkam, Madhavaram-600103', '61096333', 'admin@populargroup.co.in'),
+(10, 'SUP0002', 'Supplier 05', 'wwww', '0775698747', 'supplier05@gmail.com');
 
 -- --------------------------------------------------------
 
@@ -1190,7 +1276,7 @@ CREATE TABLE `tbl_temp_invoice` (
 --
 
 INSERT INTO `tbl_temp_invoice` (`Id`, `Value`) VALUES
-(1, '6');
+(1, '22');
 
 -- --------------------------------------------------------
 
@@ -1304,6 +1390,14 @@ ALTER TABLE `tbl_expense_payments`
   ADD KEY `Updated_By` (`Updated_By`);
 
 --
+-- Indexes for table `tbl_expense_payments_history`
+--
+ALTER TABLE `tbl_expense_payments_history`
+  ADD PRIMARY KEY (`Id`),
+  ADD KEY `Expense_Id` (`Expense_Id`,`Reversed_By`),
+  ADD KEY `Updated_By` (`Reversed_By`);
+
+--
 -- Indexes for table `tbl_invoice`
 --
 ALTER TABLE `tbl_invoice`
@@ -1404,31 +1498,31 @@ ALTER TABLE `tbl_user`
 -- AUTO_INCREMENT for table `tbl_backend`
 --
 ALTER TABLE `tbl_backend`
-  MODIFY `Backend_Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=176;
+  MODIFY `Backend_Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=178;
 
 --
 -- AUTO_INCREMENT for table `tbl_backend_permissions`
 --
 ALTER TABLE `tbl_backend_permissions`
-  MODIFY `Permission_Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=928;
+  MODIFY `Permission_Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=936;
 
 --
 -- AUTO_INCREMENT for table `tbl_brand`
 --
 ALTER TABLE `tbl_brand`
-  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
 -- AUTO_INCREMENT for table `tbl_cash_flow`
 --
 ALTER TABLE `tbl_cash_flow`
-  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=195;
+  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=229;
 
 --
 -- AUTO_INCREMENT for table `tbl_category`
 --
 ALTER TABLE `tbl_category`
-  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
+  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=32;
 
 --
 -- AUTO_INCREMENT for table `tbl_company_info`
@@ -1446,7 +1540,7 @@ ALTER TABLE `tbl_customers`
 -- AUTO_INCREMENT for table `tbl_expenses`
 --
 ALTER TABLE `tbl_expenses`
-  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=32;
+  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=40;
 
 --
 -- AUTO_INCREMENT for table `tbl_expenses_categories`
@@ -1458,43 +1552,49 @@ ALTER TABLE `tbl_expenses_categories`
 -- AUTO_INCREMENT for table `tbl_expenses_types`
 --
 ALTER TABLE `tbl_expenses_types`
-  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT for table `tbl_expense_payments`
 --
 ALTER TABLE `tbl_expense_payments`
-  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=56;
+  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=77;
+
+--
+-- AUTO_INCREMENT for table `tbl_expense_payments_history`
+--
+ALTER TABLE `tbl_expense_payments_history`
+  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=81;
 
 --
 -- AUTO_INCREMENT for table `tbl_invoice`
 --
 ALTER TABLE `tbl_invoice`
-  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
+  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=37;
 
 --
 -- AUTO_INCREMENT for table `tbl_item`
 --
 ALTER TABLE `tbl_item`
-  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=32;
+  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=57;
 
 --
 -- AUTO_INCREMENT for table `tbl_payments`
 --
 ALTER TABLE `tbl_payments`
-  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
 
 --
 -- AUTO_INCREMENT for table `tbl_product`
 --
 ALTER TABLE `tbl_product`
-  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=155;
+  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=156;
 
 --
 -- AUTO_INCREMENT for table `tbl_product_details`
 --
 ALTER TABLE `tbl_product_details`
-  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=163;
+  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=164;
 
 --
 -- AUTO_INCREMENT for table `tbl_roles`
@@ -1506,19 +1606,19 @@ ALTER TABLE `tbl_roles`
 -- AUTO_INCREMENT for table `tbl_screens`
 --
 ALTER TABLE `tbl_screens`
-  MODIFY `Screen_Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=334;
+  MODIFY `Screen_Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=335;
 
 --
 -- AUTO_INCREMENT for table `tbl_screen_permissions`
 --
 ALTER TABLE `tbl_screen_permissions`
-  MODIFY `Permission_Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=447;
+  MODIFY `Permission_Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=451;
 
 --
 -- AUTO_INCREMENT for table `tbl_suppliers`
 --
 ALTER TABLE `tbl_suppliers`
-  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- AUTO_INCREMENT for table `tbl_system_configuration`
@@ -1575,6 +1675,13 @@ ALTER TABLE `tbl_expenses_types`
 ALTER TABLE `tbl_expense_payments`
   ADD CONSTRAINT `tbl_expense_payments_ibfk_1` FOREIGN KEY (`Expense_Id`) REFERENCES `tbl_expenses` (`Expense_Id`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `tbl_expense_payments_ibfk_2` FOREIGN KEY (`Updated_By`) REFERENCES `tbl_user` (`Id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `tbl_expense_payments_history`
+--
+ALTER TABLE `tbl_expense_payments_history`
+  ADD CONSTRAINT `tbl_expense_payments_history_ibfk_1` FOREIGN KEY (`Reversed_By`) REFERENCES `tbl_user` (`Id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `tbl_expense_payments_history_ibfk_2` FOREIGN KEY (`Expense_Id`) REFERENCES `tbl_expenses` (`Expense_Id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `tbl_invoice`
