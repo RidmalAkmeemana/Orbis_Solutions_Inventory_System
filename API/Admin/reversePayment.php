@@ -3,20 +3,21 @@
 require '../../API/Connection/BackEndPermission.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Sanitize and escape POST data
     $Invoice_Id = mysqli_real_escape_string($conn, $_POST['Invoice_Id']);
+    $Reverse_Reason = mysqli_real_escape_string($conn, $_POST['Reverse_Reason']);
+    $Reversed_By = mysqli_real_escape_string($conn, $_POST['Reverse_By']);
 
-    // Check if Invoice_Id is empty
-    if (empty($Invoice_Id)) {
-        $response = [
+    date_default_timezone_set("Asia/Colombo");
+    $currentDateTime = date('Y-m-d H:i:s');
+
+    if (empty($Invoice_Id) || empty($Reverse_Reason) || empty($Reversed_By)) {
+        echo json_encode([
             'success' => false,
-            'error' => 'Invoice_Id is required.',
-        ];
-        echo json_encode($response);
+            'error' => 'Invoice_Id, Reverse_Reason, and Reversed_By are required.'
+        ]);
         exit;
     }
 
-    // Start a transaction
     mysqli_begin_transaction($conn);
 
     try {
@@ -29,10 +30,38 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         if ($result && mysqli_num_rows($result) > 0) {
             $lastPayment = mysqli_fetch_assoc($result);
-
-            // Extract payment details
             $lastPaidAmount = $lastPayment['Paid_Amount'];
+            $lastBalanceTotal = $lastPayment['Balance_Total'];
+            $lastTotalPaid = $lastPaidAmount - $lastBalanceTotal;
             $lastPaymentId = $lastPayment['Payment_Id'];
+            $grandTotal = $lastPayment['Grand_Total'];
+            $paymentDate = $lastPayment['Payment_Date'];
+
+            // Insert into tbl_payments_history before deletion
+            $insertHistorySQL = "
+                INSERT INTO tbl_payments_history (
+                    Invoice_Id,
+                    Payment_Id,
+                    Grand_Total,
+                    Reverse_Amount,
+                    Reverse_Reason,
+                    Payment_Date,
+                    Reverse_Date,
+                    Reversed_By
+                ) VALUES (
+                    '$Invoice_Id',
+                    '$lastPaymentId',
+                    '$grandTotal',
+                    '$lastTotalPaid',
+                    '$Reverse_Reason',
+                    '$paymentDate',
+                    '$currentDateTime',
+                    '$Reversed_By'
+                );";
+
+            if (!mysqli_query($conn, $insertHistorySQL)) {
+                throw new Exception("Failed to insert into payment history: " . mysqli_error($conn));
+            }
 
             // Delete the last payment record
             $deletePaymentSQL = "DELETE FROM tbl_payments 
@@ -76,16 +105,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
 
             $invoice = mysqli_fetch_assoc($invoiceResult);
+            $newPaidAmount = $invoice['New_Paid_Amount'];
             $grandTotal = $invoice['Grand_Total'];
-            $newDueTotal = $grandTotal - ($invoice['New_Paid_Amount'] ?? 0);
+            $newDueTotal = $grandTotal - $newPaidAmount;
 
-            // Determine the new Status
             $newStatus = (number_format($newDueTotal, 2, '.', '') == $grandTotal) ? 'Unpaid' : 'Partially Paid';
 
             // Update the invoice totals and status
             $updateInvoiceSQL = "UPDATE tbl_invoice 
                                  SET 
-                                     Paid_Amount = Paid_Amount - '$lastPaidAmount',
+                                     Paid_Amount = '$newPaidAmount',
                                      Balance_Total = 0,
                                      Due_Total = '$newDueTotal',
                                      Status = '$newStatus',
@@ -97,35 +126,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 throw new Exception("Failed to update invoice: " . mysqli_error($conn));
             }
 
-            // Commit the transaction
             mysqli_commit($conn);
 
-            // Return success response
-            $response = [
+            echo json_encode([
                 'success' => true,
-                'message' => 'Last payment reversed successfully. Status updated accordingly.',
-            ];
-            echo json_encode($response);
+                'message' => 'Last payment reversed successfully. Status updated accordingly.'
+            ]);
         } else {
             throw new Exception("No payments found for Invoice_Id: $Invoice_Id.");
         }
     } catch (Exception $e) {
-        // Roll back the transaction in case of error
         mysqli_rollback($conn);
-
-        // Return error response
-        $response = [
+        echo json_encode([
             'success' => false,
-            'message' => $e->getMessage(),
-        ];
-        echo json_encode($response);
+            'message' => $e->getMessage()
+        ]);
     }
 } else {
-    // Handle invalid request method
-    $response = [
+    echo json_encode([
         'success' => false,
-        'error' => 'Invalid request method.',
-    ];
-    echo json_encode($response);
+        'error' => 'Invalid request method.'
+    ]);
 }
 ?>

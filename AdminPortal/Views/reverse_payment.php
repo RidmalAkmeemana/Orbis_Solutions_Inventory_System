@@ -268,11 +268,13 @@ if ($result && mysqli_num_rows($result) > 0) {
                 </div>
                 <div class="modal-body">
                     <div class="form-content p-2">
-                        <h4 class="modal-title">Confirmation !</h4>
-                        <p class="mb-4">Are you sure want to Reverse The Last Payment ?</p>
-
                         <form method="POST" action="../../API/Admin/reversePayment.php" id="reversePaymentForm" enctype="multipart/form-data">
-                            <input style="display:none;" type="text" name="Invoice_Id" value="<?php echo $fetch1['Invoice_Id']; ?>">
+                            <div class="form-group">
+                                <input style="display:none;" type="text" name="Invoice_Id" value="<?php echo $fetch1['Invoice_Id']; ?>">
+                                <input style="display:none;" type="text" name="Reverse_By" class="form-control" required="" readonly="true" value="<?php echo $fetch['Id']; ?>">
+                                <label>Reverse Reason</label><label class="text-danger">*</label>
+                                <input type="text" name="Reverse_Reason" class="form-control" required="">
+                            </div>
                             <button type="submit" name="reverse" class="btn btn-primary btn-block">Confirm </button>
                         </form>
                     </div>
@@ -340,6 +342,10 @@ if ($result && mysqli_num_rows($result) > 0) {
                             order: [] // Disable initial sorting
                         });
 
+                        function parseCurrency(value) {
+                            return parseFloat(value.toString().replace(/,/g, '')) || 0;
+                        }
+
                         // Add rows to the DataTable
                         $.each(groupedData, function(invoiceId, rows) {
                             let PaymentIds = '';
@@ -354,7 +360,18 @@ if ($result && mysqli_num_rows($result) > 0) {
                                 const formattedPaymentId = row.Invoice_Id + '/' + row.Payment_Id;
                                 const formattedPaymentDate = row.Payment_Date ? row.Payment_Date : 'N/A';
                                 const formattedDescription = row.Description ? row.Description : 'N/A';
-                                const formattedPaidAmount = 'LKR: ' + row.Paid_Amount;
+
+                                const paid = parseCurrency(row.Paid_Amount);
+                                const balance = parseCurrency(row.Balance_Total);
+                                const finalPaid = paid - balance;
+
+                                const formattedPaidAmount = 'LKR: ' + finalPaid.toLocaleString('en-LK', {
+                                    minimumFractionDigits: 2,
+                                    maximumFractionDigits: 2
+                                });
+
+
+                                // const formattedPaidAmount = 'LKR: ' + row.Paid_Amount - row.Balance_Total;
                                 const formattedDueTotal = 'LKR: ' + row.Due_Total;
                                 const formattedUser = row.First_Name + ' ' + row.Last_Name;
 

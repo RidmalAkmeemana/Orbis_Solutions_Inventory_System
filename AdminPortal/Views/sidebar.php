@@ -129,6 +129,12 @@
                 </li>
                 <?php } ?>
 
+                <?php if (hasPermission($role, 'reverse-history.php', $conn)) { ?>
+                <li class="<?php echo ($currentPage == 'reverse-history.php') ? 'active' : ''; ?>"> 
+                    <a href="reverse-history.php"><i class="fa fa-history"></i> <span>Reversal History</span></a>
+                </li>
+                <?php } ?>
+
                 <?php if (hasPermission($role, 'return_invoice.php', $conn)) { ?>
                 <li class="<?php echo ($currentPage == 'return_invoice.php') ? 'active' : ''; ?>"> 
                     <a href="return_invoice.php"><i class="fa fa-file"></i> <span>Return Invoice</span></a>

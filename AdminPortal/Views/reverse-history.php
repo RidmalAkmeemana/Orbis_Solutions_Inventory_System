@@ -21,7 +21,7 @@
 <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
-        <title><?php echo($companyName); ?> - Expenses Reversal History</title>
+        <title><?php echo($companyName); ?> - Payment Reversal History</title>
 		
 		<!-- Favicon -->
         <link rel="shortcut icon" type="image/x-icon" href="assets/img/favicon.png">
@@ -169,10 +169,10 @@
 					<div class="page-header">
 						<div class="row">
 							<div class="col-sm-7 col-auto">
-								<h3 class="page-title">Expenses Reversal History</h3>
+								<h3 class="page-title">Payment Reversal History</h3>
 								<ul class="breadcrumb">
 									<li class="breadcrumb-item"><a href="home.php">Dashboard</a></li>
-									<li class="breadcrumb-item active">Expenses Reversal History</li>
+									<li class="breadcrumb-item active">Payment Reversal History</li>
 								</ul>
 							</div>
 						</div>
@@ -187,9 +187,9 @@
 										<table class="datatable table table-hover table-center mb-0">
 											<thead>
 												<tr>
-													<th>Expense Id</th>
-													<th>Voucher No</th>
-													<th>Expense Amount</th>
+													<th>Invoice Id</th>
+													<th>Reciept No</th>
+													<th>Grand Total</th>
 													<th>Reversed Amount</th>
 													<th>Reverse Reason</th>
 													<th>Payment Date</th>
@@ -243,10 +243,10 @@
         $('#categorySelect').select2();
         $('#supplierSelect').select2();
 
-        // Make an AJAX request to getExpensesReversalHistory.php
+        // Make an AJAX request to getInvoiceReversalHistory.php
         $.ajax({
             type: 'POST',
-            url: '../../API/Admin/getExpensesReversalHistory.php',
+            url: '../../API/Admin/getInvoiceReversalHistory.php',
             dataType: 'json',
             success: function (data) {
                 if (data.length > 0) {
@@ -262,15 +262,15 @@
 
                     $.each(data, function (index, row) {
 
-						const formattedPaymentId = row.Expense_Id + '/' + row.Payment_Id;
-						const formattedExpenseAmount = 'LKR: ' + row.Expense_Amount;
+						const formattedPaymentId = row.Invoice_Id + '/' + row.Payment_Id;
+						const formattedGrandTotal = 'LKR: ' + row.Grand_Total;
                         const formattedReverseAmount = 'LKR: ' + row.Reverse_Amount;
 						const formattedUser = row.First_Name + ' ' + row.Last_Name;
 
                         table.row.add([
-                            row.Expense_Id,
+                            row.Invoice_Id,
     						formattedPaymentId,
-    						formattedExpenseAmount,
+    						formattedGrandTotal,
     						formattedReverseAmount,
 							row.Reverse_Reason,
     						row.Payment_Date,

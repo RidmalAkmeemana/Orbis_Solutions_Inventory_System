@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jun 15, 2025 at 09:49 PM
+-- Generation Time: Jun 16, 2025 at 08:43 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.0.30
 
@@ -114,7 +114,8 @@ INSERT INTO `tbl_backend` (`Backend_Id`, `Backend_Name`, `Screen_Category`, `Scr
 (173, 'updateCompany.php', 'System Information', 'View'),
 (174, 'getSystemConfiguration.php', 'System Information', 'View'),
 (175, 'updateConfiguration.php', 'System Information', 'View'),
-(177, 'getExpensesReversalHistory.php', 'Expenses', 'Reversal History');
+(177, 'getExpensesReversalHistory.php', 'Expenses', 'Reversal History'),
+(178, 'getInvoiceReversalHistory.php', 'Invoice', 'Reversal History');
 
 -- --------------------------------------------------------
 
@@ -274,7 +275,8 @@ INSERT INTO `tbl_backend_permissions` (`Permission_Id`, `Role`, `Backend_Id`) VA
 (932, 'Super Admin', 165),
 (933, 'Super Admin', 166),
 (934, 'Super Admin', 168),
-(935, 'Super Admin', 177);
+(935, 'Super Admin', 177),
+(936, 'Super Admin', 178);
 
 -- --------------------------------------------------------
 
@@ -330,8 +332,6 @@ INSERT INTO `tbl_cash_flow` (`Id`, `Income_Transaction_Id`, `Expense_Transaction
 (195, 15, NULL, 'Invoice Payment_1 - INVW000091', 1752.55, NULL, 'Cash', '2025-04-27 18:53:42'),
 (196, 16, NULL, 'Invoice Payment_1 - INVW000101', 830.00, NULL, 'Cash', '2025-04-27 18:54:50'),
 (197, 17, NULL, 'Invoice Payment_1 - INVW000131', 5.00, NULL, 'Cash', '2025-04-27 21:21:24'),
-(198, 18, NULL, 'Invoice Payment_2 - INVW000131', 3531.24, NULL, 'Cash', '2025-04-27 21:22:30'),
-(200, 20, NULL, 'Invoice Payment_1 - INVR000161', 6874.00, NULL, 'Cash', '2025-05-01 14:47:58'),
 (201, 21, NULL, 'Invoice Payment_1 - INVR000171', 5769.00, NULL, 'Card', '2025-05-01 14:49:12'),
 (215, 26, NULL, 'Invoice Payment_1 - INVR000211', 1500.00, NULL, 'Cash', '2025-06-15 20:45:05'),
 (216, 27, NULL, 'Invoice Payment_1 - INVW000021', 3168.00, NULL, 'Cash', '2025-06-15 20:45:50'),
@@ -605,10 +605,10 @@ INSERT INTO `tbl_invoice` (`Id`, `Invoice_Id`, `Customer_Id`, `User_Id`, `Sale_T
 (25, 'INVW000101', 'CUS0002', 1, 'Whole Sale', 1, 'Fully Paid', 830.00, 0.00, 0, 0.00, 0, 0.00, 0, 0.00, 0, 0.00, 270.00, 830.00, 1000.00, 170.00, 0.00, 'Cash', NULL, '2025-04-27 18:54:50', '2025-04-27 18:54:50'),
 (26, 'INVW000111', 'CUS0001', 1, 'Whole Sale', 1, 'Unpaid', 1150.00, 0.00, 1, 0.00, 1, 0.00, 1, 0.00, 1, 0.00, 400.00, 1150.00, 0.00, 0.00, 1150.00, 'N/A', NULL, '2025-04-27 19:23:27', NULL),
 (27, 'INVW000121', 'CUS0002', 1, 'Whole Sale', 1, 'Unpaid', 770.00, 0.00, 1, 10.25, 1, 99.99, 1, 2.21, 1, 23.22, 165.00, 1814.66, 0.00, 0.00, 1814.66, 'N/A', NULL, '2025-04-27 19:48:49', NULL),
-(28, 'INVW000131', 'CUS0002', 1, 'Whole Sale', 1, 'Fully Paid', 1660.00, 0.00, 1, 10.22, 1, 10.22, 1, 2.21, 0, 1500.25, 540.00, 3536.24, 5005.00, 1468.76, 0.00, 'Cash', 'Fully Paid', '2025-04-27 21:21:24', '2025-04-27 21:22:30'),
+(28, 'INVW000131', 'CUS0002', 1, 'Whole Sale', 1, 'Partially Paid', 1660.00, 0.00, 1, 10.22, 1, 10.22, 1, 2.21, 0, 1500.25, 540.00, 3536.24, 5.00, 0.00, 3531.24, 'Cash', 'Fully Paid', '2025-04-27 21:21:24', '2025-04-27 21:21:24'),
 (29, 'INVW000141', 'CUS0002', 1, 'Whole Sale', 3, 'Unpaid', 25600.00, 500.00, 1, 10.22, 1, 10.22, 1, 2.21, 0, 1500.25, 8390.00, 32285.40, 0.00, 0.00, 32285.40, 'Card', NULL, '2025-04-27 21:23:50', NULL),
 (30, 'INVW000151', 'CUS0002', 1, 'Whole Sale', 1, 'Unpaid', 1190.00, 0.00, 1, 0.00, 1, 0.00, 1, 0.00, 0, 0.00, 390.00, 1190.00, 0.00, 0.00, 1190.00, 'N/A', NULL, '2025-05-01 14:45:35', NULL),
-(31, 'INVR000161', 'CUS0001', 1, 'Retail Sale', 2, 'Fully Paid', 6874.00, 0.00, 1, 0.00, 1, 0.00, 1, 0.00, 0, 0.00, 3438.00, 6874.00, 7000.00, 126.00, 0.00, 'Cash', 'Cash', '2025-05-01 14:47:58', '2025-05-01 14:47:58'),
+(31, 'INVR000161', 'CUS0001', 1, 'Retail Sale', 2, 'Unpaid', 6874.00, 0.00, 1, 0.00, 1, 0.00, 1, 0.00, 0, 0.00, 3438.00, 6874.00, 0.00, 0.00, 6874.00, 'Cash', NULL, '2025-05-01 14:47:58', NULL),
 (32, 'INVR000171', 'CUS0002', 1, 'Retail Sale', 3, 'Fully Paid', 5769.00, 0.00, 1, 0.00, 1, 0.00, 1, 0.00, 0, 0.00, 2980.00, 5769.00, 5769.00, 0.00, 0.00, 'Card', 'Card Payment', '2025-05-01 14:49:12', '2025-05-01 14:49:12'),
 (33, 'INVW000181', 'CUS0002', 1, 'Whole Sale', 2, 'Unpaid', 1270.00, 0.00, 1, 0.00, 1, 0.00, 1, 0.00, 0, 0.00, 476.00, 1270.00, 0.00, 0.00, 1270.00, 'Bank Transfer', NULL, '2025-05-01 15:24:36', NULL),
 (34, 'INVW000191', 'CUS0002', 1, 'Whole Sale', 1, 'Unpaid', 1190.00, 0.00, 1, 0.00, 1, 0.00, 1, 0.00, 0, 0.00, 390.00, 1190.00, 0.00, 0.00, 1190.00, 'N/A', NULL, '2025-05-01 15:56:45', NULL),
@@ -706,11 +706,35 @@ INSERT INTO `tbl_payments` (`Id`, `Invoice_Id`, `Payment_Id`, `Grand_Total`, `Pa
 (15, 'INVW000091', 1, 1752.55, 2000.00, 247.45, 0.00, 'Cash', 'Paid', '2025-04-27 18:53:42', 1),
 (16, 'INVW000101', 1, 830.00, 1000.00, 170.00, 0.00, 'Cash', NULL, '2025-04-27 18:54:50', 1),
 (17, 'INVW000131', 1, 3536.24, 5.00, 0.00, 3531.24, 'Cash', 'Fully Paid', '2025-04-27 21:21:24', 1),
-(18, 'INVW000131', 2, 3536.24, 5000.00, 1468.76, 0.00, 'Cash', 'Fully Paid', '2025-04-27 21:22:30', 1),
-(20, 'INVR000161', 1, 6874.00, 7000.00, 126.00, 0.00, 'Cash', 'Cash', '2025-05-01 14:47:58', 1),
 (21, 'INVR000171', 1, 5769.00, 5769.00, 0.00, 0.00, 'Card', 'Card Payment', '2025-05-01 14:49:12', 1),
 (26, 'INVR000211', 1, 1500.00, 5000.00, 3500.00, 0.00, 'Cash', 'test', '2025-06-15 20:45:05', 1),
 (27, 'INVW000021', 1, 3168.00, 8000.00, 4832.00, 0.00, 'Cash', 'Test', '2025-06-15 20:45:50', 1);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `tbl_payments_history`
+--
+
+CREATE TABLE `tbl_payments_history` (
+  `Id` int(11) NOT NULL,
+  `Invoice_Id` varchar(11) NOT NULL,
+  `Payment_Id` int(11) NOT NULL,
+  `Grand_Total` float(10,2) NOT NULL,
+  `Reverse_Amount` float(10,2) NOT NULL,
+  `Reverse_Reason` varchar(1000) DEFAULT NULL,
+  `Payment_Date` datetime NOT NULL,
+  `Reverse_Date` datetime NOT NULL,
+  `Reversed_By` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `tbl_payments_history`
+--
+
+INSERT INTO `tbl_payments_history` (`Id`, `Invoice_Id`, `Payment_Id`, `Grand_Total`, `Reverse_Amount`, `Reverse_Reason`, `Payment_Date`, `Reverse_Date`, `Reversed_By`) VALUES
+(28, 'INVR000161', 1, 6874.00, 7000.00, 'Wrong Entry', '2025-05-01 14:47:58', '2025-06-16 23:40:40', 1),
+(29, 'INVW000131', 2, 3536.24, 5000.00, 'Invalid Payment Method', '2025-04-27 21:22:30', '2025-06-16 23:42:01', 1);
 
 -- --------------------------------------------------------
 
@@ -1124,7 +1148,8 @@ INSERT INTO `tbl_screens` (`Screen_Id`, `Screen_Name`, `Screen_Category`, `Scree
 (331, 'reverse_expense.php', 'Expenses', 'Reversal'),
 (332, 'cash_flow.php', 'Cash Flow', 'View'),
 (333, 'settings.php', 'System Information', 'View'),
-(334, 'expense_reverse-history.php', 'Expenses', 'Reversal History');
+(334, 'expense_reverse-history.php', 'Expenses', 'Reversal History'),
+(335, 'reverse-history.php', 'Invoice', 'Reversal History');
 
 -- --------------------------------------------------------
 
@@ -1210,7 +1235,8 @@ INSERT INTO `tbl_screen_permissions` (`Permission_Id`, `Role`, `Screen_Id`) VALU
 (447, 'Admin', 302),
 (448, 'Admin', 306),
 (449, 'Super Admin', 331),
-(450, 'Super Admin', 334);
+(450, 'Super Admin', 334),
+(451, 'Super Admin', 335);
 
 -- --------------------------------------------------------
 
@@ -1425,6 +1451,14 @@ ALTER TABLE `tbl_payments`
   ADD KEY `Updated_By` (`Updated_By`);
 
 --
+-- Indexes for table `tbl_payments_history`
+--
+ALTER TABLE `tbl_payments_history`
+  ADD PRIMARY KEY (`Id`),
+  ADD KEY `Invoice_Id` (`Invoice_Id`),
+  ADD KEY `Updated_By` (`Reversed_By`);
+
+--
 -- Indexes for table `tbl_product`
 --
 ALTER TABLE `tbl_product`
@@ -1498,13 +1532,13 @@ ALTER TABLE `tbl_user`
 -- AUTO_INCREMENT for table `tbl_backend`
 --
 ALTER TABLE `tbl_backend`
-  MODIFY `Backend_Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=178;
+  MODIFY `Backend_Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=179;
 
 --
 -- AUTO_INCREMENT for table `tbl_backend_permissions`
 --
 ALTER TABLE `tbl_backend_permissions`
-  MODIFY `Permission_Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=936;
+  MODIFY `Permission_Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=937;
 
 --
 -- AUTO_INCREMENT for table `tbl_brand`
@@ -1585,6 +1619,12 @@ ALTER TABLE `tbl_payments`
   MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
 
 --
+-- AUTO_INCREMENT for table `tbl_payments_history`
+--
+ALTER TABLE `tbl_payments_history`
+  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=30;
+
+--
 -- AUTO_INCREMENT for table `tbl_product`
 --
 ALTER TABLE `tbl_product`
@@ -1606,13 +1646,13 @@ ALTER TABLE `tbl_roles`
 -- AUTO_INCREMENT for table `tbl_screens`
 --
 ALTER TABLE `tbl_screens`
-  MODIFY `Screen_Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=335;
+  MODIFY `Screen_Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=336;
 
 --
 -- AUTO_INCREMENT for table `tbl_screen_permissions`
 --
 ALTER TABLE `tbl_screen_permissions`
-  MODIFY `Permission_Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=451;
+  MODIFY `Permission_Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=452;
 
 --
 -- AUTO_INCREMENT for table `tbl_suppliers`
@@ -1696,6 +1736,13 @@ ALTER TABLE `tbl_invoice`
 ALTER TABLE `tbl_payments`
   ADD CONSTRAINT `tbl_payments_ibfk_1` FOREIGN KEY (`Invoice_Id`) REFERENCES `tbl_invoice` (`Invoice_Id`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `tbl_payments_ibfk_2` FOREIGN KEY (`Updated_By`) REFERENCES `tbl_user` (`Id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `tbl_payments_history`
+--
+ALTER TABLE `tbl_payments_history`
+  ADD CONSTRAINT `tbl_payments_history_ibfk_1` FOREIGN KEY (`Reversed_By`) REFERENCES `tbl_user` (`Id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `tbl_payments_history_ibfk_2` FOREIGN KEY (`Invoice_Id`) REFERENCES `tbl_invoice` (`Invoice_Id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `tbl_product`

@@ -4,23 +4,20 @@ require '../../API/Connection/BackEndPermission.php';
 
 // SQL query to fetch invoice payment data
 $sql = "SELECT 
-    i.Id,
-    i.Invoice_Id,
+    p.Id,
+    p.Invoice_Id,
     p.Payment_Id,
     FORMAT(p.Grand_Total, 2) AS Grand_Total,
-    FORMAT(p.Paid_Amount, 2) AS Paid_Amount,
-    FORMAT(p.Balance_Total, 2) AS Balance_Total,
-    FORMAT(p.Due_Total, 2) AS Due_Total,
-    p.Payment_Type,
+    FORMAT(p.Reverse_Amount, 2) AS Reverse_Amount,
     p.Payment_Date,
-    p.Description,
-    p.Updated_By,
+    p.Reverse_Reason,
+    p.Reverse_Date,
+    p.Reversed_By,
     u.First_Name,
     u.Last_Name
-    FROM tbl_invoice i
-    JOIN tbl_payments p ON i.Invoice_Id = p.Invoice_Id
-    JOIN tbl_user u ON p.Updated_By = u.Id
-    ORDER BY i.Invoice_Id, p.Payment_Id ASC";
+    FROM tbl_payments_history p
+    JOIN tbl_user u ON p.Reversed_By = u.Id
+    ORDER BY p.Invoice_Id, p.Reverse_Date DESC";
 
 // Execute the query and handle errors
 $result = $conn->query($sql);
@@ -42,13 +39,11 @@ if ($result->num_rows > 0) {
             "Invoice_Id" => $row["Invoice_Id"],
             "Payment_Id" => $row["Payment_Id"],
             "Grand_Total" => $row["Grand_Total"],
-            "Paid_Amount" => $row["Paid_Amount"],
-            "Balance_Total" => $row["Balance_Total"],
-            "Due_Total" => $row["Due_Total"],
-            "Payment_Type" => $row["Payment_Type"],
+            "Reverse_Amount" => $row["Reverse_Amount"],
             "Payment_Date" => $row["Payment_Date"],
-            "Description" => $row["Description"],
-            "Updated_By" => $row["Updated_By"],
+            "Reverse_Reason" => $row["Reverse_Reason"],
+            "Reverse_Date" => $row["Reverse_Date"],
+            "Reversed_By" => $row["Reversed_By"],
             "First_Name" => $row["First_Name"],
             "Last_Name" => $row["Last_Name"]
         ));
