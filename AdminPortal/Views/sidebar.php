@@ -87,6 +87,15 @@
                 </li>
                 <?php } ?>
 
+                <p class="menu-title" style="color:#949494;"><span>Quotation</span></p>
+
+                <?php if (hasPermission($role, 'quotation.php', $conn)) { ?>
+                <li class="<?php echo ($currentPage == 'quotation.php' || $currentPage == 'quotation2.php') ? 'active' : ''; ?>"> 
+                    <a href="quotation.php"><i class="fa fa-file-text-o" aria-hidden="true"></i> <span>Quotation</span></a>
+                </li>
+                <?php } ?>
+                
+
                 <p class="menu-title" style="color:#949494;"><span>POS System</span></p>
 
                 <?php if (hasPermission($role, 'pos.php', $conn)) { ?>

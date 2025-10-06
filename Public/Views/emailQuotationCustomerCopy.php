@@ -17,7 +17,7 @@
         $companyTel3 = $row['Company_Tel3'];
 	}
 
-    $invoiceNo = $_REQUEST['Invoice_No'];
+    $quotationNo = $_REQUEST['Quotation_No'];
 ?>
 
 <!DOCTYPE html>
@@ -26,7 +26,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
-    <title><?php echo($companyName); ?> - Invoice</title>
+    <title><?php echo($companyName); ?> - Quotation</title>
 
     <!-- Favicon -->
     <link rel="shortcut icon" type="image/x-icon" href="assets/img/favicon.png">
@@ -115,6 +115,7 @@
             }
         }
         /* Full-Screen Loader */
+
     </style>
 
     <!--[if lt IE 9]>
@@ -132,7 +133,7 @@
                     <div style="margin-top: 10px; font-size: 16px;">Loading . . .</div>
                 </div>
             </div>
-            <!-- /Full-Screen Loader -->            
+            <!-- /Full-Screen Loader -->
 
             <!-- Invoice Container -->
             <div class="invoice-container">
@@ -159,7 +160,7 @@
                     <div class="col-sm-12 m-b-20 d-flex justify-content-center"> <!-- Added d-flex and justify-content-center -->
                         <div class="invoice-details">
                             <h3 class="text-uppercase font-weight-bold mb-1">
-                                <span  style="font-family: Arial;">Invoice</span>
+                                <span  style="font-family: Arial;">Quotation</span>
                             </h3>
                         </div>
                     </div>
@@ -167,32 +168,28 @@
                 <div class="row mt-4">
                     <div class="col-sm-6 col-lg-7 col-xl-8 m-b-20">
                         <h6 class="mb-1">
-                            <span class="font-weight-bold"  style="font-family: Arial; font-size: 17px;">Invoice No: </span>
-                            <span id="invoice_No"  style="font-family: Arial; font-size: 17px;"></span>
+                            <span class="font-weight-bold"  style="font-family: Arial; font-size: 17px;">Quotation No: </span>
+                            <span id="quotation_No"  style="font-family: Arial; font-size: 17px;"></span>
                         </h6>
                         <h6 class="mb-1">
-                            <span class="font-weight-bold"  style="font-family: Arial; font-size: 17px;">Invoice Date: </span>
-                            <span id="invoice_Date"  style="font-family: Arial; font-size: 17px;"></span>
+                            <span class="font-weight-bold"  style="font-family: Arial; font-size: 17px;">Quotation Date: </span>
+                            <span id="quotation_Date"  style="font-family: Arial; font-size: 17px;"></span>
                         </h6>
                         <br>
                         <h6 class="mb-1">
-                            <span class="font-weight-bold"  style="font-family: Arial; font-size: 17px;">Invoice To: </span>
+                            <span class="font-weight-bold"  style="font-family: Arial; font-size: 17px;">Quotation To: </span>
                             <span id="customer_Name"  style="font-family: Arial; font-size: 17px;"></span>
                         </h6>
                     </div>
                     <div class="col-sm-6 col-lg-5 col-xl-4 m-b-20">
                         <h6 class="text-right">
-                            <span class="font-weight-bold mb-1"  style="font-family: Arial; font-size: 17px;">Invoice By: </span>
+                            <span class="font-weight-bold mb-1"  style="font-family: Arial; font-size: 17px;">Quotation By: </span>
                             <span  style="font-family: Arial; font-size: 17px;" id="user_Name"></span>
                         </h6>
                         <br>
                         <h6 class="text-right">
                             <span class="font-weight-bold mb-1"  style="font-family: Arial; font-size: 17px;">Sale Type: </span>
                             <span  style="font-family: Arial; font-size: 17px;" id="sale_Type"></span>
-                        </h6>
-                        <h6 class="text-right">
-                            <span class="font-weight-bold mb-1"  style="font-family: Arial; font-size: 17px;">Status: </span>
-                            <span  style="font-family: Arial; font-size: 17px;" id="status"></span>
                         </h6>
                     </div>
                 </div>
@@ -241,25 +238,19 @@
                                         <th style="font-family: Arial; font-size: 17px;">
                                             Tax <span id="tax"></span>
                                         </th>
-                                        <th style="font-family: Arial; font-size: 17px; float:right;">
-                                            Paid Amount (LKR): <span id="paid_Amount"></span>
-                                        </th>
+                                        <th></th>
                                     </tr>
                                     <tr>
                                         <th style="font-family: Arial; font-size: 17px;">
                                             Vat <span id="vat"></span>
                                         </th>
-                                        <th style="font-family: Arial; font-size: 17px; float:right;">
-                                            Due (LKR): <span id="due_Amount"></span>
-                                        </th>
+                                        <th></th>
                                     </tr>
                                     <tr>
                                         <th style="font-family: Arial; font-size: 17px;">
                                             Delivery Charge <span id="delivery_Charge"></span>
                                         </th>
-                                        <th style="font-family: Arial; font-size: 17px; float:right;">
-                                            Balance (LKR): <span id="balance_Amount"></span>
-                                        </th>
+                                        <th></th>
                                     </tr>
                                     <tr></tr>
                                     </thead>
@@ -275,14 +266,6 @@
                         <h6 class="text-left">
                             <span style="font-family: Arial; font-size: 17px;" class="font-weight-bold mb-1">Item Count: </span>
                             <span style="font-family: Arial; font-size: 17px;" id="item_Count"></span>
-                        </h6>
-                        <h6 class="text-left">
-                            <span style="font-family: Arial; font-size: 17px;" class="font-weight-bold mb-1">Payment Method: </span>
-                            <span style="font-family: Arial; font-size: 17px;" id="payment_Type"></span>
-                        </h6>
-                        <h6 class="text-left">
-                            <span style="font-family: Arial; font-size: 17px;" class="font-weight-bold mb-1">Last Payment Date: </span>
-                            <span style="font-family: Arial; font-size: 17px;" id="payment_Date"></span>
                         </h6>
                     </div>
 
@@ -306,7 +289,7 @@
 
                 <div class="invoice-info">
                     <h5 style="font-family: Arial; font-size: 17px;" class="font-weight-bold mb-1">Description</h5>
-                    <p style="font-family: Arial; font-size: 17px;" id="invoice_Description" class="mb-0"></p>
+                    <p style="font-family: Arial; font-size: 17px;" id="quotation_Description" class="mb-0"></p>
                 </div>
 
                 <div class="row mt-4">
@@ -343,18 +326,20 @@
     <script src="assets/js/script.js"></script>
 
     <script>
-        // Fetch invoice data from viewInvoiceData.php
-        function fetchInvoiceData(invoiceId) {
+        // Fetch invoice data from viewQuotationData.php
+        function fetchQuotationData(quotationId) {
             $.ajax({
-                url: '../../API/Public/viewInvoiceDataCopy.php', // Update with actual path
+                url: '../../API/Public/viewQuotationDataCopy.php', // Update with actual path 
                 type: 'GET',
-                data: { Invoice_Id: invoiceId },
+                data: {
+                    Quotation_Id: quotationId
+                },
                 dataType: 'json',
                 success: function(response) {
                     if (response.success === 'false') {
                         window.location.reload();
                     } else {
-                        populateInvoiceData(response);
+                        populateQuotationData(response);
                     }
                 },
                 error: function(xhr, status, error) {
@@ -372,58 +357,52 @@
             });
         }
 
-        // Function to populate invoice data
-        function populateInvoiceData(data) {
-            const invoice = data.InvoiceData;
-            const paymentDate = invoice.Payment_Date ? invoice.Payment_Date : 'N/A';
-            const invoiceDecription = invoice.Description ? invoice.Description : 'N/A';
+        // Function to populate quotation data
+        function populateQuotationData(data) {
+            const quotation = data.QuotationData;
+            const quotationDecription = quotation.Description ? quotation.Description : 'N/A';
 
-            document.title = 'Orbis Solutions - Invoice | ' + invoice.Invoice_No;
-            document.getElementById('invoice_No').innerText = invoice.Invoice_No;
-            document.getElementById('invoice_Date').innerText = invoice.Invoice_Date;
-            document.getElementById('customer_Name').innerText = invoice.Customer_Name;
-            document.getElementById('user_Name').innerText = invoice.First_Name + ' ' + invoice.Last_Name;
-            document.getElementById('sale_Type').innerText = invoice.Sale_Type;
-            document.getElementById('status').innerText = invoice.Status;
-            document.getElementById('sub_Total').innerText = invoice.Sub_Total;
-            document.getElementById('discount_Total').innerText = invoice.Discount_Total;
+            document.title = 'Orbis Solutions - Quotation | ' + quotation.Quotation_No;
+            document.getElementById('quotation_No').innerText = quotation.Quotation_No;
+            document.getElementById('quotation_Date').innerText = quotation.Quotation_Date;
+            document.getElementById('customer_Name').innerText = quotation.Customer_Name;
+            document.getElementById('user_Name').innerText = quotation.First_Name + ' ' + quotation.Last_Name;
+            document.getElementById('sale_Type').innerText = quotation.Sale_Type;
+            document.getElementById('sub_Total').innerText = quotation.Sub_Total;
+            document.getElementById('discount_Total').innerText = quotation.Discount_Total;
+
 
             // Service Charge
-            if (invoice.ServiceCharge_IsPercentage === "1") {
-                $('#service_Charge').text('(%): ' + formatAmount(invoice.ServiceCharge)).show();
+            if (quotation.ServiceCharge_IsPercentage === "1") {
+                $('#service_Charge').text('(%): ' + formatAmount(quotation.ServiceCharge)).show();
             } else {
-                $('#service_Charge').text('(LKR): ' + formatAmount(invoice.ServiceCharge)).show();
+                $('#service_Charge').text('(LKR): ' + formatAmount(quotation.ServiceCharge)).show();
             }
 
             // Tax Charge
-            if (invoice.Tax_IsPercentage === "1") {
-                $('#tax').text('(%): ' + formatAmount(invoice.Tax)).show();
+            if (quotation.Tax_IsPercentage === "1") {
+                $('#tax').text('(%): ' + formatAmount(quotation.Tax)).show();
             } else {
-                $('#tax').text('(LKR): ' + formatAmount(invoice.Tax)).show();
+                $('#tax').text('(LKR): ' + formatAmount(quotation.Tax)).show();
             }
 
             // VAT Charge
-            if (invoice.Vat_IsPercentage === "1") {
-                $('#vat').text('(%): ' + formatAmount(invoice.Vat)).show();
+            if (quotation.Vat_IsPercentage === "1") {
+                $('#vat').text('(%): ' + formatAmount(quotation.Vat)).show();
             } else {
-                $('#vat').text('(LKR): ' + formatAmount(invoice.Vat)).show();
+                $('#vat').text('(LKR): ' + formatAmount(quotation.Vat)).show();
             }
 
             // Delivery Charge
-            if (invoice.Delivery_IsPercentage === "1") {
-                $('#delivery_Charge').text('(%): ' + formatAmount(invoice.Delivery)).show();
+            if (quotation.Delivery_IsPercentage === "1") {
+                $('#delivery_Charge').text('(%): ' + formatAmount(quotation.Delivery)).show();
             } else {
-                $('#delivery_Charge').text('(LKR): ' + formatAmount(invoice.Delivery)).show();
+                $('#delivery_Charge').text('(LKR): ' + formatAmount(quotation.Delivery)).show();
             }
 
-            document.getElementById('grand_Total').innerText = invoice.Grand_Total;
-            document.getElementById('paid_Amount').innerText = invoice.Paid_Amount;
-            document.getElementById('balance_Amount').innerText = invoice.Balance_Total;
-            document.getElementById('due_Amount').innerText = invoice.Due_Total;
-            document.getElementById('item_Count').innerText = invoice.Item_Count;
-            document.getElementById('payment_Type').innerText = invoice.Payment_Type;
-            document.getElementById('payment_Date').innerText = paymentDate;
-            document.getElementById('invoice_Description').innerText = invoiceDecription;
+            document.getElementById('grand_Total').innerText = quotation.Grand_Total;
+            document.getElementById('item_Count').innerText = quotation.Item_Count;
+            document.getElementById('quotation_Description').innerText = quotationDecription;
 
             // Populate products
             const products = data.products;
@@ -446,9 +425,9 @@
             });
         }
 
-        // Example: Fetch and populate invoice data for a specific Invoice_Id
-        const invoiceId = '<?php echo $invoiceNo; ?>'; // Replace with actual Invoice_Id
-        fetchInvoiceData(invoiceId);
+        // Example: Fetch and populate quotation data for a specific Quotation_Id
+        const quotationId = '<?php echo $quotationNo; ?>'; // Replace with actual Quotation_Id
+        fetchQuotationData(quotationId);
     </script>
 
     <!-- Loader Script -->
