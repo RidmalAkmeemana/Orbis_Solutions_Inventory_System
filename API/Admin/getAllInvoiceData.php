@@ -46,7 +46,6 @@ if ($result->num_rows > 0) {
             "Last_Name" => $row["Last_Name"],
             "Sale_Type" => $row["Sale_Type"],
             "Item_Count" => $row["Item_Count"],
-            "Item_Count" => $row["Item_Count"],
             'Status' => $row['Status'],
             'Grand_Total' => $row['Grand_Total'],
             'Paid_Amount' => $row['Paid_Amount'],

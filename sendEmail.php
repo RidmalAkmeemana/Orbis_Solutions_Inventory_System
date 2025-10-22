@@ -27,11 +27,19 @@ $mail = new PHPMailer(true);
 
 try {
     // Server settings
+    // $mail->isSMTP();
+    // $mail->Host       = 'mail.spacemail.com';           // Replace with your SMTP server
+    // $mail->SMTPAuth   = true;
+    // $mail->Username   = 'info@orbislk.com';     // Replace with your email
+    // $mail->Password   = '6BB7A5A6-106c-4553-a856-f1D04F71C68D';              // Replace with your email password or app password
+    // $mail->SMTPSecure = 'ssl';                        // Use 'ssl' or 'tls'
+    // $mail->Port       = 465;                          // Use 587 for TLS, 465 for SSL
+
     $mail->isSMTP();
-    $mail->Host       = 'mail.spacemail.com';           // Replace with your SMTP server
+    $mail->Host       = 'smtp.gmail.com';           // Replace with your SMTP server
     $mail->SMTPAuth   = true;
-    $mail->Username   = 'info@orbislk.com';     // Replace with your email
-    $mail->Password   = '6BB7A5A6-106c-4553-a856-f1D04F71C68D';              // Replace with your email password or app password
+    $mail->Username   = 'orbissolutionslk@gmail.com';     // Replace with your email
+    $mail->Password   = 'rfhm bosk qabi tycz';              // Replace with your email password or app password
     $mail->SMTPSecure = 'ssl';                        // Use 'ssl' or 'tls'
     $mail->Port       = 465;                          // Use 587 for TLS, 465 for SSL
 

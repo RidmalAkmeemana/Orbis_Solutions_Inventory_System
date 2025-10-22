@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Oct 06, 2025 at 09:38 AM
+-- Generation Time: Oct 19, 2025 at 11:05 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.0.30
 
@@ -119,7 +119,10 @@ INSERT INTO `tbl_backend` (`Backend_Id`, `Backend_Name`, `Screen_Category`, `Scr
 (179, 'searchProductDataQt.php', 'Quotation', 'View'),
 (180, 'saveQuotation.php', 'Quotation', 'View'),
 (181, 'viewQuotationData.php', 'Quotation', 'View'),
-(182, 'searchCustomerQt.php', 'Quotation', 'View');
+(182, 'searchCustomerQt.php', 'Quotation', 'View'),
+(183, 'getAllQuotationData.php', 'Quotation', 'View'),
+(184, 'viewQuotationDataCopy.php', 'Quotation', 'View'),
+(185, 'deleteQuotation.php', 'Quotation', 'Delete');
 
 -- --------------------------------------------------------
 
@@ -298,7 +301,10 @@ INSERT INTO `tbl_backend_permissions` (`Permission_Id`, `Role`, `Backend_Id`) VA
 (955, 'Admin', 179),
 (956, 'Admin', 180),
 (957, 'Admin', 181),
-(958, 'Admin', 182);
+(958, 'Admin', 182),
+(959, 'Super Admin', 183),
+(960, 'Super Admin', 184),
+(961, 'Super Admin', 185);
 
 -- --------------------------------------------------------
 
@@ -1069,12 +1075,10 @@ INSERT INTO `tbl_quotation` (`Id`, `Quotation_Id`, `Customer_Id`, `User_Id`, `Sa
 (47, 'QUTW000011', 'CUS0002', 1, 'Whole Sale', 2, 28750.00, 0.00, 1, 0.00, 1, 0.00, 1, 0.00, 0, 0.00, 10000.00, 28750.00, 'Sample Quotation', '2025-10-06 10:50:16'),
 (48, 'QUTW000021', 'CUS0002', 1, 'Whole Sale', 2, 19800.00, 0.00, 1, 0.00, 1, 0.00, 1, 0.00, 0, 0.00, 6700.00, 19800.00, 'Retail Quoation', '2025-10-06 10:52:12'),
 (49, 'QUTR000031', 'CUS0002', 1, 'Whole Sale', 2, 225000.00, 0.00, 1, 0.00, 1, 0.00, 1, 0.00, 0, 0.00, 112500.00, 225000.00, 'Retail Quotation', '2025-10-06 10:54:54'),
-(50, 'QUTW000041', 'CUS0001', 1, 'Whole Sale', 1, 115000.00, 0.00, 1, 0.00, 1, 0.00, 1, 0.00, 0, 0.00, 40000.00, 115000.00, 'ss', '2025-10-06 12:45:41'),
 (51, 'QUTW000051', 'CUS0002', 1, 'Whole Sale', 1, 119000.00, 0.00, 1, 0.00, 1, 0.00, 1, 0.00, 0, 0.00, 39000.00, 119000.00, 'ss', '2025-10-06 12:47:25'),
-(52, 'QUTW000061', 'CUS0001', 1, 'Whole Sale', 1, 57500.00, 0.00, 1, 0.00, 1, 0.00, 1, 0.00, 0, 0.00, 20000.00, 57500.00, 'Test', '2025-10-06 13:04:32'),
 (53, 'QUTW000071', 'CUS0002', 1, 'Whole Sale', 2, 90800.00, 0.00, 1, 0.00, 1, 0.00, 1, 0.00, 0, 0.00, 29750.00, 90800.00, 'Test 2', '2025-10-06 13:04:55'),
-(54, 'QUTR000081', 'CUS0001', 1, 'Whole Sale', 1, 150000.00, 0.00, 1, 0.00, 1, 0.00, 1, 0.00, 0, 0.00, 75000.00, 150000.00, '12562', '2025-10-06 13:07:12'),
-(55, 'QUTR000091', 'CUS0002', 1, 'Whole Sale', 1, 160100.00, 0.00, 1, 0.00, 1, 0.00, 1, 0.00, 0, 0.00, 80000.00, 160100.00, '25612', '2025-10-06 13:07:25');
+(55, 'QUTR000091', 'CUS0002', 1, 'Whole Sale', 1, 160100.00, 0.00, 1, 0.00, 1, 0.00, 1, 0.00, 0, 0.00, 80000.00, 160100.00, '25612', '2025-10-06 13:07:25'),
+(56, 'QUTW000101', 'CUS0002', 1, 'Whole Sale', 1, 12650.00, 0.00, 1, 0.00, 1, 0.00, 1, 0.00, 0, 0.00, 4400.00, 12650.00, 'asasass', '2025-10-19 10:34:23');
 
 -- --------------------------------------------------------
 
@@ -1109,13 +1113,11 @@ INSERT INTO `tbl_quote_item` (`Id`, `Quotation_Id`, `Product_Id`, `Product_Detai
 (66, 'QUTW000021', '045-BLA-NMR', 114, 'SIGNAL LIGHT LEFT', 750.00, 1150.00, 0.00, 10, 0.00, 11500.00, 7500.00, 4000.00),
 (67, 'QUTR000031', '045-BLA-NMR', 114, 'SIGNAL LIGHT LEFT', 750.00, 1500.00, 0.00, 100, 0.00, 150000.00, 75000.00, 75000.00),
 (68, 'QUTR000031', '045-SVM-DNL', 116, 'DIO MIRROR LEFT 2PCS', 750.00, 1500.00, 0.00, 50, 0.00, 75000.00, 37500.00, 37500.00),
-(69, 'QUTW000041', '045-BLA-NML', 115, 'SIGNAL LIGHT RIGHT', 750.00, 1150.00, 0.00, 100, 0.00, 115000.00, 75000.00, 40000.00),
 (70, 'QUTW000051', '037-SVMFZR', 113, 'FZV2 MIRROR RIGHT 2PCS', 800.00, 1190.00, 0.00, 100, 0.00, 119000.00, 80000.00, 39000.00),
-(71, 'QUTW000061', '045-BLA-NML', 115, 'SIGNAL LIGHT RIGHT', 750.00, 1150.00, 0.00, 50, 0.00, 57500.00, 37500.00, 20000.00),
 (72, 'QUTW000071', '17950-KWP-900', 86, 'CHOCK CABLE', 560.00, 830.00, 0.00, 10, 0.00, 8300.00, 5600.00, 2700.00),
 (73, 'QUTW000071', '1GC-E7620-00', 61, 'PRIMARY SLIDING', 1109.00, 1650.00, 0.00, 50, 0.00, 82500.00, 55450.00, 27050.00),
-(74, 'QUTR000081', '045-BLA-NML', 115, 'SIGNAL LIGHT RIGHT', 750.00, 1500.00, 0.00, 100, 0.00, 150000.00, 75000.00, 75000.00),
-(75, 'QUTR000091', '17210-KVT-D00', 83, 'AIR FILTER', 801.00, 1601.00, 0.00, 100, 0.00, 160100.00, 80100.00, 80000.00);
+(75, 'QUTR000091', '17210-KVT-D00', 83, 'AIR FILTER', 801.00, 1601.00, 0.00, 100, 0.00, 160100.00, 80100.00, 80000.00),
+(76, 'QUTW000101', '045-BLA-NML', 115, 'SIGNAL LIGHT RIGHT', 750.00, 1150.00, 0.00, 11, 0.00, 12650.00, 8250.00, 4400.00);
 
 -- --------------------------------------------------------
 
@@ -1193,7 +1195,10 @@ INSERT INTO `tbl_screens` (`Screen_Id`, `Screen_Name`, `Screen_Category`, `Scree
 (335, 'reverse-history.php', 'Invoice', 'Reversal History'),
 (336, 'quotation.php', 'Quotation', 'View'),
 (337, 'quotation2.php', 'Quotation', 'View'),
-(338, 'printQuotation.php', 'Quotation', 'View');
+(338, 'printQuotation.php', 'Quotation', 'View'),
+(339, 'sales_quotation.php', 'Quotation', 'View'),
+(340, 'view_quotation.php', 'Quotation', 'View'),
+(341, 'printQuotationCopy.php', 'Quotation', 'View');
 
 -- --------------------------------------------------------
 
@@ -1288,7 +1293,10 @@ INSERT INTO `tbl_screen_permissions` (`Permission_Id`, `Role`, `Screen_Id`) VALU
 (458, 'Admin', 333),
 (459, 'Admin', 336),
 (460, 'Admin', 337),
-(461, 'Admin', 338);
+(461, 'Admin', 338),
+(462, 'Super Admin', 339),
+(463, 'Super Admin', 340),
+(464, 'Super Admin', 341);
 
 -- --------------------------------------------------------
 
@@ -1372,7 +1380,7 @@ CREATE TABLE `tbl_temp_quotation` (
 --
 
 INSERT INTO `tbl_temp_quotation` (`Id`, `Value`) VALUES
-(1, '10');
+(1, '11');
 
 -- --------------------------------------------------------
 
@@ -1627,13 +1635,13 @@ ALTER TABLE `tbl_user`
 -- AUTO_INCREMENT for table `tbl_backend`
 --
 ALTER TABLE `tbl_backend`
-  MODIFY `Backend_Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=183;
+  MODIFY `Backend_Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=186;
 
 --
 -- AUTO_INCREMENT for table `tbl_backend_permissions`
 --
 ALTER TABLE `tbl_backend_permissions`
-  MODIFY `Permission_Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=959;
+  MODIFY `Permission_Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=962;
 
 --
 -- AUTO_INCREMENT for table `tbl_brand`
@@ -1735,13 +1743,13 @@ ALTER TABLE `tbl_product_details`
 -- AUTO_INCREMENT for table `tbl_quotation`
 --
 ALTER TABLE `tbl_quotation`
-  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=56;
+  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=57;
 
 --
 -- AUTO_INCREMENT for table `tbl_quote_item`
 --
 ALTER TABLE `tbl_quote_item`
-  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=76;
+  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=77;
 
 --
 -- AUTO_INCREMENT for table `tbl_roles`
@@ -1753,13 +1761,13 @@ ALTER TABLE `tbl_roles`
 -- AUTO_INCREMENT for table `tbl_screens`
 --
 ALTER TABLE `tbl_screens`
-  MODIFY `Screen_Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=339;
+  MODIFY `Screen_Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=342;
 
 --
 -- AUTO_INCREMENT for table `tbl_screen_permissions`
 --
 ALTER TABLE `tbl_screen_permissions`
-  MODIFY `Permission_Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=462;
+  MODIFY `Permission_Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=465;
 
 --
 -- AUTO_INCREMENT for table `tbl_suppliers`

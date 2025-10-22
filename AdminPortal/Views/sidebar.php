@@ -94,6 +94,12 @@
                     <a href="quotation.php"><i class="fa fa-file-text-o" aria-hidden="true"></i> <span>Quotation</span></a>
                 </li>
                 <?php } ?>
+
+                <?php if (hasPermission($role, 'sales_quotation.php', $conn)) { ?>
+                <li class="<?php echo ($currentPage == 'sales_quotation.php' || $currentPage == 'view_quotation.php') ? 'active' : ''; ?>"> 
+                    <a href="sales_quotation.php"><i class="fa fa-file"></i> <span>Sales Quotation</span></a>
+                </li>
+                <?php } ?>
                 
 
                 <p class="menu-title" style="color:#949494;"><span>POS System</span></p>
