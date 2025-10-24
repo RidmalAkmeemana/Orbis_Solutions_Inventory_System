@@ -28,7 +28,7 @@ $user_status = $fetch['Status'];
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
-    <title><?php echo ($companyName); ?> - Inventory Report</title>
+    <title><?php echo ($companyName); ?> - Cash Flow Report</title>
 
     <!-- Favicon -->
     <link rel="shortcut icon" type="image/x-icon" href="assets/img/favicon.png">
@@ -181,10 +181,10 @@ $user_status = $fetch['Status'];
                 <div class="page-header">
                     <div class="row">
                         <div class="col-sm-7 col-auto">
-                            <h3 class="page-title">Inventory Report</h3>
+                            <h3 class="page-title">Cash Flow Report</h3>
                             <ul class="breadcrumb">
                                 <li class="breadcrumb-item"><a href="home.php">Dashboard</a></li>
-                                <li class="breadcrumb-item active">Inventory Report</li>
+                                <li class="breadcrumb-item active">Cash Flow Report</li>
                             </ul>
                         </div>
                     </div>
@@ -199,7 +199,7 @@ $user_status = $fetch['Status'];
                             <div class="modal-body mt-4">
                                 <i class="fa fa-exclamation-circle animate__animated animate__tada animate__infinite" style="font-size: 100px; margin-top:20px; color:#e63c3c;" aria-hidden="true"></i>
                                 <h3 class="modal-title"><b>Error</b></h3>
-                                <p>Quantity From Cannot Greater Than Quantity To !</p>
+                                <p>From Date cannot be greater than To Date !</p>
                             </div>
                             <div class="modal-body">
                                 <button style="width:20%;" type="button" class="btn btn-primary" id="OkBtn1" data-dismiss="modal">OK</button>
@@ -214,90 +214,21 @@ $user_status = $fetch['Status'];
                     <div class="col-sm-12">
                         <div class="card">
                             <div class="card-body">
-
-                                <?php
-
-                                require_once '../Controllers/select_controller.php';
-
-                                $db_handle = new DBController();
-                                $countryResult = $db_handle->runQuery("SELECT DISTINCT Product_Id FROM tbl_product_details WHERE Inventort_Updated = 'True' ORDER BY Product_Id ASC");
-                                $countryResult1 = $db_handle->runQuery("SELECT * FROM tbl_category ORDER BY Category_Id ASC");
-                                $countryResult2 = $db_handle->runQuery("SELECT * FROM tbl_suppliers ORDER BY Supplier_Id ASC");
-                                $countryResult3 = $db_handle->runQuery("SELECT * FROM tbl_brand ORDER BY Brand_Id ASC");
-
-                                ?>
-
                                 <!-- Add Filters Section Above the Table -->
-                                <form method="POST" action="printInventoryReport.php" id="filterForm" enctype="multipart/form-data">
+                                <form method="POST" action="printCashFlowReport.php" id="filterForm" enctype="multipart/form-data">
                                     <div class="row mb-4">
-                                        <div class="col-md-4">
-                                            <label><strong>Product Id</strong></label><label class="text-danger">*</label>
-                                            <select style="width: 100%;" class="form-control select2 product-select" name="Product_Id" required>
-                                                <option selected>ALL</option>
-                                                <?php
-                                                if (!empty($countryResult)) {
-                                                    foreach ($countryResult as $key => $value) {
-                                                        echo '<option value="' . $countryResult[$key]['Product_Id'] . '">' . $countryResult[$key]['Product_Id'] . '</option>';
-                                                    }
-                                                }
-                                                ?>
-                                            </select>
+                                        <div class="col-md-4 mt-2">
+                                            <label><strong>Date From</strong></label><label class="text-danger">*</label>
+                                            <input type="date" name="DateFrom" class="form-control" required="">
                                         </div>
 
-                                        <div class="col-md-4">
-                                            <label><strong>Brand Name</strong></label><label class="text-danger">*</label>
-                                            <select style="width: 100%;" class="form-control select2 product-brand" name="Brand_Id" required>
-                                                <option selected>ALL</option>
-                                                <?php
-                                                if (!empty($countryResult3)) {
-                                                    foreach ($countryResult3 as $key => $value) {
-                                                        echo '<option value="' . $countryResult3[$key]['Brand_Id'] . '">' . $countryResult3[$key]['Brand_Name'] . '</option>';
-                                                    }
-                                                }
-                                                ?>
-                                            </select>
-                                        </div>
-
-                                        <div class="col-md-4">
-                                            <label><strong>Product Category</strong></label><label class="text-danger">*</label>
-                                            <select style="width: 100%;" class="form-control select2 product-category" name="Category_Id" required>
-                                                <option selected>ALL</option>
-                                                <?php
-                                                if (!empty($countryResult1)) {
-                                                    foreach ($countryResult1 as $key => $value) {
-                                                        echo '<option value="' . $countryResult1[$key]['Category_Id'] . '">' . $countryResult1[$key]['Category_Name'] . '</option>';
-                                                    }
-                                                }
-                                                ?>
-                                            </select>
-                                        </div>
-
-                                        <div class="col-md-3 mt-2">
-                                            <label><strong>Supplier Name</strong></label><label class="text-danger">*</label>
-                                            <select style="width: 100%;" class="form-control select2 product-supplier" name="Supplier_Id" required>
-                                                <option selected>ALL</option>
-                                                <?php
-                                                if (!empty($countryResult2)) {
-                                                    foreach ($countryResult2 as $key => $value) {
-                                                        echo '<option value="' . $countryResult2[$key]['Supplier_Id'] . '">' . $countryResult2[$key]['Supplier_Name'] . '</option>';
-                                                    }
-                                                }
-                                                ?>
-                                            </select>
-                                        </div>
-
-                                        <div class="col-md-3 mt-2">
-                                            <label><strong>Qty From</strong></label><label class="text-danger">*</label>
-                                            <input type="number" name="QtyFrom" class="form-control" required="">
-                                        </div>
-
-                                        <div class="col-md-3 mt-2">
-                                            <label><strong>Qty To</strong></label><label class="text-danger">*</label>
-                                            <input type="number" name="QtyTo" class="form-control" required="">
+                                        <div class="col-md-4 mt-2">
+                                            <label><strong>Date To</strong></label><label class="text-danger">*</label>
+                                            <input type="date" name="DateTo" class="form-control" required="">
                                         </div>
 
                                         <!-- Adjusted column size to align the button inline -->
-                                        <div class="col-md-3" style="margin-top:40px;">
+                                        <div class="col-md-4" style="margin-top:40px;">
                                             <button type="submit" class="btn btn-primary w-100" id="filterBtn">Generate</button>
                                         </div>
                                     </div>
@@ -343,54 +274,36 @@ $user_status = $fetch['Status'];
 
             $('.select2').select2();
 
-            $('input[name="QtyTo"]').on('keydown blur', function(event) {
+            $('input[name="DateTo"]').on('keydown blur', function(event) {
                 if (event.type === 'blur' || event.key === 'Enter') {
                     if (event.key === 'Enter') {
                         event.preventDefault(); // Prevent the default action, which may cause form submission
                     }
 
-                    const qtyFrom = parseInt(document.querySelector('input[name="QtyFrom"]').value);
-                    const qtyTo = parseInt(document.querySelector('input[name="QtyTo"]').value);
+                    const dateFrom = new Date(document.querySelector('input[name="DateFrom"]').value);
+                    const dateTo = new Date(document.querySelector('input[name="DateTo"]').value);
 
-                    if (qtyFrom > qtyTo) {
+                    if (dateFrom > dateTo) {
                         $('#ErrorModel').modal('show');
-                        $(this).val(qtyFrom);
-                    }
-                    if (qtyTo < 0) {
-                        $(this).val(0);
+                        const formattedDateFrom = dateFrom.toISOString().split('T')[0];
+                        $('input[name="DateTo"]').val(formattedDateFrom);
                     }
                 }
             });
 
-            $('input[name="QtyFrom"]').on('keydown blur', function(event) {
+            $('input[name="DateFrom"]').on('keydown blur', function(event) {
                 if (event.type === 'blur' || event.key === 'Enter') {
                     if (event.key === 'Enter') {
                         event.preventDefault(); // Prevent the default action, which may cause form submission
                     }
 
-                    const qtyFrom = parseInt(document.querySelector('input[name="QtyFrom"]').value);
-                    const qtyTo = parseInt(document.querySelector('input[name="QtyTo"]').value);
+                    const dateFrom = new Date(document.querySelector('input[name="DateFrom"]').value);
+                    const dateTo = new Date(document.querySelector('input[name="DateTo"]').value);
 
-                    if (qtyFrom > qtyTo) {
+                    if (dateFrom > dateTo) {
                         $('#ErrorModel').modal('show');
-                        $('input[name="QtyTo"]').val(qtyFrom);
-                    }
-                    if (qtyTo < 0) {
-                        $('input[name="QtyTo"]').val(0);
-                    }
-                }
-            });
-
-            $('input[name="QtyFrom"]').on('keydown blur', function(event) {
-                if (event.type === 'blur' || event.key === 'Enter') {
-                    if (event.key === 'Enter') {
-                        event.preventDefault(); // Prevent the default action, which may cause form submission
-                    }
-
-                    const qtyFrom = parseInt(document.querySelector('input[name="QtyFrom"]').value);
-
-                    if (qtyFrom < 0) {
-                        $(this).val(0);
+                        const formattedDateFrom = dateFrom.toISOString().split('T')[0];
+                        $('input[name="DateTo"]').val(formattedDateFrom);
                     }
                 }
             });

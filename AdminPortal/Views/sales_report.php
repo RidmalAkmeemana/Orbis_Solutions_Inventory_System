@@ -20,12 +20,6 @@ $query = mysqli_query($conn, "SELECT * FROM `tbl_user` WHERE `username` = '$user
 $fetch = mysqli_fetch_array($query);
 $user_status = $fetch['Status'];
 
-// Check if user has access to addNewProduct.php
-$has_access_to_add_product = false;
-$permission_query = mysqli_query($conn, "SELECT * FROM `tbl_backend_permissions` WHERE `Role` = '$user_status' AND `Backend_Id` = 102") or die(mysqli_error());
-if (mysqli_num_rows($permission_query) > 0) {
-    $has_access_to_add_product = true;
-}
 ?>
 
 <!DOCTYPE html>
@@ -195,8 +189,27 @@ if (mysqli_num_rows($permission_query) > 0) {
                         </div>
                     </div>
                 </div>
-
                 <!-- /Page Header -->
+
+                <!-- Model Alerts -->
+
+                <div class="modal fade" id="ErrorModel" role="dialog">
+                    <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content text-center">
+                            <div class="modal-body mt-4">
+                                <i class="fa fa-exclamation-circle animate__animated animate__tada animate__infinite" style="font-size: 100px; margin-top:20px; color:#e63c3c;" aria-hidden="true"></i>
+                                <h3 class="modal-title"><b>Error</b></h3>
+                                <p>From Date cannot be greater than To Date !</p>
+                            </div>
+                            <div class="modal-body">
+                                <button style="width:20%;" type="button" class="btn btn-primary" id="OkBtn1" data-dismiss="modal">OK</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- /Model Alerts -->
+
                 <div class="row">
                     <div class="col-sm-12">
                         <div class="card">
@@ -355,7 +368,7 @@ if (mysqli_num_rows($permission_query) > 0) {
                     const dateTo = new Date(document.querySelector('input[name="DateTo"]').value);
 
                     if (dateFrom > dateTo) {
-                        alert('From Date cannot be greater than To Date'); // Show alert
+                        $('#ErrorModel').modal('show');
                         const formattedDateFrom = dateFrom.toISOString().split('T')[0];
                         $('input[name="DateTo"]').val(formattedDateFrom);
                     }
@@ -372,7 +385,7 @@ if (mysqli_num_rows($permission_query) > 0) {
                     const dateTo = new Date(document.querySelector('input[name="DateTo"]').value);
 
                     if (dateFrom > dateTo) {
-                        alert('From Date cannot be greater than To Date'); // Show alert
+                        $('#ErrorModel').modal('show');
                         const formattedDateFrom = dateFrom.toISOString().split('T')[0];
                         $('input[name="DateTo"]').val(formattedDateFrom);
                     }

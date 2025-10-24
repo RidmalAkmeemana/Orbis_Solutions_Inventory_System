@@ -178,6 +178,18 @@
                 </li>
                 <?php } ?>
 
+                <?php if (hasPermission($role, 'outstanding_report.php', $conn)) { ?>
+                <li class="<?php echo ($currentPage == 'outstanding_report.php') ? 'active' : ''; ?>"> 
+                    <a href="outstanding_report.php"><i class="fa fa-file"></i> <span>Outstanding Report</span></a>
+                </li>
+                <?php } ?>
+
+                <?php if (hasPermission($role, 'cashflow_report.php', $conn)) { ?>
+                <li class="<?php echo ($currentPage == 'cashflow_report.php') ? 'active' : ''; ?>"> 
+                    <a href="cashflow_report.php"><i class="fa fa-file"></i> <span>Cash Flow Report</span></a>
+                </li>
+                <?php } ?>
+
                 <p class="menu-title" style="color:#949494;"><span>Configuration</span></p>
 
                 <?php if (hasPermission($role, 'settings.php', $conn)) { ?>
