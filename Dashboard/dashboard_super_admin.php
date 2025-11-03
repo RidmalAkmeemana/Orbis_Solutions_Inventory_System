@@ -47,9 +47,8 @@
                             <thead class="table-light">
                                 <tr>
                                     <th>#</th>
+                                    <th>Product Code</th>
                                     <th>Product Name</th>
-                                    <th>Brand</th>
-                                    <th>Category</th>
                                     <th>Sold Qty</th>
                                     <th>Available Qty</th>
                                 </tr>
@@ -218,9 +217,8 @@ function renderFastProductsPie(data){
         const tr = document.createElement("tr");
         tr.innerHTML = `
             <td>${index + 1}</td>
+            <td>${p.product_id}</td>
             <td>${p.product_name}</td>
-            <td>${p.brand}</td>
-            <td>${p.category}</td>
             <td>${p.qty_sold}</td>
             <td>${p.available_qty}</td>
         `;
