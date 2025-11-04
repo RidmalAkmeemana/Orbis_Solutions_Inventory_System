@@ -25,8 +25,21 @@
     <!-- Counts -->
     <div class="row g-3 mb-3" id="tiles-counts"></div>
 
-    <!-- Fast Moving Products -->
+    <!-- Daily Sales From Last Month -->
     <div class="row mb-4">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title text-center">Daily Sales (Last 30 Days)</h5>
+                    <canvas id="dailySalesChart" height="120"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Daily Sales From Last Month -->
+
+    <div class="row mb-4">
+
         <!-- Pie Chart -->
         <div class="col-md-4">
             <div class="card">
@@ -36,9 +49,34 @@
                 </div>
             </div>
         </div>
+        <!-- Pie Chart -->
 
-        <!-- Table -->
-        <div class="col-md-8">
+        <!-- Top Users Bubble Chart -->
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title text-center">Top 10 Users by Billing</h5>
+                    <canvas id="topUsersBubble" height="300"></canvas>
+                </div>
+            </div>
+        </div>
+        <!-- Top Users Bubble Chart -->
+
+        <!-- Most Used Payment Methods -->
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title text-center">Most Used Payment Methods</h5>
+                    <canvas id="paymentMethodBar" height="300"></canvas>
+                </div>
+            </div>
+        </div>
+        <!-- Most Used Payment Methods -->
+    </div>
+
+    <div class="row mb-4">
+        <!-- Fast Moving Products -->
+        <div class="col-md-6">
             <div class="card">
                 <div class="card-body">
                     <h5 class="card-title text-center">Top 10 Moving Product Details</h5>
@@ -61,6 +99,33 @@
                 </div>
             </div>
         </div>
+        <!-- Fast Moving Products -->
+
+        <!-- Top 10 Customers Table -->
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title text-center">Top 10 Customers by Billing</h5>
+                    <div class="table-responsive">
+                        <table class="table table-hover table-center" id="topCustomersTable">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>#</th>
+                                    <th>Customer Name</th>
+                                    <th>Address</th>
+                                    <th>Contact No</th>
+                                    <th>Email</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Rows will be injected -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Top 10 Customers Table -->
     </div>
 
 </div>
@@ -75,7 +140,7 @@ function formatMoney(v) {
 
 // --- Make Tile HTML with card ---
 function makeTileHtml(label, value) {
-    return `<div class="col-sm-6 col-md-3 mb-3">
+    return `<div class="col-sm-6 col-md-2 mb-3">
         <div class="card">
             <div class="card-body text-center p-3">
                 <div class="tile-number" data-target="${value}">0</div>
@@ -226,6 +291,186 @@ function renderFastProductsPie(data){
     });
 }
 
+// --- Render Daily Sales Bar Chart ---
+function renderDailySalesChart(data) {
+    if (!data.dailySales || data.dailySales.length === 0) return;
+
+    const ctx = document.getElementById("dailySalesChart");
+
+    const labels = data.dailySales.map(s => s.date);
+    const sales = data.dailySales.map(s => s.total_sales);
+
+    // Two color alternating pattern
+    const colors = sales.map((_, i) => i % 2 === 0 ? "#be3235" : "#000000");
+
+    new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: "Daily Sales (LKR)",
+                data: sales,
+                backgroundColor: colors
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                x: { ticks: { font: { size: 11 } } },
+                y: {
+                    ticks: { font: { size: 11 } },
+                    beginAtZero: true
+                }
+            },
+            plugins: {
+                legend: { display: false },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            return "LKR " + Number(context.raw).toLocaleString(undefined, { minimumFractionDigits: 2 });
+                        }
+                    }
+                }
+            }
+        }
+    });
+}
+
+// --- Render Top Users Bubble Chart ---
+function renderTopUsersBubble(data){
+    if (!data.topUsers || data.topUsers.length === 0) return;
+
+    const ctx = document.getElementById("topUsersBubble");
+
+    // Color palette for users
+    const colors = ['#be3235','#000000','#26af48','#009efb','#f39c12','#8207DB','#53EAFD','#FFA2A2','#162456','#31C950'];
+
+    // Assign color per user (stable mapping)
+    const userColorMap = {};
+    let colorIndex = 0;
+
+    const chartData = data.topUsers.map(u => {
+        if(!userColorMap[u.user_id]){
+            userColorMap[u.user_id] = colors[colorIndex % colors.length];
+            colorIndex++;
+        }
+
+        const baseColor = userColorMap[u.user_id];
+
+        return {
+            x: u.invoice_count,
+            y: u.total_sales,
+            r: Math.max(8, Math.min(u.total_sales / 5000, 30)),
+            label: u.user_name,
+            color: baseColor
+        };
+    });
+
+    new Chart(ctx, {
+        type: 'bubble',
+        data: {
+            datasets: [{
+                label: "Users",
+                data: chartData,
+                backgroundColor: chartData.map(p => hexToRgba(p.color, 0.65)),
+                borderColor: chartData.map(p => hexToRgba(p.color, 1)),
+                borderWidth: 1.5
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            const d = context.raw;
+                            return [
+                                `User: ${d.label}`,
+                                `Invoices: ${d.x}`,
+                                `Sales: LKR ${Number(d.y).toLocaleString(undefined, {minimumFractionDigits:2})}`
+                            ];
+                        }
+                    }
+                },
+                legend: { display: false }
+            },
+            scales: {
+                x: { title: { display: true, text: 'Invoice Count', font: { size: 14 } } },
+                y: { title: { display: true, text: 'Total Sales (LKR)', font: { size: 14 } } }
+            }
+        }
+    });
+}
+
+// Convert HEX to RGBA for smooth opacity
+function hexToRgba(hex, opacity){
+    const r = parseInt(hex.slice(1,3), 16);
+    const g = parseInt(hex.slice(3,5), 16);
+    const b = parseInt(hex.slice(5,7), 16);
+    return `rgba(${r},${g},${b},${opacity})`;
+}
+
+// --- Render Most Used Payment Methods Bar Graph ---
+function renderPaymentMethodBar(data){
+    if(!data.paymentMethods || data.paymentMethods.length === 0) return;
+
+    const ctx = document.getElementById("paymentMethodBar");
+
+    const labels = data.paymentMethods.map(p => p.method);
+    const counts = data.paymentMethods.map(p => p.usage_count);
+
+    const barColors = ['#be3235','#000000','#26af48','#009efb','#f39c12'];
+
+    new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: "Usage Count",
+                data: counts,
+                backgroundColor: labels.map((_, i) => barColors[i % barColors.length]),
+                borderColor: labels.map((_, i) => barColors[i % barColors.length]),
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: { display: false },
+                tooltip: {
+                    callbacks: {
+                        label: (context) => `Used: ${context.raw} times`
+                    }
+                }
+            },
+            scales: {
+                x: { title: { display: true, text: 'Payment Method' } },
+                y: { title: { display: true, text: 'Usage Count' }, beginAtZero: true }
+            }
+        }
+    });
+}
+
+// --- Render Top Customers Table ---
+function renderTopCustomers(data){
+    if(!data.topCustomers || data.topCustomers.length === 0) return;
+
+    const tbody = document.querySelector("#topCustomersTable tbody");
+    tbody.innerHTML = "";
+
+    data.topCustomers.forEach((c, index) => {
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+            <td>${index + 1}</td>
+            <td>${c.customer_name}</td>
+            <td>${c.address}</td>
+            <td>${c.contact_no}</td>
+            <td>${c.email}</td>
+        `;
+        tbody.appendChild(tr);
+    });
+}
+
 // --- Fetch Dashboard Data ---
 function fetchDashboard() {
     $.ajax({
@@ -239,6 +484,10 @@ function fetchDashboard() {
             }
             renderTiles(res.pageData || {});
             renderFastProductsPie(res);
+            renderDailySalesChart(res);
+            renderTopUsersBubble(res);
+            renderPaymentMethodBar(res);
+            renderTopCustomers(res);
         }
     });
 }

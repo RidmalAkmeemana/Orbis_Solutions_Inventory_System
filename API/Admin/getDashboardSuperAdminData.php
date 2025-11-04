@@ -82,12 +82,112 @@ if($q){
     }
 }
 
+// 4) Daily Sales of Last Month (Last 30 Days)
+$dailySales = [];
+
+$q = $conn->query("
+    SELECT 
+        DATE(Invoice_Date) AS sale_date,
+        SUM(Grand_Total) AS total_sales
+    FROM tbl_invoice
+    WHERE Invoice_Date >= CURDATE() - INTERVAL 30 DAY
+    GROUP BY DATE(Invoice_Date)
+    ORDER BY sale_date ASC
+");
+
+if($q){
+    while($r = $q->fetch_assoc()){
+        $dailySales[] = [
+            'date' => $r['sale_date'],
+            'total_sales' => (float)$r['total_sales']
+        ];
+    }
+}
+
+// 5) Top 10 Users with highest billing
+$topUsers = [];
+$q = $conn->query("
+    SELECT 
+        u.Id,
+        CONCAT(u.First_Name, ' ', u.Last_Name) AS user_name,
+        COUNT(i.Invoice_Id) AS invoice_count,
+        IFNULL(SUM(i.Grand_Total),0) AS total_sales
+    FROM tbl_user u
+    LEFT JOIN tbl_invoice i ON i.User_Id = u.Id
+    GROUP BY u.Id
+    HAVING total_sales > 0
+    ORDER BY total_sales DESC
+    LIMIT 10
+");
+
+if($q){
+    while($r = $q->fetch_assoc()){
+        $topUsers[] = [
+            'user_id' => $r['Id'],
+            'user_name' => $r['user_name'],
+            'invoice_count' => (int)$r['invoice_count'],
+            'total_sales' => (float)$r['total_sales']
+        ];
+    }
+}
+
+// 6) Most Used Payment Methods
+$paymentMethods = [];
+$q = $conn->query("
+    SELECT 
+        Payment_Type,
+        COUNT(*) AS usage_count
+    FROM tbl_invoice
+    GROUP BY Payment_Type
+    ORDER BY usage_count DESC
+    LIMIT 5
+");
+
+if($q){
+    while($r = $q->fetch_assoc()){
+        $paymentMethods[] = [
+            'method' => $r['Payment_Type'],
+            'usage_count' => (int)$r['usage_count']
+        ];
+    }
+}
+
+// 7) Top 10 Customers (Highest Billing)
+$topCustomers = [];
+$q = $conn->query("
+    SELECT 
+        c.Customer_Name,
+        COALESCE(c.Customer_Address, 'N/A') AS Customer_Address,
+        COALESCE(c.Customer_Contact, 'N/A') AS Customer_Contact,
+        COALESCE(c.Customer_Email, 'N/A') AS Customer_Email,
+        SUM(i.Grand_Total) AS total_spent
+    FROM tbl_customers c 
+    INNER JOIN tbl_invoice i ON i.Customer_Id = c.Customer_Id
+    GROUP BY c.Customer_Id
+    ORDER BY total_spent DESC
+    LIMIT 10
+");
+
+if($q){
+    while($r = $q->fetch_assoc()){
+        $topCustomers[] = [
+            'customer_name' => $r['Customer_Name'],
+            'address' => $r['Customer_Address'],
+            'contact_no' => $r['Customer_Contact'],
+            'email' => $r['Customer_Email']
+        ];
+    }
+}
 
 // FINAL RESPONSE
 echo json_encode([
     'success' => 'true',
     'pageData' => $counts,
-    'fastProducts' => $fastProducts
+    'fastProducts' => $fastProducts,
+    'dailySales' => $dailySales,
+    'topUsers' => $topUsers,
+    'paymentMethods' => $paymentMethods,
+    'topCustomers' => $topCustomers
 ]);
 
 $conn->close();
