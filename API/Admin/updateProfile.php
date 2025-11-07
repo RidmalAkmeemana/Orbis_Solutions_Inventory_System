@@ -9,8 +9,6 @@ if (!isset($_SESSION['user']) || !isset($_SESSION['token'])) {
 }
 
 include '../Connection/config.php';
-include '../Connection/uploadurl.php';
-
 header("Content-Type: application/json; charset=UTF-8");
 
 // Retrieve data from POST request
@@ -32,7 +30,7 @@ if (isset($_FILES['Img']) && $_FILES['Img']['error'] === UPLOAD_ERR_OK) {
         // Define image file path and URL
         $imageLocation = "../../Images/Admins/$Username.$fileExtension";
         $imagePath = "Images/Admins/$Username.$fileExtension";
-        $uploadedUrl = $base_url . $imagePath;
+        $uploadedUrl = $imagePath;
 
         // Move uploaded file to the target directory
         if (move_uploaded_file($fileTmpPath, $imageLocation)) {

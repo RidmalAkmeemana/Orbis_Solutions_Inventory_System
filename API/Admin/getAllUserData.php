@@ -19,7 +19,7 @@ if ($result->num_rows > 0) {
             $imgPath = 'Images/Admins/admin.jpg'; // Set default image path
             $img_url = $base_url . $imgPath;
         } else {
-            $img_url = $imgPath;
+            $img_url = $base_url . $imgPath;
         }
 
         array_push($dataset, array(

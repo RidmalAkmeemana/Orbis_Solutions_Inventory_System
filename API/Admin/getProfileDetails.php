@@ -2,6 +2,7 @@
 // Include necessary files
 require_once '../../API/Connection/validator.php';
 require_once '../../API/Connection/config.php';
+include '../../API/Connection/uploadurl.php';
 
 // Initialize response array
 $response = array();
@@ -25,7 +26,7 @@ if(isset($_SESSION['user'])) {
         $response['Last_Name'] = $user['Last_Name'];
         $response['Username'] = $user['Username'];
         $response['Status'] = $user['Status'];
-        $response['Img'] = $user['Img'];
+        $response['Img'] = $base_url.$user['Img'];
         
     } else {
         // Set error flag

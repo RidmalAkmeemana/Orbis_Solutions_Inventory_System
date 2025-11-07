@@ -10,7 +10,7 @@ $Password = md5($_POST['Password']);
 $Status = $_POST['Status'];
 
 $imagpath = "Images/Admins/default_profile.png";
-$uploade_url = $base_url . $imagpath;
+$uploade_url = $imagpath;
 $img = $uploade_url;
 
 if (empty($First_Name) || empty($Last_Name) || empty($Username) || empty($Password) || empty($Status)) {

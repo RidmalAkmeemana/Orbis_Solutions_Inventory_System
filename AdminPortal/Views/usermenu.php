@@ -1,6 +1,7 @@
 <?php 
     require_once '../../API/Connection/validator.php';
     require_once '../../API/Connection/config.php';
+	include '../../API/Connection/uploadurl.php';
 
     $query = mysqli_query($conn, "SELECT * FROM `tbl_user` WHERE `username` = '$_SESSION[user]'") or die(mysqli_error());
     $fetch = mysqli_fetch_array($query);
@@ -8,12 +9,12 @@
 ?>
 	<li class="nav-item dropdown has-arrow">
 		<a href="#" class="dropdown-toggle nav-link" data-toggle="dropdown">
-			<span class="user-img"><img class="rounded-circle" src="<?php echo $fetch['Img']; ?>" width="31" alt="User Image"></span>
+			<span class="user-img"><img class="rounded-circle" src="<?php echo $base_url.$fetch['Img']; ?>" width="31" alt="User Image"></span>
 		</a>
 		<div class="dropdown-menu">
 			<div class="user-header">
 				<div class="avatar avatar-sm">
-					<img src="<?php echo $fetch['Img']; ?>" alt="User Image" class="avatar-img rounded-circle" style="width: 40px; height: 40px; object-fit: cover; border-radius: 50%;">
+					<img src="<?php echo $base_url.$fetch['Img']; ?>" alt="User Image" class="avatar-img rounded-circle" style="width: 40px; height: 40px; object-fit: cover; border-radius: 50%;">
 				</div>
 				<div class="user-text">
 					<h6><?php echo $fetch['First_Name']; ?> <?php echo $fetch['Last_Name']; ?></h6>

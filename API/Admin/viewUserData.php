@@ -1,6 +1,7 @@
 <?php
 
 require '../../API/Connection/BackEndPermission.php';
+include '../Connection/uploadurl.php';
 
 $Id = $_REQUEST["Id"];
 
@@ -19,7 +20,7 @@ if ($resultRole->num_rows > 0) {
         $imgPath = 'Images/Admins/admin.jpg'; // Set default image path
         $img_url = $base_url . $imgPath;
     } else {
-        $img_url = $imgPath;
+        $img_url = $base_url . $imgPath;
     }
 
     // Construct user data
