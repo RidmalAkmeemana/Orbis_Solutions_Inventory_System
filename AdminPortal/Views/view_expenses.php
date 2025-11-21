@@ -2,7 +2,7 @@
 require_once '../../API/Connection/validator.php';
 require_once '../../API/Connection/config.php';
 require_once '../../API/Connection/ScreenPermission.php';
-include '../Connection/uploadurl.php';
+include '../../API/Connection/uploadurl.php';
 
 // Fetch Company Name from the database
 $companyName = ""; // Default name if query fails
