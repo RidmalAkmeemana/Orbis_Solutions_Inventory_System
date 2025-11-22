@@ -197,15 +197,16 @@
 		<!-- Slimscroll JS -->
         <script src="assets/plugins/slimscroll/jquery.slimscroll.min.js"></script>
 		
-		<script src="assets/plugins/raphael/raphael.min.js"></script>    
-		<script src="assets/plugins/morris/morris.min.js"></script>  
-		<script src="assets/js/chart.morris.js"></script>
+		<!-- Datatables JS -->
+		<script src="assets/plugins/datatables/jquery.dataTables.min.js"></script>
+		<script src="assets/plugins/datatables/datatables.min.js"></script>
 		
 		<!-- Custom JS -->
 		<script  src="assets/js/script.js"></script>
 
 		<!-- Loader Script -->
 		<script>
+
         let startTime = performance.now(); // Capture the start time when the page starts loading
 
         window.addEventListener("load", function () {
@@ -219,6 +220,33 @@
                 document.getElementById("pageLoader").style.display = "none";
             }, delay);
         });
+
+		// document.addEventListener("DOMContentLoaded", function () {
+		// 	const toggleButton = document.getElementById("darkModeToggle");
+		// 	const icon = document.getElementById("darkModeIcon");
+
+		// 	// Load state
+		// 	if (localStorage.getItem("darkMode") === "enabled") {
+		// 		document.body.classList.add("dark-mode");
+		// 		icon.classList.remove("fa-moon-o");
+		// 		icon.classList.add("fa-sun-o");
+		// 	}
+
+		// 	toggleButton.addEventListener("click", function () {
+		// 		document.body.classList.toggle("dark-mode");
+
+		// 		if (document.body.classList.contains("dark-mode")) {
+		// 			localStorage.setItem("darkMode", "enabled");
+		// 			icon.classList.remove("fa-moon-o");
+		// 			icon.classList.add("fa-sun-o");
+		// 		} else {
+		// 			localStorage.setItem("darkMode", "disabled");
+		// 			icon.classList.remove("fa-sun-o");
+		// 			icon.classList.add("fa-moon-o");
+		// 		}
+		// 	});
+		// });
+
     </script>
     <!-- /Loader Script -->
 		

@@ -4,7 +4,7 @@ require '../../API/Connection/config.php';
 header('Content-Type: application/json; charset=utf-8');
 
 if (!isset($_REQUEST['username'])) {
-    echo json_encode(["success" => false, "message" => "unauthorized"]);
+    echo json_encode(["success" => false, "message" => "unauthorized access"]);
     exit;
 }
 

@@ -23,8 +23,32 @@
     }
 ?>
 
+<style>
+    .sidebar {
+    position: fixed;
+    overflow: hidden;
+}
+
+.sidebar-inner {
+    height: 100%;
+    overflow-y: auto;      /* enable scrolling */
+    overflow-x: hidden;
+    padding-bottom: 50px;  /* prevents last item from being cut off */
+}
+
+/* Smooth scroll */
+.sidebar-inner::-webkit-scrollbar {
+    width: 6px;
+}
+.sidebar-inner::-webkit-scrollbar-thumb {
+    background: #aaa;
+    border-radius: 10px;
+}
+
+</style>
+
 <div class="sidebar" id="sidebar">
-    <div class="sidebar-inner slimscroll">
+    <div class="sidebar-inner">
         <div id="sidebar-menu" class="sidebar-menu">
             <ul>
                 <li class="<?php echo ($currentPage == 'home.php') ? 'active' : ''; ?>"> 

@@ -1,6 +1,7 @@
 <?php
 
 require '../../API/Connection/BackEndPermission.php';
+include '../Connection/uploadurl.php';
 
 // Fetch the Expense_Id from the GET parameters
 $expenseId = isset($_GET['Expense_Id']) ? mysqli_real_escape_string($conn, $_GET['Expense_Id']) : '';
@@ -82,6 +83,10 @@ if (!$paymentsResult) {
     $response->error = 'SQL Error: ' . mysqli_error($conn);
     echo json_encode($response);
     exit();
+}
+
+if (!empty($expenseData['Doc'])) {
+    $expenseData['Doc'] = $base_url . $expenseData['Doc'];
 }
 
 $payments = [];

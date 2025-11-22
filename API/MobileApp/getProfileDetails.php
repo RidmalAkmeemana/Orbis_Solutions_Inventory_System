@@ -3,7 +3,7 @@ require_once '../../API/Connection/config.php';
 header("Content-Type: application/json");
 
 if (!isset($_REQUEST['username'])) {
-    echo json_encode(["success" => false, "message" => "Username is required"]);
+    echo json_encode(["success" => false, "message" => "User login is required"]);
     exit;
 }
 

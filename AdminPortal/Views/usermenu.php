@@ -7,6 +7,11 @@
     $fetch = mysqli_fetch_array($query);
             		
 ?>
+	<!-- <li class="nav-item">
+		<a href="javascript:void(0);" id="darkModeToggle" class="nav-link">
+			<i id="darkModeIcon" class="fa fa-moon-o"></i>
+		</a>
+	</li> -->
 	<li class="nav-item dropdown has-arrow">
 		<a href="#" class="dropdown-toggle nav-link" data-toggle="dropdown">
 			<span class="user-img"><img class="rounded-circle" src="<?php echo $base_url.$fetch['Img']; ?>" width="31" alt="User Image"></span>

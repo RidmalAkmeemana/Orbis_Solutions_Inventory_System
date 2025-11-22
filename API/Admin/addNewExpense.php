@@ -79,7 +79,7 @@ if (!$maxExpID) {
 // File destination
 $fileLocation = "../../Files/$newExpenseId.$fileExtension";
 $filePath = "Files/$newExpenseId.$fileExtension";
-$uploadedUrl = $base_url . $filePath;
+$uploadedUrl = $filePath;
 
 // Move the file to the destination
 if (!move_uploaded_file($fileTmpPath, $fileLocation)) {

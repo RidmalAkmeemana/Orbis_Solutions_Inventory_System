@@ -81,7 +81,7 @@
                 <div class="card-body">
                     <h5 class="card-title text-center">Top 10 Moving Product Details</h5>
                     <div class="table-responsive">
-                        <table class="datatable table table-hover table-center mb-0" id="fastProductTable">
+                        <table class="table table-hover table-center" id="fastProductTable">
                             <thead class="table-light">
                                 <tr>
                                     <th>#</th>
