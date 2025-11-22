@@ -521,6 +521,7 @@ if (mysqli_num_rows($permission_query) > 0) {
 
 		<!-- Custom JS -->
 		<script src="assets/js/script.js"></script>
+		<link rel="stylesheet" href="assets/css/dark_mode_style.css">
 
 		<!-- Select2 JS -->
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>

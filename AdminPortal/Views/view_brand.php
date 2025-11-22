@@ -70,6 +70,7 @@ if (mysqli_num_rows($permission_query) > 0) {
 
 	<!-- Main CSS -->
 	<link rel="stylesheet" href="assets/css/style.css">
+	<link rel="stylesheet" href="assets/css/dark_mode_style.css">
 
 	<!--[if lt IE 9]>
 			<script src="assets/js/html5shiv.min.js"></script>
@@ -328,13 +329,11 @@ if (mysqli_num_rows($permission_query) > 0) {
 					<div class="row">
 						<div class="col-md-12 text-center mt-4 position-relative">
 							<div class="background-container" style="background-image: url('assets/img/cover.png');">
-								<div class="col-md-12 text-center mt-4">
-									<h5 class="page-title">
+								<div class="col-md-12 text-center mt-4 page-title-container">
 										<h1 class="text-xs font-weight-bold text-uppercase mb-1" id="brandName"></h1>
 										<h5 class="text-xs font-weight-bold text-uppercase mb-1" id="brandId"></h5>
 										<a href="home.php" class="breadcrumb-item" style="color: black;"><i class="fa fa-home"></i> Home</a>
 										<a href="add_brand.php" class="breadcrumb-item active">Brands</a>
-									</h5>
 								</div>
 							</div>
 						</div>

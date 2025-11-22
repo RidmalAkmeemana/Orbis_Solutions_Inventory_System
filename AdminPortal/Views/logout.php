@@ -25,6 +25,7 @@
 
 	<!-- Main CSS -->
 	<link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="assets/css/dark_mode_style.css">
 
     <style>
         /* Full-Screen Loader */

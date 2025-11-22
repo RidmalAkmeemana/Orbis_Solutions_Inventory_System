@@ -7,11 +7,11 @@
     $fetch = mysqli_fetch_array($query);
             		
 ?>
-	<!-- <li class="nav-item">
+	<li class="nav-item">
 		<a href="javascript:void(0);" id="darkModeToggle" class="nav-link">
 			<i id="darkModeIcon" class="fa fa-moon-o"></i>
 		</a>
-	</li> -->
+	</li>
 	<li class="nav-item dropdown has-arrow">
 		<a href="#" class="dropdown-toggle nav-link" data-toggle="dropdown">
 			<span class="user-img"><img class="rounded-circle" src="<?php echo $base_url.$fetch['Img']; ?>" width="31" alt="User Image"></span>
@@ -30,3 +30,42 @@
 				<a class="dropdown-item" href="logout.php">Logout</a>
 		</div>
 	</li>
+
+	<script>
+// ----------------------
+// DARK MODE INITIAL LOAD
+// ----------------------
+document.addEventListener("DOMContentLoaded", function () {
+
+    const bodyEl = document.body;
+    const iconEl = document.getElementById("darkModeIcon");
+
+    // Check saved mode
+    const savedMode = localStorage.getItem("darkMode");
+
+    if (savedMode === "enabled") {
+        bodyEl.classList.add("dark-mode");
+        iconEl.classList.remove("fa-moon-o");
+        iconEl.classList.add("fa-sun-o");
+    }
+
+    // -----------------------
+    // DARK MODE TOGGLE BUTTON
+    // -----------------------
+    $("#darkModeToggle").on("click", function () {
+        
+        bodyEl.classList.toggle("dark-mode");
+
+        if (bodyEl.classList.contains("dark-mode")) {
+            localStorage.setItem("darkMode", "enabled");
+            iconEl.classList.remove("fa-moon-o");
+            iconEl.classList.add("fa-sun-o");
+        } else {
+            localStorage.setItem("darkMode", "disabled");
+            iconEl.classList.remove("fa-sun-o");
+            iconEl.classList.add("fa-moon-o");
+        }
+    });
+
+});
+</script>

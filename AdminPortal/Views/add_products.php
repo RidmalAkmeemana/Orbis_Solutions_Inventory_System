@@ -53,6 +53,7 @@ if (mysqli_num_rows($permission_query) > 0) {
 
 	<!-- Main CSS -->
 	<link rel="stylesheet" href="assets/css/style.css">
+	<link rel="stylesheet" href="assets/css/dark_mode_style.css">
 
 	<!-- Select2 CSS -->
 	<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />

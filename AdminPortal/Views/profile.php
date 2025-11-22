@@ -39,6 +39,7 @@ if ($result && mysqli_num_rows($result) > 0) {
 
 	<!-- Main CSS -->
 	<link rel="stylesheet" href="assets/css/style.css">
+	<link rel="stylesheet" href="assets/css/dark_mode_style.css">
 
 	<!--[if lt IE 9]>
 			<script src="assets/js/html5shiv.min.js"></script>

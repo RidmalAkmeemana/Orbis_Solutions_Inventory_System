@@ -70,6 +70,7 @@ if (mysqli_num_rows($permission_query) > 0) {
 
 	<!-- Main CSS -->
 	<link rel="stylesheet" href="assets/css/style.css">
+	<link rel="stylesheet" href="assets/css/dark_mode_style.css">
 
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
 
@@ -364,13 +365,11 @@ if (mysqli_num_rows($permission_query) > 0) {
 					<div class="row">
 						<div class="col-md-12 text-center mt-4 position-relative">
 							<div class="background-container" style="background-image: url('assets/img/cover.png');">
-								<div class="col-md-12 text-center mt-4">
-									<h5 class="page-title">
+								<div class="col-md-12 text-center mt-4 page-title-container" >
 										<h1 class="text-xs font-weight-bold text-uppercase mb-1" id="supplierName"></h1>
 										<h5 class="text-xs font-weight-bold text-uppercase mb-1" id="supplierId"></h5>
 										<a href="home.php" class="breadcrumb-item" style="color: black;"><i class="fa fa-home"></i> Home</a>
-										<a href="add_suppliers.php" class="breadcrumb-item active">Suppliers</a>
-									</h5>
+										<a href="add_suppliers.php" class="breadcrumb-item active">Suppliers</a>	
 								</div>
 							</div>
 						</div>

@@ -1,0 +1,175 @@
+/* ================================
+   DARK MODE ROOT
+================================ */
+body.dark-mode {
+    background-color: #121212 !important;
+    color: #ffffff !important;
+}
+
+/* ================================
+   GENERAL TEXT / LINKS / TITLES
+================================ */
+body.dark-mode a,
+body.dark-mode h1,
+body.dark-mode h2,
+body.dark-mode h3,
+body.dark-mode p,
+body.dark-mode span,
+body.dark-mode .text-muted {
+    color: #ffffff !important;
+}
+
+/* ================================
+   HEADER
+================================ */
+body.dark-mode .header {
+    background: #1d1d1d !important;
+    border-color: #333 !important;
+}
+
+/* ================================
+   SIDEBAR
+================================ */
+body.dark-mode .sidebar {
+    background: #1d1d1d !important;
+}
+
+body.dark-mode .sidebar a {
+    color: #ccc !important;
+}
+
+body.dark-mode .sidebar a:hover,
+body.dark-mode .sidebar a.active {
+    background: #333 !important;
+    color: #fff !important;
+}
+
+/* ================================
+   CARDS / TABLES / MODALS
+================================ */
+body.dark-mode .card,
+body.dark-mode .table,
+body.dark-mode .modal-content {
+    background: #222 !important;
+    color: #fff !important;
+    border-color: #444 !important;
+}
+
+/* ================================
+   TABLE HEADERS
+================================ */
+table thead th {
+    color: #000 !important;
+    background: #f1f1f1 !important;
+    border-color: #ddd !important;
+}
+
+body.dark-mode table thead th {
+    background: #e6e6e6 !important;
+    color: #000 !important;
+}
+
+/* ================================
+   BUTTON VISIBILITY FIX
+================================ */
+
+/* Default button visibility */
+body.dark-mode table tbody tr .btn {
+    opacity: 0.8;
+    transition: opacity 0.2s;
+}
+
+/* Show clearly when hovering */
+body.dark-mode table tbody tr:hover .btn {
+    opacity: 1 !important;
+}
+
+/* =========================================
+   ✔ FIXED — bg-success-light BUTTON IN DARK MODE
+========================================= */
+body.dark-mode .bg-success-light {
+    background-color: #3c763d !important;
+    color: #ffffff !important;
+    border: 1px solid #4cae4c !important;
+}
+
+/* Hover better in dark */
+body.dark-mode .bg-success-light:hover {
+    background-color: #4cae4c !important;
+    color: #fff !important;
+}
+
+/* ================================
+   FORMS
+================================ */
+body.dark-mode .form-control {
+    background: #1d1d1d !important;
+    color: #fff !important;
+    border-color: #444 !important;
+}
+
+body.dark-mode .form-control::placeholder {
+    color: #bbbbbb !important;
+}
+
+/* ================================
+   DROPDOWN MENU
+================================ */
+body.dark-mode .dropdown-menu {
+    background: #222 !important;
+    color: #fff !important;
+    border-color: #444 !important;
+}
+
+body.dark-mode .dropdown-item {
+    color: #e0e0e0 !important;
+}
+
+body.dark-mode .dropdown-item:hover {
+    background: #333 !important;
+    color: #fff !important;
+}
+
+/* ================================
+   DATATABLES
+================================ */
+body.dark-mode .dataTables_wrapper input,
+body.dark-mode .dataTables_wrapper select {
+    background: #1d1d1d !important;
+    color: #fff !important;
+    border-color: #444 !important;
+}
+
+body.dark-mode .dataTables_wrapper .dataTables_info,
+body.dark-mode .dataTables_wrapper .dataTables_paginate a {
+    color: #e0e0e0 !important;
+}
+
+body.dark-mode .dataTables_wrapper .dataTables_paginate .current {
+    background: #333 !important;
+    color: #fff !important;
+    border-color: #555 !important;
+}
+
+/* ================================
+   USER MENU
+================================ */
+body.dark-mode .dropdown-menu .user-header {
+    background: #e6e6e6 !important;
+    border-bottom: 1px solid #ccc !important;
+}
+
+body.dark-mode .user-header .user-text h6,
+body.dark-mode .user-header .user-text p {
+    color: #000 !important;
+}
+
+/* ================================
+   PAGE TITLE / BREADCRUMB BLACK IN DARK MODE
+================================ */
+body.dark-mode .page-title-container h1,
+body.dark-mode .page-title-container h5,
+body.dark-mode .page-title-container a {
+    color: #000 !important; /* force black text */
+}
+
