@@ -222,32 +222,6 @@
             }, delay);
         });
 
-		// document.addEventListener("DOMContentLoaded", function () {
-		// 	const toggleButton = document.getElementById("darkModeToggle");
-		// 	const icon = document.getElementById("darkModeIcon");
-
-		// 	// Load state
-		// 	if (localStorage.getItem("darkMode") === "enabled") {
-		// 		document.body.classList.add("dark-mode");
-		// 		icon.classList.remove("fa-moon-o");
-		// 		icon.classList.add("fa-sun-o");
-		// 	}
-
-		// 	toggleButton.addEventListener("click", function () {
-		// 		document.body.classList.toggle("dark-mode");
-
-		// 		if (document.body.classList.contains("dark-mode")) {
-		// 			localStorage.setItem("darkMode", "enabled");
-		// 			icon.classList.remove("fa-moon-o");
-		// 			icon.classList.add("fa-sun-o");
-		// 		} else {
-		// 			localStorage.setItem("darkMode", "disabled");
-		// 			icon.classList.remove("fa-sun-o");
-		// 			icon.classList.add("fa-moon-o");
-		// 		}
-		// 	});
-		// });
-
     </script>
     <!-- /Loader Script -->
 		

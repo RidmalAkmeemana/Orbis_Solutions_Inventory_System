@@ -29,7 +29,7 @@ body.dark-mode .header {
 
 /* ================================
    SIDEBAR
-================================ */
+===================================
 body.dark-mode .sidebar {
     background: #1d1d1d !important;
 }
@@ -42,7 +42,7 @@ body.dark-mode .sidebar a:hover,
 body.dark-mode .sidebar a.active {
     background: #333 !important;
     color: #fff !important;
-}
+}*/
 
 /* ================================
    CARDS / TABLES / MODALS
@@ -90,13 +90,60 @@ body.dark-mode table tbody tr:hover .btn {
 body.dark-mode .bg-success-light {
     background-color: #3c763d !important;
     color: #ffffff !important;
-    border: 1px solid #4cae4c !important;
 }
 
 /* Hover better in dark */
 body.dark-mode .bg-success-light:hover {
     background-color: #4cae4c !important;
     color: #fff !important;
+}
+
+/* =========================================
+   ✔ FIXED — bg-warning-light BUTTON IN DARK MODE
+========================================= */
+body.dark-mode .bg-warning-light {
+    background-color: #8a6d3b !important;   /* Dark-friendly amber */
+    color: #ffffff !important;              /* Keep text readable */
+}
+
+/* Hover styling for better visibility in dark */
+body.dark-mode .bg-warning-light:hover {
+    background-color: #c0963e !important;
+    color: #fff !important;
+}
+
+/* =========================================
+   ✔ FIXED — badge-light IN DARK MODE
+========================================= */
+body.dark-mode .badge.badge-light {
+    background-color: #555 !important;    /* Dark-friendly grey */
+    color: #ffffff !important;            /* White text */
+}
+
+/* Hover effect — optional */
+body.dark-mode .badge.badge-light:hover {
+    background-color: #666 !important;
+    color: #ffffff !important;
+}
+
+/* =========================================
+   ✔ Dark Mode — POS Tabs Background Fix
+========================================= */
+body.dark-mode .profile-menu {
+    background-color: #111 !important;   /* Full black background */
+    border-color: #222 !important;
+}
+
+body.dark-mode .profile-menu .nav-tabs.nav-tabs-solid .nav-link {
+    background-color: #111 !important;   /* Slightly lighter for separation */
+}
+
+body.dark-mode .profile-menu .nav-tabs.nav-tabs-solid :hover{
+    background-color: #222 !important;   /* Slightly lighter for separation */
+}
+
+body.dark-mode .profile-menu .nav-tabs.nav-tabs-solid .nav-link.active {
+    background-color: #be3235 !important;   /* Active tab darker highlight */
 }
 
 /* ================================
@@ -130,6 +177,74 @@ body.dark-mode .dropdown-item:hover {
     color: #fff !important;
 }
 
+/* =========================================
+   ✔ Dark Mode — Select & Select2
+========================================= */
+
+/* Standard <select> element */
+body.dark-mode select.form-control,
+body.dark-mode .form-control {
+    background-color: #1d1d1d !important;
+    color: #ffffff !important;
+    border-color: #444 !important;
+}
+
+body.dark-mode select.form-control option {
+    background-color: #1d1d1d !important;
+    color: #ffffff !important;
+}
+
+/* =========================================
+   ✔ Select2 Main Box
+========================================= */
+body.dark-mode .select2-container--default .select2-selection--single {
+    background-color: #1d1d1d !important;
+    border-color: #444 !important;
+    color: #ffffff !important;
+}
+
+body.dark-mode .select2-container--default .select2-selection__rendered {
+    color: #ffffff !important;
+}
+
+/* Placeholder text */
+body.dark-mode .select2-container--default .select2-selection__placeholder {
+    color: #bbbbbb !important;
+}
+
+/* Dropdown arrow */
+body.dark-mode .select2-container--default .select2-selection__arrow b {
+    border-color: #ffffff transparent transparent transparent !important;
+}
+
+/* =========================================
+   ✔ Select2 Dropdown List
+========================================= */
+body.dark-mode .select2-container--default .select2-results > .select2-results__options {
+    background-color: #1d1d1d !important;
+    color: #ffffff !important;
+}
+
+body.dark-mode .select2-container--default .select2-results__option {
+    background-color: #1d1d1d !important;
+    color: #ffffff !important;
+}
+
+/* Hover item */
+body.dark-mode .select2-container--default .select2-results__option--highlighted {
+    background-color: #333 !important;
+    color: #fff !important;
+}
+
+/* =========================================
+   ✔ Dark Mode — Input Group Prefix (e.g., LKR:)
+========================================= */
+body.dark-mode .input-group-text {
+    background-color: #1d1d1d !important;
+    color: #ffffff !important;
+    border-color: #444 !important;
+}
+
 /* ================================
    DATATABLES
 ================================ */
@@ -145,10 +260,28 @@ body.dark-mode .dataTables_wrapper .dataTables_paginate a {
     color: #e0e0e0 !important;
 }
 
-body.dark-mode .dataTables_wrapper .dataTables_paginate .current {
-    background: #333 !important;
-    color: #fff !important;
-    border-color: #555 !important;
+/* Bootstrap / common pagination */
+body.dark-mode .pagination .page-item:not(.active) .page-link {
+    color: #000 !important; /* inactive pages black */
+}
+
+body.dark-mode .pagination .page-item.active .page-link {
+    color: #fff !important; /* current page white */
+}
+
+/* DataTables pagination buttons */
+body.dark-mode .dataTables_wrapper .dataTables_paginate .paginate_button:not(.current) {
+    color: #000 !important; /* inactive pages black */
+}
+
+body.dark-mode .dataTables_wrapper .dataTables_paginate .paginate_button.current {
+    color: #fff !important; /* current page white */
+}
+
+/* Extra fallback for any anchors inside pagination */
+body.dark-mode .pagination li a,
+body.dark-mode .dataTables_wrapper .dataTables_paginate a {
+    color: inherit !important; /* use the above rules */
 }
 
 /* ================================
@@ -171,5 +304,40 @@ body.dark-mode .page-title-container h1,
 body.dark-mode .page-title-container h5,
 body.dark-mode .page-title-container a {
     color: #000 !important; /* force black text */
+}
+
+/* ================================
+   DARK MODE — Profile Header Background
+================================ */
+body.dark-mode .profile-header {
+    background-color: #1d1d1d !important; /* dark background */
+    border-bottom: 1px solid #333 !important; /* optional border */
+    color: #ffffff !important; /* text inside stays readable */
+}
+
+/* Optional: adjust the Company Name text color */
+body.dark-mode .profile-header .user-name {
+    color: #ffffff !important;
+}
+
+/* Optional: logo container background adjustment if needed */
+body.dark-mode .profile-header .profile-image {
+    background-color: transparent !important;
+}
+
+/* ================================
+   DARK MODE — Full-Screen Loader Spinner
+================================ */
+body.dark-mode #pageLoader {
+    background-color: rgba(18, 18, 18, 0.9) !important; /* dark overlay */
+}
+
+body.dark-mode #pageLoader .loader-content {
+    color: #ffffff !important; /* loading text */
+}
+
+body.dark-mode #pageLoader .spinner {
+	border: 5px solid #be3235;
+	border-top: 5px solid transparent;
 }
 
