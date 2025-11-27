@@ -1,5 +1,6 @@
 <?php
 require_once '../../API/Connection/config.php';
+include '../../API/Connection/uploadurl.php';
 header("Content-Type: application/json");
 
 if (!isset($_REQUEST['username'])) {
@@ -21,7 +22,7 @@ if ($result && mysqli_num_rows($result) > 0) {
         "Last_Name" => $user['Last_Name'],
         "Username" => $user['Username'],
         "Status" => $user['Status'],
-        "Img" => $user['Img']
+        "Img" => $base_url.$user['Img']
     ]);
 } else {
     echo json_encode([
