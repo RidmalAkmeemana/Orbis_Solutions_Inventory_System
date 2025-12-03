@@ -5,6 +5,11 @@
 		  private $user = "root";
 		  private $password = "";
 		  private $database = "db_orbis_solutions_inventory_system";
+
+		//   private $host = "localhost";
+		//   private $user = "mdrizxbowc_Orbis";
+		//   private $password = "HcL=2h5y%40t";
+		//   private $database = "mdrizxbowc_db_orbis_solutions_inventory_system";
 		  private $conn;
 
 		function __construct() 

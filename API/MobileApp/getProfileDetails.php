@@ -18,6 +18,7 @@ if ($result && mysqli_num_rows($result) > 0) {
 
     echo json_encode([
         "success" => true,
+        "Id" => $user['Id'],
         "First_Name" => $user['First_Name'],
         "Last_Name" => $user['Last_Name'],
         "Username" => $user['Username'],
