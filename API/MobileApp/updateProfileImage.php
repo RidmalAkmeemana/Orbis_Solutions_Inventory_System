@@ -9,9 +9,8 @@ if (!isset($_REQUEST['username'])) {
     exit;
 };
 
-// Retrieve data from POST request
-$Id = $_POST['Id'];
-$Username = $_POST['Username'];
+// Retrieve data from REQUEST request
+$username = $_REQUEST['username'];
 
 // Check if an image is uploaded
 if (isset($_FILES['Img']) && $_FILES['Img']['error'] === UPLOAD_ERR_OK) {
@@ -33,7 +32,7 @@ if (isset($_FILES['Img']) && $_FILES['Img']['error'] === UPLOAD_ERR_OK) {
             // Update user data including image
             $sql = "UPDATE `tbl_user` 
                     SET `Img` = '$uploadedUrl' 
-                    WHERE `tbl_user`.`Id` = '$Id';";
+                    WHERE `tbl_user`.`Username` = '$username';";
         } else {
             $myObj = new \stdClass();
             $myObj->success = 'false';
