@@ -25,7 +25,7 @@ if (isset($_FILES['Img']) && $_FILES['Img']['error'] === UPLOAD_ERR_OK) {
         // Define image file path and URL
         $imageLocation = "../../Images/Admins/$username.$fileExtension";
         $imagePath = "Images/Admins/$username.$fileExtension";
-        $uploadedUrl = $imagePath;
+        $uploadedUrl = $imagePath . '?v=' . time();
 
         // Move uploaded file to the target directory
         if (move_uploaded_file($fileTmpPath, $imageLocation)) {
