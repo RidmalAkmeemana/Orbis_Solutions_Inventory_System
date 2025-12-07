@@ -14,7 +14,7 @@
 	</li>
 	<li class="nav-item dropdown has-arrow">
 		<a href="#" class="dropdown-toggle nav-link" data-toggle="dropdown">
-			<span class="user-img"><img class="rounded-circle" src="<?php echo $base_url.$fetch['Img']; ?>" width="31" alt="User Image"></span>
+			<span class="user-img"><img class="rounded-circle" src="<?php echo $base_url.$fetch['Img']; ?>" style="width: 31px; height: 31px; object-fit: cover; border-radius: 50%;" alt="User Image"></span>
 		</a>
 		<div class="dropdown-menu">
 			<div class="user-header">

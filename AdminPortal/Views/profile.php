@@ -234,7 +234,7 @@ if ($result && mysqli_num_rows($result) > 0) {
 							<div class="row align-items-center">
 								<div class="col-auto profile-image">
 									<a href="#">
-										<img class="rounded-circle" alt="User Image" id="ProfileImage">
+										<img class="rounded-circle" style="width: 100px; height: 100px; object-fit: cover; border-radius: 50%;" alt="User Image" id="ProfileImage">
 									</a>
 								</div>
 								<div class="col ml-md-n2 profile-user-info">
