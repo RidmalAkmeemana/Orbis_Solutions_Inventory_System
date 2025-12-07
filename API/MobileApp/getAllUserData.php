@@ -4,6 +4,11 @@ require_once '../../API/Connection/config.php';
 include '../Connection/uploadurl.php';
 header("Content-Type: application/json");
 
+if (!isset($_REQUEST['username'])) {
+    echo json_encode(["success" => false, "message" => "unauthorized access"]);
+    exit;
+}
+
 // SQL query to fetch supplier details
 $sql = "SELECT * FROM tbl_user ORDER BY tbl_user.Id ASC LIMIT 12";
 

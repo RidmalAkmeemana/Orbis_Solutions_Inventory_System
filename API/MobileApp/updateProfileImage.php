@@ -10,7 +10,7 @@ if (!isset($_REQUEST['username'])) {
 };
 
 // Retrieve data from REQUEST request
-$Username = $_REQUEST['username'];
+$username = $_REQUEST['username'];
 
 // Check if an image is uploaded
 if (isset($_FILES['Img']) && $_FILES['Img']['error'] === UPLOAD_ERR_OK) {
@@ -23,8 +23,8 @@ if (isset($_FILES['Img']) && $_FILES['Img']['error'] === UPLOAD_ERR_OK) {
 
     if (in_array($fileExtension, $allowedExtensions)) {
         // Define image file path and URL
-        $imageLocation = "../../Images/Admins/$Username.$fileExtension";
-        $imagePath = "Images/Admins/$Username.$fileExtension";
+        $imageLocation = "../../Images/Admins/$username.$fileExtension";
+        $imagePath = "Images/Admins/$username.$fileExtension";
         $uploadedUrl = $imagePath;
 
         // Move uploaded file to the target directory
@@ -32,7 +32,7 @@ if (isset($_FILES['Img']) && $_FILES['Img']['error'] === UPLOAD_ERR_OK) {
             // Update user data including image
             $sql = "UPDATE `tbl_user` 
                     SET `Img` = '$uploadedUrl' 
-                    WHERE `tbl_user`.`Username` = '$Username';";
+                    WHERE `tbl_user`.`Username` = '$username';";
         } else {
             $myObj = new \stdClass();
             $myObj->success = 'false';
