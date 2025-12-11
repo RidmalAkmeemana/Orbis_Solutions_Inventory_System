@@ -419,7 +419,7 @@
                     $.each(data, function (index, row) {
                         table.row.add([
 							row.id,
-                            '<a href="' + row.img + '" class="avatar avatar-sm mr-2"><img class="avatar-img rounded-circle" src="' + row.img + '"></a>' + row.firstname + ' ' + row.lastname,
+                            '<a href="' + row.img + '" class="avatar avatar-sm mr-2"><img class="avatar-img rounded-circle" src="' + row.img + '" style="width: 40px; height: 40px; object-fit: cover; border-radius: 50%;"></a>' + row.firstname + ' ' + row.lastname,
                             row.status,
                             row.username,
                             '<div class="actions"><a class="btn btn-sm bg-success-light" href="view_user.php?Id=' + row.id + '"><i class="fe fe-eye"></i> View </a></div>'

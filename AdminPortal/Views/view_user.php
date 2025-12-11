@@ -349,7 +349,7 @@ if (mysqli_num_rows($permission_query) > 0) {
 						<div class="col-md-12 text-center mt-4 position-relative">
 							<div class="background-container" style="background-image: url('assets/img/cover.png');">
 								<div class="col-md-12 text-center mt-2 page-title-container">
-									<a id="userImageLink" href="" class="avatar avatar-sm mr-2 mb-4"><img id="userImage" style="height:60px; width:60px;" class="avatar-img rounded-circle" src=""></a>
+									<a id="userImageLink" href="" class="avatar avatar-sm mr-2 mb-4"><img id="userImage" style="width: 60px; height: 60px; object-fit: cover; border-radius: 50%;" class="avatar-img rounded-circle" src=""></a>
 									<h1 class="text-xs font-weight-bold text-uppercase mb-1" id="userID"></h1>
 									<a href="home.php" class="breadcrumb-item" style="color: black;"><i class="fa fa-home"></i> Home</a>
 									<a href="add_users.php" class="breadcrumb-item active">Users</a>
