@@ -47,6 +47,74 @@ if ($result && mysqli_num_rows($result) > 0) {
 		<![endif]-->
 
 	<style>
+
+		/* Floating Edit Button */
+		.edit-profile-btn {
+			position: absolute;
+			bottom: 0;
+			right: 10px;
+			width: 36px;
+			height: 36px;
+			border-radius: 50%;
+			background-color: #be3235;
+			border: 0px;
+			color: #fff;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			cursor: pointer;
+			box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+			padding: 0;
+		}
+
+		/* Pencil Icon Size */
+		.edit-profile-btn i {
+			font-size: 14px;
+		}
+
+		/* Hover Effect */
+		.edit-profile-btn:hover {
+			background-color: #a7282b;
+		}
+
+		.image-drop-zone {
+			position: relative;
+			border: 2px dashed #be3235;
+			border-radius: 10px;
+			height: 180px;
+			cursor: pointer;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			text-align: center;
+			background: #fafafa;
+		}
+
+		.image-drop-zone.dragover {
+			background: #fff0f0;
+		}
+
+		.image-drop-zone .placeholder {
+			color: #777;
+		}
+
+		.image-drop-zone i {
+			font-size: 36px;
+			color: #be3235;
+		}
+
+		.image-drop-zone span {
+			color: #be3235;
+			font-weight: 600;
+		}
+
+		.image-drop-zone img {
+			max-height: 100%;
+			max-width: 100%;
+			object-fit: cover;
+			border-radius: 8px;
+		}
+
 		/* Full-Screen Loader */
 		#pageLoader {
 			position: fixed;
@@ -232,11 +300,17 @@ if ($result && mysqli_num_rows($result) > 0) {
 					<div class="col-md-12">
 						<div class="profile-header">
 							<div class="row align-items-center">
-								<div class="col-auto profile-image">
+								<div class="col-auto profile-image-wrapper">
 									<a href="#">
-										<img class="rounded-circle" style="width: 100px; height: 100px; object-fit: cover; border-radius: 50%;" alt="User Image" id="ProfileImage">
+										<img class="rounded-circle" style="width: 100px; height: 100px; object-fit: cover; border-radius: 50%;" src="assets/img/default-user.png" alt="User Image" id="ProfileImage">
 									</a>
+
+									<!-- Edit Icon -->
+									<button type="button" class="edit-profile-btn" id="editProfileImageBtn" title="Edit Image">
+										<i class="fa fa-pencil"></i>
+									</button>
 								</div>
+
 								<div class="col ml-md-n2 profile-user-info">
 									<h4 class="user-name mb-0" id="FullName"></h4>
 									<h6 class="text-muted" id="Status"></h6>
@@ -307,6 +381,49 @@ if ($result && mysqli_num_rows($result) > 0) {
 											</div>
 										</div>
 
+										<!-- Edit Image Modal -->
+										<div class="modal fade" id="Update_Profile_Image" aria-hidden="true" role="dialog">
+											<div class="modal-dialog modal-dialog-centered" role="document">
+												<div class="modal-content">
+													<div class="modal-header">
+														<h5 class="modal-title">Personal Details</h5>
+														<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+															<span aria-hidden="true">&times;</span>
+														</button>
+													</div>
+													<div class="modal-body">
+														<form method="POST" action="../../API/Admin/updateProfileImage.php" id="updateProfileImageForm" enctype="multipart/form-data">
+															<div class="row form-row">
+																<input style="display:none;" type="text" name="Id" class="form-control" value="<?php echo $fetch['Id']; ?>" readonly>
+																<input style="display:none;" type="text" name="Username" class="form-control" value="<?php echo $fetch['Username']; ?>" readonly>
+																<div class="col-12 col-sm-12">
+																	<div class="form-group">
+																		<label>Profile Image</label><label class="text-danger">*</label>
+
+																		<!-- Drag & Drop Area -->
+																		<div id="imageDropZone" class="image-drop-zone">
+																			<img id="imagePreview" src="" alt="Preview" style="display:none;">
+																			<div class="placeholder">
+																				<i class="fa fa-cloud-upload"></i>
+																				<p>Drag & Drop image here<br>or <span>Click to Upload</span></p>
+																			</div>
+																			<input type="file" name="Img" id="profileImageInput" accept="image/png, image/jpeg" hidden>
+																		</div>
+
+																		<label class="text-muted" style="font-size: 0.85rem;">
+																			Image must be <b>JPG, JPEG, PNG</b>
+																		</label>
+																	</div>
+																</div>
+															</div>
+															<button type="submit" name="save" class="btn btn-primary btn-block">Save Changes</button>
+														</form>
+													</div>
+												</div>
+											</div>
+										</div>
+										<!-- /Edit Image Modal -->
+
 										<!-- Edit Details Modal -->
 										<div class="modal fade" id="Update_Profile" aria-hidden="true" role="dialog">
 											<div class="modal-dialog modal-dialog-centered" role="document">
@@ -323,7 +440,7 @@ if ($result && mysqli_num_rows($result) > 0) {
 																<div class="col-12 col-sm-6">
 																	<div class="form-group">
 																		<label>First Name</label><label class="text-danger">*</label>
-																		<input style="display: none;" type="text" name="Id" class="form-control" value="<?php echo $fetch['Id']; ?>">
+																		<input style="display: none;" type="text" name="Id" class="form-control" value="<?php echo $fetch['Id']; ?>" readonly>
 																		<input type="text" name="First_Name" class="form-control" id="FormFirstName" required="">
 																	</div>
 																</div>
@@ -333,19 +450,19 @@ if ($result && mysqli_num_rows($result) > 0) {
 																		<input type="text" name="Last_Name" class="form-control" id="FormLastName" required="">
 																	</div>
 																</div>
-																<div class="col-12 col-sm-6">
+																<div class="col-12 col-sm-12">
 																	<div class="form-group">
 																		<label>Username</label><label class="text-danger">*</label>
 																		<input type="text" name="Username" class="form-control" id="FormUserName" required="">
 																	</div>
 																</div>
-																<div class="col-12 col-sm-6">
+																<!-- <div class="col-12 col-sm-6">
 																	<div class="form-group">
 																		<label>Profile Image</label>
 																		<input type="file" name="Img" class="form-control">
 																		<label class="text-muted" style="font-size: 0.85rem;">Image must be <b>JPG, JPEG, PNG</b></label>
 																	</div>
-																</div>
+																</div> -->
 															</div>
 															<button type="submit" name="save" class="btn btn-primary btn-block">Save Changes</button>
 														</form>
@@ -376,7 +493,7 @@ if ($result && mysqli_num_rows($result) > 0) {
 													<div class="form-group row">
 														<div class="col-md-6">
 															<label for="newpassword">New Password</label><label class="text-danger">*</label>
-															<input type="text" name="Id" style="display: none;" value="<?php echo $fetch['Id']; ?>">
+															<input type="text" name="Id" style="display: none;" value="<?php echo $fetch['Id']; ?>" readonly>
 															<input type="password" class="form-control" required name="newpassword" id="newpassword">
 														</div>
 														<div class="col-md-6">
@@ -425,6 +542,47 @@ if ($result && mysqli_num_rows($result) > 0) {
 
 	<script>
 		$(document).ready(function() {
+
+			// Open image upload modal
+			$('#editProfileImageBtn').on('click', function () {
+				$('#Update_Profile_Image').modal('show');
+			});
+
+			// Submit profile image via AJAX
+			$('#updateProfileImageForm').submit(function (event) {
+				event.preventDefault();
+
+				$('#pageLoader').show();
+
+				$.ajax({
+					type: 'POST',
+					url: '../../API/Admin/updateProfileImage.php',
+					data: new FormData(this),
+					processData: false,
+					contentType: false,
+					dataType: 'json',
+					success: function (response) {
+
+						if (typeof response === 'string') {
+							response = JSON.parse(response);
+						}
+
+						$('#Update_Profile_Image').modal('hide');
+
+						showUpdateAlerts(response);
+
+						// Refresh image only
+						fetchProfileDetails();
+					},
+					error: function () {
+						$('#Update_Profile_Image').modal('hide');
+						$('#UpdateFailedModel').modal('show');
+					},
+					complete: function () {
+						$('#pageLoader').hide();
+					}
+				});
+			});
 
 			// Function to show and hide alerts based on response for updating
 			function showUpdateAlerts(response) {
@@ -576,6 +734,59 @@ if ($result && mysqli_num_rows($result) > 0) {
 				}
 			});
 		});
+
+		/* ===============================
+		DRAG & DROP + IMAGE PREVIEW
+		================================= */
+
+		const dropZone = document.getElementById('imageDropZone');
+		const fileInput = document.getElementById('profileImageInput');
+		const preview = document.getElementById('imagePreview');
+
+		// Click to open file selector
+		dropZone.addEventListener('click', () => fileInput.click());
+
+		// Drag over
+		dropZone.addEventListener('dragover', (e) => {
+			e.preventDefault();
+			dropZone.classList.add('dragover');
+		});
+
+		// Drag leave
+		dropZone.addEventListener('dragleave', () => {
+			dropZone.classList.remove('dragover');
+		});
+
+		// Drop file
+		dropZone.addEventListener('drop', (e) => {
+			e.preventDefault();
+			dropZone.classList.remove('dragover');
+
+			if (e.dataTransfer.files.length) {
+				fileInput.files = e.dataTransfer.files;
+				previewImage(fileInput.files[0]);
+			}
+		});
+
+		// Input change (click upload)
+		fileInput.addEventListener('change', () => {
+			if (fileInput.files.length) {
+				previewImage(fileInput.files[0]);
+			}
+		});
+
+		// Preview function
+		function previewImage(file) {
+			if (!file.type.startsWith('image/')) return;
+
+			const reader = new FileReader();
+			reader.onload = function (e) {
+				preview.src = e.target.result;
+				preview.style.display = 'block';
+				dropZone.querySelector('.placeholder').style.display = 'none';
+			};
+			reader.readAsDataURL(file);
+		}
 	</script>
 
 	<!-- Loader Script -->
