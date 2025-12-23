@@ -228,6 +228,22 @@ if ($result && mysqli_num_rows($result) > 0) {
 					</div>
 				</div>
 
+				<div class="modal fade" id="ImageUpdateSuccessModel" role="dialog">
+					<div class="modal-dialog modal-dialog-centered">
+						<!-- Modal content-->
+						<div class="modal-content text-center">
+							<div class="modal-body mt-4">
+								<i class="fa fa-check-circle animate__animated animate__tada animate__infinite" style="font-size: 100px; margin-top:20px; color:#26af48;" aria-hidden="true"></i>
+								<h3 class="modal-title"><b>Success</b></h3>
+								<p>Record Updated Successfully !</p>
+							</div>
+							<div class="modal-body">
+								<button style="width:20%;" type="button" class="btn btn-primary" id="OkBtn" data-dismiss="modal">OK</button>
+							</div>
+						</div>
+					</div>
+				</div>
+
 				<div class="modal fade" id="UpdateInvalidModel" role="dialog">
 					<div class="modal-dialog modal-dialog-centered">
 						<!-- Modal content-->
@@ -564,7 +580,7 @@ if ($result && mysqli_num_rows($result) > 0) {
 
 						$('#Update_Profile_Image').modal('hide');
 
-						showUpdateAlerts(response);
+						showImageUpdateAlerts(response);
 
 						// Refresh image only
 						fetchProfileDetails();
@@ -587,6 +603,25 @@ if ($result && mysqli_num_rows($result) > 0) {
 				if (response.success === 'true') {
 					// Show UpdateSuccessModel only if success is true
 					$('#UpdateSuccessModel').modal('show');
+				} else if (response.success === 'false' && response.error === 'invalid_file_type') {
+					// Show UpdateInvalidModel only if success is false and error is invalid_file_type
+					$('#UpdateInvalidModel').modal('show');
+				} else if (response.success === 'false' && response.error === 'password_mismatch') {
+					// Show UpdateInvalidModel only if success is false and error is password_mismatch
+					$('#PasswordInvalidModel').modal('show');
+				} else {
+					// Show UpdateFailedModel for any other failure scenario
+					$('#UpdateFailedModel').modal('show');
+				}
+			}
+
+			function showImageUpdateAlerts(response) {
+				// Hide the Add Update_Profile modal before showing any alert modals
+				$('#Update_Profile').modal('hide');
+
+				if (response.success === 'true') {
+					// Show UpdateSuccessModel only if success is true
+					$('#ImageUpdateSuccessModel').modal('show');
 				} else if (response.success === 'false' && response.error === 'invalid_file_type') {
 					// Show UpdateInvalidModel only if success is false and error is invalid_file_type
 					$('#UpdateInvalidModel').modal('show');
@@ -673,6 +708,11 @@ if ($result && mysqli_num_rows($result) > 0) {
 			$('#UpdateSuccessModel #OkBtn').on('click', function() {
 				// Refresh the page when "Ok" is clicked
 				window.location.href = 'logout.php';
+			});
+
+			$('#ImageUpdateSuccessModel #OkBtn').on('click', function() {
+				// Refresh the page when "Ok" is clicked
+				window.location.href = 'profile.php';
 			});
 
 			// Function to update profile password
