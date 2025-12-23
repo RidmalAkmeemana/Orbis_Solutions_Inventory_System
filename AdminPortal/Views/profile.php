@@ -87,11 +87,6 @@ if ($result && mysqli_num_rows($result) > 0) {
 			align-items: center;
 			justify-content: center;
 			text-align: center;
-			background: #fafafa;
-		}
-
-		.image-drop-zone.dragover {
-			background: #fff0f0;
 		}
 
 		.image-drop-zone .placeholder {
