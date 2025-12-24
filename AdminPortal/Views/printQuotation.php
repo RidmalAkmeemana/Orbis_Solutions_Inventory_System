@@ -154,6 +154,21 @@
                 </div>
             </div>
 
+            <div class="modal fade" id="SMSSuccessModel" role="dialog">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content text-center">
+                        <div class="modal-body mt-4">
+                            <i class="fa fa-check-circle animate__animated animate__tada animate__infinite" style="font-size: 100px; margin-top:20px; color:#26af48;" aria-hidden="true"></i>
+                            <h3 class="modal-title"><b>Success</b></h3>
+                            <p>Customer SMS Sent Successfully !</p>
+                        </div>
+                        <div class="modal-body">
+                            <button style="width:20%;" type="button" class="btn btn-primary" id="OkBtn" data-dismiss="modal">OK</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <div class="modal fade" id="EmailErrorModel" role="dialog">
                 <div class="modal-dialog modal-dialog-centered">
                     <div class="modal-content text-center">
@@ -176,6 +191,36 @@
                             <i class="fa fa-exclamation-circle animate__animated animate__tada animate__infinite" style="font-size: 100px; margin-top:20px; color:#e63c3c;" aria-hidden="true"></i>
                             <h3 class="modal-title"><b>Error</b></h3>
                             <p>Quotation Data Is Not Loaded yet !</p>
+                        </div>
+                        <div class="modal-body">
+                            <button style="width:20%;" type="button" class="btn btn-primary" id="OkBtn1" data-dismiss="modal">OK</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal fade" id="SentSMSFailedModel" role="dialog">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content text-center">
+                        <div class="modal-body mt-4">
+                            <i class="fa fa-exclamation-circle animate__animated animate__tada animate__infinite" style="font-size: 100px; margin-top:20px; color:#e63c3c;" aria-hidden="true"></i>
+                            <h3 class="modal-title"><b>Error</b></h3>
+                            <p>Customer SMS Sent Failed !</p>
+                        </div>
+                        <div class="modal-body">
+                            <button style="width:20%;" type="button" class="btn btn-primary" id="OkBtn1" data-dismiss="modal">OK</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal fade" id="SMSAlreadySendModel" role="dialog">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content text-center">
+                        <div class="modal-body mt-4">
+                            <i class="fa fa-exclamation-circle animate__animated animate__tada animate__infinite" style="font-size: 100px; margin-top:20px; color:#e63c3c;" aria-hidden="true"></i>
+                            <h3 class="modal-title"><b>Error</b></h3>
+                            <p>Customer SMS Already Sent !</p>
                         </div>
                         <div class="modal-body">
                             <button style="width:20%;" type="button" class="btn btn-primary" id="OkBtn1" data-dismiss="modal">OK</button>
@@ -375,6 +420,7 @@
 					<button onclick="window.location.href = 'quotation.php';" class="btn btn-back"><i class="fa fa-arrow-left" aria-hidden="true"></i> Back</button>
 					<button onclick="window.print();" class="btn btn-primary"><i class="fa fa-print" aria-hidden="true"></i> Print</button>
                     <button onclick="sendQuoatationEmail(this)" class="btn btn-info"> <i class="fa fa-share" aria-hidden="true"></i> Send Email </button>
+                    <button onclick="sendQuoatationSMS(this)" class="btn btn-warning"> <i class="fa fa-commenting-o" aria-hidden="true"></i> Send SMS </button>
    				</div>
             </div>
             <!-- /Invoice Container -->
@@ -588,6 +634,74 @@
                 },
                 complete: function () {
                     $('#pageLoader').hide(); // Hide loader after response (success or error)
+                }
+            });
+        }
+
+        function sendQuoatationSMS(buttonElement) {
+
+            if (!quotationData && !CompanyName) {
+                $('#AlertErrorModel').modal('show');
+                return;
+            }
+
+            const quotationNo = quotationData.QuotationData.Quotation_No;
+            const customerName = quotationData.QuotationData.Customer_Name;
+            const contactNo = quotationData.QuotationData.Customer_Contact; // Example: dynamically fetched from quotationData
+
+            if (!contactNo) {
+                $('#SentSMSFailedModel').modal('show');
+                return;
+            }
+
+            const quotationLink = `<?php echo $base_url ?>Public/Views/emailQuotationCustomerCopy.php?Quotation_No=${quotationNo}`;
+            const smsKey = 'smsSent_' + quotationNo;
+
+            if (sessionStorage.getItem(smsKey)) {
+                $('#SMSAlreadySendModel').modal('show');
+                return;
+            }
+
+            const message =
+                `Dear ${customerName},\n` +
+                `Download your quotation here:\n` +
+                `${quotationLink}\n\n` +
+                `${CompanyName}\n` +
+                `Contact No: ${CompanyTel1} | ${CompanyTel2} | ${CompanyTel3}`;
+
+            sendSMS(contactNo, message, smsKey);
+        }
+
+        // Example sendEmail function using AJAX
+        function sendSMS(to, body, smsKey) {
+
+            $('#pageLoader').show();
+
+            $.ajax({
+                url: '../../sendSMS.php',
+                type: 'POST',
+                dataType: 'json',
+                data: {
+                    to: to,
+                    body: body
+                },
+                success: function(response) {
+
+                    console.log('SMS Response:', response);
+
+                    if (response.success === true) {
+                        sessionStorage.setItem(smsKey, '1');
+                        $('#SMSSuccessModel').modal('show');
+                    } else {
+                        $('#SentSMSFailedModel').modal('show');
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error('SMS AJAX Error:', error);
+                    $('#SentSMSFailedModel').modal('show');
+                },
+                complete: function() {
+                    $('#pageLoader').hide();
                 }
             });
         }
