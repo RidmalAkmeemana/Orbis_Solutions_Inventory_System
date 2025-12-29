@@ -1,5 +1,6 @@
 <?php
 // Include necessary files
+header("Content-Type: application/json; charset=UTF-8");
 require_once '../../API/Connection/validator.php';
 require_once '../../API/Connection/config.php';
 include '../../API/Connection/uploadurl.php';

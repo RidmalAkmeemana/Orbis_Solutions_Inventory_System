@@ -1,5 +1,6 @@
 <?php
 
+header("Content-Type: application/json; charset=UTF-8");
 require '../../API/Connection/config.php';
 
 // Fetch the Invoice_Id from the GET parameters
