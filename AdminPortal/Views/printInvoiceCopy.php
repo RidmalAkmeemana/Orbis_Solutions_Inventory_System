@@ -122,8 +122,8 @@ $invoiceNo = $_REQUEST['Invoice_No'];
                 transform: rotate(360deg);
             }
         }
-        /* Full-Screen Loader */
 
+        /* Full-Screen Loader */
     </style>
 
     <!--[if lt IE 9]>
@@ -159,6 +159,21 @@ $invoiceNo = $_REQUEST['Invoice_No'];
         </div>
     </div>
 
+    <div class="modal fade" id="SMSSuccessModel" role="dialog">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content text-center">
+                <div class="modal-body mt-4">
+                    <i class="fa fa-check-circle animate__animated animate__tada animate__infinite" style="font-size: 100px; margin-top:20px; color:#26af48;" aria-hidden="true"></i>
+                    <h3 class="modal-title"><b>Success</b></h3>
+                    <p>Customer SMS Sent Successfully !</p>
+                </div>
+                <div class="modal-body">
+                    <button style="width:20%;" type="button" class="btn btn-primary" id="OkBtn" data-dismiss="modal">OK</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="modal fade" id="EmailErrorModel" role="dialog">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content text-center">
@@ -166,6 +181,36 @@ $invoiceNo = $_REQUEST['Invoice_No'];
                     <i class="fa fa-exclamation-circle animate__animated animate__tada animate__infinite" style="font-size: 100px; margin-top:20px; color:#e63c3c;" aria-hidden="true"></i>
                     <h3 class="modal-title"><b>Error</b></h3>
                     <p>Customer Email Not Available !</p>
+                </div>
+                <div class="modal-body">
+                    <button style="width:20%;" type="button" class="btn btn-primary" id="OkBtn1" data-dismiss="modal">OK</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="SentSMSFailedModel" role="dialog">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content text-center">
+                <div class="modal-body mt-4">
+                    <i class="fa fa-exclamation-circle animate__animated animate__tada animate__infinite" style="font-size: 100px; margin-top:20px; color:#e63c3c;" aria-hidden="true"></i>
+                    <h3 class="modal-title"><b>Error</b></h3>
+                    <p>Customer SMS Sent Failed !</p>
+                </div>
+                <div class="modal-body">
+                    <button style="width:20%;" type="button" class="btn btn-primary" id="OkBtn1" data-dismiss="modal">OK</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="SMSAlreadySendModel" role="dialog">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content text-center">
+                <div class="modal-body mt-4">
+                    <i class="fa fa-exclamation-circle animate__animated animate__tada animate__infinite" style="font-size: 100px; margin-top:20px; color:#e63c3c;" aria-hidden="true"></i>
+                    <h3 class="modal-title"><b>Error</b></h3>
+                    <p>Customer SMS Already Sent !</p>
                 </div>
                 <div class="modal-body">
                     <button style="width:20%;" type="button" class="btn btn-primary" id="OkBtn1" data-dismiss="modal">OK</button>
@@ -398,6 +443,7 @@ $invoiceNo = $_REQUEST['Invoice_No'];
             <button onclick="window.history.back();" class="btn btn-back"><i class="fa fa-arrow-left" aria-hidden="true"></i> Back</button>
             <button onclick="window.print();" class="btn btn-primary"><i class="fa fa-print" aria-hidden="true"></i> Print</button>
             <button onclick="sendInvoiceEmail(this)" class="btn btn-info"> <i class="fa fa-share" aria-hidden="true"></i> Send Email </button>
+            <button onclick="sendInvoiceSMS(this)" class="btn btn-warning"> <i class="fa fa-commenting-o" aria-hidden="true"></i> Send SMS </button>
         </div>
     </div>
     <!-- /Invoice Container -->
@@ -430,7 +476,7 @@ $invoiceNo = $_REQUEST['Invoice_No'];
                 type: 'GET',
                 url: '../../API/Admin/getCompanyDetails.php',
                 dataType: 'json',
-                success: function (response) {
+                success: function(response) {
                     CompanyName = response.Company_Name;
                     CompanyAddress = response.Company_Address;
                     CompanyEmail = response.Company_Email;
@@ -438,7 +484,7 @@ $invoiceNo = $_REQUEST['Invoice_No'];
                     CompanyTel2 = response.Company_Tel2 && response.Company_Tel2.trim() !== '' ? response.Company_Tel2 : 'N/A';
                     CompanyTel3 = response.Company_Tel3 && response.Company_Tel3.trim() !== '' ? response.Company_Tel3 : 'N/A';
                 },
-                error: function (xhr, status, error) {
+                error: function(xhr, status, error) {
                     console.error('Error fetching company details:', status, error);
                 }
             });
@@ -606,18 +652,86 @@ $invoiceNo = $_REQUEST['Invoice_No'];
                     subject: subject,
                     body: body
                 },
-                success: function (response) {
+                success: function(response) {
                     if (response.success === true) {
                         $('#EmailSuccessModel').modal('show');
                     } else {
                         $('#SentFailedModel').modal('show');
                     }
                 },
-                error: function (xhr, status, error) {
+                error: function(xhr, status, error) {
                     $('#SentFailedModel').modal('show');
                 },
-                complete: function () {
+                complete: function() {
                     $('#pageLoader').hide(); // Hide loader after response (success or error)
+                }
+            });
+        }
+
+        function sendInvoiceSMS(buttonElement) {
+
+            if (!invoiceData && !CompanyName) {
+                $('#AlertErrorModel').modal('show');
+                return;
+            }
+
+            const invoiceNo = invoiceData.InvoiceData.Invoice_No;
+            const customerName = invoiceData.InvoiceData.Customer_Name;
+            const contactNo = invoiceData.InvoiceData.Customer_Contact;
+
+            if (!contactNo) {
+                $('#SentSMSFailedModel').modal('show');
+                return;
+            }
+
+            const invoiceLink = `<?php echo $base_url ?>Public/Views/emailInvoiceCustomerCopy.php?Invoice_No=${invoiceNo}`;
+            const smsKey = 'smsSent_' + invoiceNo;
+
+            if (sessionStorage.getItem(smsKey)) {
+                $('#SMSAlreadySendModel').modal('show');
+                return;
+            }
+
+            const message =
+                `Dear ${customerName},\n` +
+                `Download your invoice here:\n` +
+                `${invoiceLink}\n\n` +
+                `${CompanyName}\n` +
+                `Contact No: ${CompanyTel1} | ${CompanyTel2} | ${CompanyTel3}`;
+
+            sendSMS(contactNo, message, smsKey);
+        }
+
+        // Example sendEmail function using AJAX
+        function sendSMS(to, body, smsKey) {
+
+            $('#pageLoader').show();
+
+            $.ajax({
+                url: '../../sendSMS.php',
+                type: 'POST',
+                dataType: 'json',
+                data: {
+                    to: to,
+                    body: body
+                },
+                success: function(response) {
+
+                    console.log('SMS Response:', response);
+
+                    if (response.success === true) {
+                        sessionStorage.setItem(smsKey, '1');
+                        $('#SMSSuccessModel').modal('show');
+                    } else {
+                        $('#SentSMSFailedModel').modal('show');
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error('SMS AJAX Error:', error);
+                    $('#SentSMSFailedModel').modal('show');
+                },
+                complete: function() {
+                    $('#pageLoader').hide();
                 }
             });
         }
@@ -631,14 +745,14 @@ $invoiceNo = $_REQUEST['Invoice_No'];
     <script>
         let startTime = performance.now(); // Capture the start time when the page starts loading
 
-        window.addEventListener("load", function () {
+        window.addEventListener("load", function() {
             let endTime = performance.now(); // Capture the end time when the page is fully loaded
             let loadTime = endTime - startTime; // Calculate the total loading time
 
             // Ensure the loader stays for at least 500ms but disappears dynamically based on actual load time
-            let delay = Math.max(loadTime); 
+            let delay = Math.max(loadTime);
 
-            setTimeout(function () {
+            setTimeout(function() {
                 document.getElementById("pageLoader").style.display = "none";
             }, delay);
         });
