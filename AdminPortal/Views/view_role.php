@@ -633,62 +633,116 @@ if (mysqli_num_rows($permission_query) > 0) {
                             // Draw the table
                             table.draw();
 
-                            // Construct screen list
+                            // ===== Excel Style Screen Permission Table (FIXED) =====
                             let screenList = '';
+
                             if (Object.keys(response.screens).length > 0) {
+
+                                // Collect all unique subcategories
+                                let subCategoriesSet = new Set();
+
                                 $.each(response.screens, function(category, subCategories) {
-                                    let categoryId = category.replace(/ /g, '');
-                                    screenList += `
-                                <div class="col-md-12 text-left mt-4 category" data-category="${categoryId}">
-                                    <h4 class="page-title">
-                                        <h4 class="text-xs font-weight-bold mb-1">${category}</h4>
-                                    </h4>
-                                    <div class="row">
-                            `;
-                                    $.each(subCategories, function(subCategory, screens) {
-                                        let allAssigned = screens.every(screen => screen.Assigned);
-                                        let subCategoryId = subCategory.replace(/ /g, '');
-                                        screenList += `
-                                    <div class="col-md-3 text-left mt-4 subCategory" data-category="${categoryId}" data-subcategory="${subCategoryId}">
-                                        <p class="text-xs font-weight-bold mb-1">
-                                            <input type="checkbox" id="${subCategoryId}" class="subCategoryCheckbox" ${allAssigned ? 'checked' : ''}>
-                                            <label for="${subCategoryId}" class="mx-auto">${subCategory}</label>
-                                        </p>
-                                        <div class="pages">
-                                `;
-                                        screens.forEach(function(screen) {
-                                            let screenId = screen.Screen_Id;
-                                            let screenName = screen.Screen_Name.replace(/ /g, '');
-                                            screenList += `
-                                            <div style="display:none;" class="col-md-12 text-left mt-2">
-                                                <p class="text-xs font-weight-bold mb-1">
-                                                    <input type="checkbox" id="${screenName}" class="pageCheckbox ${categoryId}-${subCategoryId}-pageCheckbox" data-screen-id="${screenId}" data-table-name="${screen.Table_Name}" ${screen.Assigned ? 'checked' : ''} disabled>
-                                                    <label for="${screenName}" class="mx-auto">${screen.Table_Name}-${screen.Screen_Id}</label>
-                                                </p>
-                                            </div>
-                                        `;
-                                        });
-                                        screenList += `</div></div>`;
+                                    $.each(subCategories, function(subCategory) {
+                                        subCategoriesSet.add(subCategory);
                                     });
-                                    screenList += `</div></div>`;
                                 });
+
+                                let subCategories = Array.from(subCategoriesSet);
+
+                                screenList += `
+                                    <div class="col-md-12 mt-4">
+                                        <div class="table-responsive">
+                                            <table class="table table-bordered text-center align-middle">
+                                                <thead class="thead-light">
+                                                    <tr>
+                                                        <th class="font-weight-bold text-left">Screen Category</th>
+                                `;
+
+                                subCategories.forEach(sub => {
+                                    screenList += `<th>${sub}</th>`;
+                                });
+
+                                screenList += `</tr></thead><tbody>`;
+
+                                // Rows by Category
+                                $.each(response.screens, function(category, subCategoryData) {
+
+                                    let categoryKey = category.replace(/\s+/g, '');
+
+                                    screenList += `<tr><td class="text-left font-weight-bold">${category} Screens</td>`;
+
+                                    subCategories.forEach(sub => {
+
+                                        let screens = subCategoryData[sub] || [];
+                                        let cellId = `${categoryKey}_${sub.replace(/\s+/g, '')}`;
+
+                                        let allChecked = screens.length > 0 && screens.every(s => s.Assigned);
+
+                                        screenList += `<td>`;
+
+                                        if (screens.length > 0) {
+
+                                            // ONE visible checkbox per cell
+                                            screenList += `
+                                                <input type="checkbox"
+                                                    class="matrixCheckbox"
+                                                    data-cell="${cellId}"
+                                                    ${allChecked ? 'checked' : ''}
+                                                >
+                                            `;
+
+                                            // Hidden screen-level checkboxes (USED FOR SAVE)
+                                            screens.forEach(screen => {
+                                                screenList += `
+                                                    <input type="checkbox"
+                                                        class="pageCheckbox d-none"
+                                                        data-cell="${cellId}"
+                                                        data-screen-id="${screen.Screen_Id}"
+                                                        data-table-name="${screen.Table_Name}"
+                                                        ${screen.Assigned ? 'checked' : ''}
+                                                    >
+                                                `;
+                                            });
+
+                                        }
+
+                                        screenList += `</td>`;
+                                    });
+
+                                    screenList += `</tr>`;
+                                });
+
+                                screenList += `</tbody></table></div></div>`;
+
                             } else {
                                 screenList = `
-                            <div class="col-md-12 text-left mt-5">
-                                <p class="text-xs font-weight-bold mb-1">No screens available for this role</p>
-                            </div>
-                        `;
+                                    <div class="col-md-12 mt-5">
+                                        <p class="text-xs font-weight-bold">No screens available for this role</p>
+                                    </div>
+                                `;
                             }
 
+                            // Save button
                             if (hasAccessToSavePermissions) {
                                 screenList += `
-                            <div class="col-md-12 text-right mt-4">
-                                <button style="width:10%;" type="button" id="savePermissionsBtn" class="btn btn-primary"><i class="fa fa-floppy-o" aria-hidden="true"></i> Save Permission</button>
-                            </div>
-                        `;
+                                    <div class="col-md-12 text-right mt-3">
+                                        <button id="savePermissionsBtn" class="btn btn-primary">
+                                            <i class="fa fa-floppy-o"></i> Save Permission
+                                        </button>
+                                    </div>
+                                `;
                             }
 
                             $('#screensList').html(screenList);
+
+                            // Sync matrix checkbox with hidden screen checkboxes
+                            $('.matrixCheckbox').on('change', function () {
+
+                                let cellId = $(this).data('cell');
+                                let isChecked = $(this).is(':checked');
+
+                                $(`.pageCheckbox[data-cell="${cellId}"]`).prop('checked', isChecked);
+                            });
 
                             // Add event listener to subcategory checkboxes
                             $('.subCategoryCheckbox').change(function() {
