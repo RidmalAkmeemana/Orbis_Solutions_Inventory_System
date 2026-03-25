@@ -39,7 +39,7 @@ try {
     $mail->Host       = 'smtp.gmail.com';           // Replace with your SMTP server
     $mail->SMTPAuth   = true;
     $mail->Username   = 'orbissolutionslk@gmail.com';     // Replace with your email
-    $mail->Password   = 'rfhm bosk qabi tycz';              // Replace with your email password or app password
+    $mail->Password   = 'vzvf nixe fmom xped';              // Replace with your email password or app password
     $mail->SMTPSecure = 'ssl';                        // Use 'ssl' or 'tls'
     $mail->Port       = 465;                          // Use 587 for TLS, 465 for SSL
 
