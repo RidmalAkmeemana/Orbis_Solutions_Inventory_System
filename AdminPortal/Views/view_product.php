@@ -359,13 +359,6 @@ if (mysqli_num_rows($permission_query) > 0) {
 					<!-- Edit and Delete Buttons -->
 					<div class="row">
 						<div class="col-md-12 text-left">
-
-
-						</div>
-					</div>
-
-					<div class="row">
-						<div class="col-md-12 text-left">
 							<?php if ($has_access_to_edit_product): ?>
 								<a href="#Update_Product" data-toggle="modal" class="btn btn bg-primary-light"><i class="fe fe-pencil"></i> Edit</a>
 							<?php else: ?>
