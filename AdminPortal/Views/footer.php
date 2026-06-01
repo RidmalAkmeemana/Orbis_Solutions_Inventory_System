@@ -15,5 +15,5 @@
 
 <footer class="text-center py-3">
 	<hr></hr>
-    <p class="mt-4">Copyright &copy; <?php echo date("Y"); ?> <?php echo($companyName); ?> | Powered by Orbis Solutions</p>
+    <p class="mt-4">Copyright &copy; <?php echo date("Y"); ?> <?php echo($companyName); ?> | Powered by <a href="https://orbislk.com/" target="_blank" rel="noopener noreferrer" style="color: inherit; text-decoration: none;">Orbis Solutions</a></p>
 </footer>
